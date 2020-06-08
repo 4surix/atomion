@@ -50,17 +50,17 @@ Molécule('C2H4') - Atome('C') == Molécule('CH4')
 ### Informations
 
 # Pour les atomes
-print('\n', '--- Atomes ---', '\n')
+print('\n--- Atomes ---\n')
 
 print(Atome('C'))
 
 # Pour les ions
-print('\n', '--- Ions ---', '\n')
+print('\n--- Ions ---\n')
 
 print(Ion('K'))
 
 # Pour les molécules
-print('\n', '--- Molécules ---', '\n')
+print('\n--- Molécules ---\n')
 
 print(Molécule('O2'))
 
@@ -68,14 +68,14 @@ print(Molécule('O2'))
 ### Démonstration
 
 # Récupérer le nombre d'électron suivant la masse
-print('\n', '--- Nombre électron suivant masse ---', '\n')
+print('\n--- Nombre électron suivant masse ---\n')
 
 carbone = Atome('C')
 demo = carbone.demonstration(recup='électron', avec='masse')
 print(demo)
 
 # Récupérer le nombre de neutron suivant le nombre de proton
-print('\n', '--- Nombre neutron suivant nombre proton ---', '\n')
+print('\n--- Nombre neutron suivant nombre proton ---\n')
 
 carbone = Atome('C')
 demo = carbone.demonstration(recup='neutron', avec='Z')
