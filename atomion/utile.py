@@ -486,17 +486,36 @@ def verif_stable(molécule) -> None:
     )
 
 
-    for I in range(len(charges)):
+    index_dernier_atome_liée = None
+
+    range_charges = range(len(charges))
+
+    for I in range_charges:
 
         if not charges[I]:
             continue
 
-        for i in range(len(charges)):
+        for i in range_charges:
 
-            if (not charges[I] 
-            or  not charges[i] 
-            or  i == I):
+            if not charges[I]:
+                break
+
+            if (not charges[i] 
+                or (
+                    # Si c'est le même index pour les 2
+                    #   c'est que c'est le même atome
+                    #   et un atome ne peut pas s'auto-lier.
+                    i == I
+
+                    # Evite qu'un atome subit 2 liaisons de suite.
+                    # Je ne commprend pas trop comment ça fonctionne
+                    #    mais ça fonctionne.
+                    or i == index_dernier_atome_liée
+                )
+            ):
                 continue
+
+            index_dernier_atome_liée = i
 
             if charges[i] == 4:
                 
@@ -519,8 +538,6 @@ def verif_stable(molécule) -> None:
 
                     charges[I] -= charge
                     charges[i] -= charge
-
-            break
 
 
     if any(charges):
