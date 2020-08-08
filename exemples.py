@@ -47,6 +47,21 @@ Molécule('C2H4') + Atome('C') == Molécule('C3H4')
 Molécule('C2H4') - Atome('C') == Molécule('CH4')
 
 
+### Gestion des erreurs
+
+try: molécule = Molécule('H3')
+except exception.MoleculeInstable:
+	molécule = Molécule('H2')
+
+try: carbone = Atome('Carbone')
+except exception.ValeurIncorrecte:
+	carbone = Atome('C')
+
+try: oxygene = carbone + 2
+except exception.Incompatible:
+	oxygene = carbone + Proton(2)
+
+
 ### Informations
 
 # Pour les atomes
