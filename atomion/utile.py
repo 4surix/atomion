@@ -1,5 +1,5 @@
 
-from . import exceptions
+from . import irregularites
 
 from .elements import éléments
 
@@ -203,7 +203,7 @@ def configuration_électronique(élément) -> list:
             break
 
 
-    exception = exceptions.configuration.get(protons)
+    exception = irregularites.configuration.get(protons)
 
     if exception:
         couches[-len(exception):] = exception
