@@ -1,8 +1,7 @@
 
 from . import irregularites
-
+from . import exception
 from .elements import éléments
-
 from .objets.base import Molécule, Atome, Ion, Electron, Proton, Neutron
 
 
@@ -241,8 +240,10 @@ def get_info(obj, valeur) -> None:
     None
     """
 
-    if isinstance(valeur, type(obj)):
-        raise Exception("Cette élément est déjà un %s !" % obj.__class__.__name__)
+    if valeur.__class__ == obj.__class__:
+        raise exception.ValeurIncorrecte(
+            "Cette objet est déjà un '%s' !" % obj.__class__.__name__
+        )
 
     elif isinstance(valeur, (Ion, Atome)):
 
@@ -252,9 +253,13 @@ def get_info(obj, valeur) -> None:
     elif isinstance(valeur, int):
 
         if valeur >= len(éléments):
-            raise Exception("Le nombre de proton doit exister !")
+            raise exception.ValeurIncorrecte(
+                "Le nombre de proton doit exister !"
+            )
         elif valeur <= 0:
-            raise Exception("Le nombre de proton doit être supérieur à zéro !")
+            raise exception.ValeurIncorrecte(
+                "Le nombre de proton doit être supérieur à zéro !"
+            )
         else:
             obj.proton = valeur
 
@@ -268,7 +273,7 @@ def get_info(obj, valeur) -> None:
                 break
 
         if not obj.proton:
-            raise Exception(
+            raise exception.ValeurIncorrecte(
                 f"Le symbole '{valeur}'"
                 + "ne correspond à aucun élément existant !"
             )
@@ -543,9 +548,7 @@ def verif_stable(molécule) -> None:
     if any(charges):
         # Il faut que toute les charges soit égal à 0
         #   sinon ce n'est pas stable.
-        raise Exception(
-            f"Votre molécule {molécule.notation()} n'est pas stable !"
-        )
+        raise exception.MoleculeInstable(molécule)
 
 
 # Méthodes Atome/Ion

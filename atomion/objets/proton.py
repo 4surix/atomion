@@ -21,6 +21,8 @@ Retours
         Nombre de proton
 """
 
+from .. import exception
+
 from .base import Molécule, Atome, Ion, Electron, Proton, Neutron
 
 
@@ -31,5 +33,11 @@ def __init(self, valeur=1):
 
     elif isinstance(valeur, int):
         self.valeur = valeur
+
+    else:
+        raise exception.ValeurIncorrecte(
+            "Seulement les objets de type 'Atome', 'Ion' et 'int'"
+            + " peuvent être transformés en objet de type 'Proton'."
+        )
 
 Proton.__init__ = __init

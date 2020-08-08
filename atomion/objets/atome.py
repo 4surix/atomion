@@ -43,6 +43,7 @@ Atome
 """
 
 from .. import utile
+from .. import exception
 
 from .base import Molécule, Atome, Ion, Electron, Proton, Neutron
 
@@ -82,9 +83,7 @@ def __add(self, obj):
         return Molécule([self, obj])
 
     else:
-        raise Exception(
-            f"Onjet '{obj.__class__}' non compatible avec objet 'Atome'."
-        )
+        raise exception.Incompatible(self, obj)
 
 Atome.__add__ = __add
 
@@ -107,9 +106,7 @@ def __sub(self, obj):
         return Ion(self.proton, self.électron - obj.valeur)
 
     else:
-        raise Exception(
-            f"Objet '{obj.__class__}' non compatible avec objet 'Atome'."
-        )
+        raise exception.Incompatible(self, obj)
 
 Atome.__sub__ = __sub
 

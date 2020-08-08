@@ -34,6 +34,7 @@ Retour
 import copy
 
 from .. import utile
+from .. import exception
 
 from .base import Molécule, Atome, Ion, Electron, Proton, Neutron
 
@@ -46,7 +47,9 @@ def __init(self, valeur):
     )
 
     if len(self.atomes) < 2:
-        raise Exception("Une Molécule doit être composée de plusieurs atome.")
+        raise exception.ValeurIncorrecte(
+            "Une Molécule doit être composée de plusieurs atomes."
+        )
 
     utile.verif_stable(self)
 
@@ -113,9 +116,7 @@ def __add(self, obj):
         return Molécule(atomes)
 
     else:
-        raise Exception(
-            "Objet '%s' non compatible avec objet 'Molécule'." % type(obj)
-        )
+        raise exception.Incompatible(self, obj)
 
 Molécule.__add__ = __add
 
@@ -142,9 +143,7 @@ def __sub(self, obj):
         return Molécule(atomes)
 
     else:
-        raise Exception(
-            "Objet '%s' non compatible avec objet 'Molécule'." % type(obj)
-        )
+        raise exception.Incompatible(self, obj)
 
 Molécule.__sub__ = __sub
 

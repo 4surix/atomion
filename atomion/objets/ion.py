@@ -44,6 +44,7 @@ Retours
 """
 
 from .. import utile
+from .. import exception
 
 from .base import Molécule, Atome, Ion, Electron, Proton, Neutron
 
@@ -68,7 +69,10 @@ def __init(self, valeur=1, électron=0, neutron=None):
         self.couches[-1] = 8
 
     else:
-        raise Exception('Cette atome ne peut pas être un ion !')
+        raise exception.ValeurIncorrecte(
+            "Un gaz noble (2 ou 8 sur sa dernière couche)"
+            + " ne peut pas devenir un Ion."
+        )
 
 
     if self.neutron is None:
@@ -91,9 +95,7 @@ def __add(self, obj):
         return Ion(self.proton + obj.valeur)
 
     else:
-        raise Exception(
-            "Objet '%s' non compatible avec objet 'Ion'." % type(obj)
-        )
+        raise exception.Incompatible(self, obj)
 
 Ion.__add__ = __add
 
@@ -110,9 +112,7 @@ def __sub(self, obj):
         return Atome(self.proton - obj.valeur)
 
     else:
-        raise Exception(
-            "Objet '%s' non compatible avec objet 'Ion'." % type(obj)
-        )
+        raise exception.Incompatible(self, obj)
 
 Ion.__sub__ = __sub
 
