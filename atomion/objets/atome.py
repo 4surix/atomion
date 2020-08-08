@@ -35,6 +35,11 @@ Atome
 
     .configuration:list
     .couches:list
+
+    .notation()
+    .notation_symbole()
+    .notation_couche()
+    .notation_configuration()
 """
 
 from .. import utile
@@ -77,7 +82,9 @@ def __add(self, obj):
         return Molécule([self, obj])
 
     else:
-        raise Exception("Type '%s' non compatible avec type 'Atome'." % type(obj))
+        raise Exception(
+            f"Onjet '{obj.__class__}' non compatible avec objet 'Atome'."
+        )
 
 Atome.__add__ = __add
 
@@ -100,7 +107,9 @@ def __sub(self, obj):
         return Ion(self.proton, self.électron - obj.valeur)
 
     else:
-        raise Exception("Type '%s' non compatible avec type 'Atome'." % type(obj))
+        raise Exception(
+            f"Objet '{obj.__class__}' non compatible avec objet 'Atome'."
+        )
 
 Atome.__sub__ = __sub
 
@@ -118,17 +127,45 @@ Atome.__mul__ = __mul
 
 
 def __str(self):
-    return  (   "Atome %s" % self.notation()
-            +("\n Elément: %s" % self.élément[utile.params.langue] if utile.params.élément else '')
-            +("\n Catégorie: %s" % self.catégorie[utile.params.langue] if utile.params.catégorie else '')
-            +("\n Proton(s): %s" % self.proton if utile.params.proton else '')
-            +("\n Neutron(s): %s" % self.neutron if utile.params.neutron else '')
-            +("\n Electron(s): %s" % self.électron if utile.params.électron else '')
-            +("\n Masse: %s" % self.masse if utile.params.masse else '')
-            +("\n Masse atomique relative: %s" % self.masse_atomique_relative if utile.params.masse_relative else '')
-            +("\n Couche électronique: %s" % self.notation_couche() if utile.params.couches else '')
-            +("\n Configuration électronique: %s" % self.notation_configuration() if utile.params.configuration else '')
-            )
+    return (
+        "Atome %s" % self.notation()
+        + (
+            "\n Elément: %s" % self.élément[utile.params.langue] 
+            if utile.params.élément else ''
+        )
+        + (
+            "\n Catégorie: %s" % self.catégorie[utile.params.langue] 
+            if utile.params.catégorie else ''
+        )
+        + (
+            "\n Proton(s): %s" % self.proton 
+            if utile.params.proton else ''
+        )
+        + (
+            "\n Neutron(s): %s" % self.neutron 
+            if utile.params.neutron else ''
+        )
+        + (
+            "\n Electron(s): %s" % self.électron 
+            if utile.params.électron else ''
+        )
+        + (
+            "\n Masse: %s" % self.masse 
+            if utile.params.masse else ''
+        )
+        + (
+            "\n Masse atomique relative: %s" % self.masse_atomique_relative
+            if utile.params.masse_relative else ''
+        )
+        + (
+            "\n Couche électronique: %s" % self.notation_couche() 
+            if utile.params.couches else ''
+        )
+        + (
+            "\n Configuration électronique: %s" % self.notation_configuration()
+            if utile.params.configuration else ''
+        )
+    )
 
 Atome.__str__ = __str
 
@@ -152,7 +189,9 @@ Atome.__eq__ = __eq
 
 
 def notation(self):
-    return "%s Z=%s A=%s" % (self.symbole, self.proton, self.proton + self.neutron) 
+    return "%s Z=%s A=%s" % (
+        self.symbole, self.proton, self.proton + self.neutron
+    ) 
 
 Atome.notation = notation
 
@@ -173,30 +212,9 @@ def notation_symbole(self, A=True, Z=True):
 Atome.notation_symbole = notation_symbole
 
 
-def notation_couche(self):
-    couches = [
-        ''.join(utile.exposants[int(num)] for num in str(électron))
-        for électron in self.couches
-    ]
-    return ' '.join('(%s)%s' % r for r in zip(utile.notations_couche, couches))
+Atome.notation_couche = utile.notation_couche
 
-Atome.notation_couche = notation_couche
-
-
-def notation_configuration(self):
-    return ' '.join(
-        '%s%s' % (
-            notation, 
-            ''.join(utile.exposants[int(num)] for num in str(électron))
-        ) 
-        for notation, électron in zip(
-            utile.notation_configuration_atome, 
-            self.configuration
-        ) 
-        if électron
-    )
-
-Atome.notation_configuration = notation_configuration
+Atome.notation_configuration = utile.notation_configuration
 
 
 def demonstration(self, recup, avec):

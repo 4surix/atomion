@@ -1,6 +1,8 @@
 # coding: utf-8
 
-# La quasi-totalité des informations viennent de : https://github.com/Bowserinator/Periodic-Table-JSON
+# La quasi-totalité des informations viennent de : 
+#   https://github.com/Bowserinator/Periodic-Table-JSON
+# J'ai rajoutée moi-même la partie fr.
 
 éléments = [
     {

@@ -46,60 +46,120 @@ mol = 6.02*10**23
 
 fonctions_configuration_ion = (
     lambda c: ([c if c <= 2 else 2], c-2),
-    lambda c: ([c], c-2) if c <= 2 else ([2, c-2 if c <= 8 else 6], c-8),
-    lambda c: ([c], c-2) if c <= 2 else ([2, c-2], c-8) if c <= 8 else ([2, 6, c-8 if c <= 18 else 10], c-18),
-    lambda c: ([c], c-2) if c <= 2 else ([2, c-2], c-8) if c <= 8 else ([2, 6, c-8], c-18) if c <= 18 else ([2, 6, 10, c-18 if c <= 32 else 14], c-32),
-    lambda c: ([c], c-2) if c <= 2 else ([2, c-2], c-8) if c <= 8 else ([2, 6, c-8], c-18) if c <= 18 else ([2, 6, 10, c-18], c-32) if c <= 32 else ([2, 6, 10, 14, c-32 if c <= 50 else 18], c-50),
+    lambda c: 
+        ([c], c-2) if c <= 2 
+        else 
+            ([2, c-2 if c <= 8 else 6], c-8),
+    lambda c: 
+        ([c], c-2) if c <= 2 
+        else 
+            ([2, c-2], c-8) if c <= 8 
+            else 
+                ([2, 6, c-8 if c <= 18 else 10], c-18),
+    lambda c: 
+        ([c], c-2) if c <= 2
+        else 
+            ([2, c-2], c-8) if c <= 8 
+            else 
+                ([2, 6, c-8], c-18) if c <= 18 
+                else 
+                    ([2, 6, 10, c-18 if c <= 32 else 14], c-32),
+    lambda c: 
+        ([c], c-2) if c <= 2 
+        else
+            ([2, c-2], c-8) if c <= 8 
+            else 
+                ([2, 6, c-8], c-18) if c <= 18
+                else 
+                    ([2, 6, 10, c-18], c-32) if c <= 32 
+                    else 
+                        ([2, 6, 10, 14, c-32 if c <= 50 else 18], c-50),
 ) 
 
 ## Séparées par couche, récupérants la configuration d'un atome 
 
 fonctions_configuration_atome = (
     lambda c: ([c if c <= 2 else 2], c-2),
-    lambda c: ([c], c-2) if c <= 2 else ([2, c-2 if c <= 8 else 6], c-8),
-    lambda c: ([c], c-2) if c <= 2 else ([2, c-2 if c <= 8 else 6], c-8),
-    lambda c: ([c], c-2) if c <= 2 else ([2, c-2], c-12) if c <= 12 else ([2, 10, c-12 if c <= 18 else 6], c-18),
-    lambda c: ([c], c-2) if c <= 2 else ([2, c-2], c-12) if c <= 12 else ([2, 10, c-12 if c <= 18 else 6], c-18),
-    lambda c: ([c], c-2) if c <= 2 else ([2, c-2], c-16) if c <= 16 else ([2, 14, c-16], c-26) if c <= 26 else ([2, 14, 10, c-26 if c <= 32 else 6], c-32)
+    lambda c: 
+        ([c], c-2) if c <= 2 
+        else
+            ([2, c-2 if c <= 8 else 6], c-8),
+    lambda c: 
+        ([c], c-2) if c <= 2
+        else 
+            ([2, c-2 if c <= 8 else 6], c-8),
+    lambda c:
+        ([c], c-2) if c <= 2 
+        else
+            ([2, c-2], c-12) if c <= 12
+            else 
+                ([2, 10, c-12 if c <= 18 else 6], c-18),
+    lambda c: 
+        ([c], c-2) if c <= 2 
+        else
+            ([2, c-2], c-12) if c <= 12 
+            else
+                ([2, 10, c-12 if c <= 18 else 6], c-18),
+    lambda c:
+        ([c], c-2) if c <= 2
+        else 
+            ([2, c-2], c-16) if c <= 16 
+            else 
+                ([2, 14, c-16], c-26) if c <= 26
+                else
+                    ([2, 14, 10, c-26 if c <= 32 else 6], c-32)
 ) 
 
 fonctions_get = {
     # électron(s) = (Masse de l'Atome - (Masse des protons + Masse des neutrons)) / Masse d'un életron
     'électron': lambda obj: round(
-        (obj.masse_atomique_relative * u
-        - (  (masse_neutron * obj.neutron)
-           + (masse_proton * obj.proton)
-          )
-        ) / masse_électron),
+        (
+            obj.masse_atomique_relative * u
+            - (
+                (masse_neutron * obj.neutron)
+                + (masse_proton * obj.proton)
+            )
+        ) / masse_électron
+    ),
 
     # Proton(s) = (Masse de l'Atome - (Masse des électrons + Masse des neutrons)) / Masse d'un proton
     'proton': lambda obj: round(
-        (obj.masse_atomique_relative * u
-        - (  (masse_électron * obj.électron)
-           + (masse_neutron * obj.neutron)
-          )
-        ) / masse_proton),
+        (
+            obj.masse_atomique_relative * u
+            - (
+                (masse_électron * obj.électron)
+                + (masse_neutron * obj.neutron)
+            )
+        ) / masse_proton
+    ),
 
     # Neuton(s) = (Masse de l'Atome - (Masse des électrons + Masse des protons)) / Masse d'un neutron
     'neutron': lambda obj: round(
-        (obj.masse_atomique_relative * u
-        - (  (masse_électron * obj.électron)
-           + (masse_proton * obj.proton)
-          )
-        ) / masse_neutron),
+        (
+            obj.masse_atomique_relative * u
+            - (
+                (masse_électron * obj.électron)
+                + (masse_proton * obj.proton)
+            )
+        ) / masse_neutron
+    ),
 }
 
 
 ### Notations
 
 notation_configuration_ion = (
-    '1s','2s','2p','3s','3p','3d','4s','4p','4d','4f','5s','5p','5d','5f','5g')
+    '1s','2s','2p','3s','3p','3d','4s','4p','4d','4f','5s','5p','5d','5f','5g'
+)
 
 notation_configuration_atome = (
-    '1s','2s','2p','3s','3p','4s','3d','4p','5s','4d','5p','6s','4f','5d','6p','7s','5f','6d','7p')
+    '1s','2s','2p','3s','3p','4s','3d','4p','5s','4d','5p','6s','4f','5d','6p',
+    '7s','5f','6d','7p'
+)
 
 notations_couche = (
-    'K','L','M','N','O','P')
+    'K','L','M','N','O','P'
+)
 
 exposants = tuple('⁰¹²³⁴⁵⁶⁷⁸⁹')
 sous_exposants = tuple('₀₁₂₃₄₅₆₇₈₉')
@@ -152,7 +212,8 @@ def configuration_électronique(élément) -> list:
 
 
 def get_info(obj, valeur) -> None:
-    """Récupére les informations d'un atome grâce à son nombre de proton ou son symbole.
+    """Récupére les informations d'un atome grâce à son nombre de proton 
+         ou son symbole.
 
     ---------
     Arguments
@@ -181,7 +242,7 @@ def get_info(obj, valeur) -> None:
     """
 
     if isinstance(valeur, type(obj)):
-        raise Exception("Cette élément est déjà un %s !" % type(obj).__name__)
+        raise Exception("Cette élément est déjà un %s !" % obj.__class__.__name__)
 
     elif isinstance(valeur, (Ion, Atome)):
 
@@ -207,7 +268,10 @@ def get_info(obj, valeur) -> None:
                 break
 
         if not obj.proton:
-            raise Exception("Le symbole '%s' ne correspond à aucun élément existant !" % valeur)
+            raise Exception(
+                f"Le symbole '{valeur}'"
+                + "ne correspond à aucun élément existant !"
+            )
 
 
     élément = éléments[obj.proton-1]
@@ -272,7 +336,11 @@ def get_masse(obj) -> float:
     :float
         Masse de l'objet.
     """
-    return (obj.proton*masse_proton) + (obj.neutron*masse_neutron) + (obj.électron*masse_électron)
+    return (
+        (obj.proton*masse_proton) 
+        + (obj.neutron*masse_neutron)
+        + (obj.électron*masse_électron)
+    )
 
 
 def convertie_notation_vers_atomes(data:str) -> list:
@@ -317,12 +385,14 @@ def convertie_notation_vers_atomes(data:str) -> list:
 
             if atome:
                 # CO2(H2)
+                #    ^
                 atomes.extend([Atome(atome)] * (int(nbr) if nbr else 1))
                 atome = ''
                 nbr = ''
 
             if in_molécule.__class__ == str:
                 # CO2(H2)4(Ag7)2
+                #         ^
                 atomes.extend(
                     convertie_notation_vers_atomes(in_molécule) 
                     * (int(nbr) if nbr else 1)
@@ -336,6 +406,7 @@ def convertie_notation_vers_atomes(data:str) -> list:
 
             if in_molécule:
                 # (H2)2Ca
+                #      ^
                 atomes.extend(
                     convertie_notation_vers_atomes(in_molécule) 
                     * (int(nbr) if nbr else 1)
@@ -345,6 +416,7 @@ def convertie_notation_vers_atomes(data:str) -> list:
 
             if atome:
                 # CaAg
+                #   ^
                 atomes.extend([Atome(atome)] * (int(nbr) if nbr else 1))
 
             atome = carac
@@ -353,11 +425,13 @@ def convertie_notation_vers_atomes(data:str) -> list:
 
         elif carac.islower():
             # Ca
+            #  ^
             atome += carac
 
 
         elif carac in chiffres:
             # Ca6
+            #   ^
             nbr += carac
 
 
@@ -402,11 +476,12 @@ def verif_stable(molécule) -> None:
         (
             ion.diff 
             for ion in [
-                Ion(élément) 
-                for élément in molécule.atomes 
-                if not isinstance(élément, Ion)
+                élément if élément.__class__ == Ion
+                else
+                    Ion(élément)
+                for élément in molécule.atomes
             ]
-        ), 
+        ),
         reverse=True
     )
 
@@ -452,3 +527,34 @@ def verif_stable(molécule) -> None:
         # Il faut que toute les charges soit égal à 0
         #   sinon ce n'est pas stable.
         raise Exception("Votre molécule %s n'est pas stable !" % molécule.notation())
+
+# Méthodes Atome/Ion
+
+def notation_couche(self):
+    couches = [
+        ''.join(
+            exposants[int(num)] 
+            for num in str(électron)
+        )
+        for électron in self.couches
+    ]
+    return ' '.join(
+        '(%s)%s' % infos
+        for infos in zip(notations_couche, couches)
+    )
+
+def notation_configuration(self):
+    return ' '.join(
+        '%s%s' % (
+            notation, 
+            ''.join(
+                exposants[int(num)] 
+                for num in str(électron)
+            )
+        )
+        for notation, électron in zip(
+            notation_configuration_atome, 
+            self.configuration
+        )
+        if électron
+    )

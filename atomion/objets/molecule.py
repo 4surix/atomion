@@ -27,6 +27,8 @@ Retour
 
     .masse:float
     .masse_moléculaire_relative:float
+
+    .notation()
 """
 
 import copy
@@ -38,7 +40,10 @@ from .base import Molécule, Atome, Ion, Electron, Proton, Neutron
 
 def __init(self, valeur):
 
-    self.atomes = utile.convertie_notation_vers_atomes(valeur) if isinstance(valeur, str) else valeur
+    self.atomes = (
+        utile.convertie_notation_vers_atomes(valeur) 
+        if isinstance(valeur, str) else valeur
+    )
 
     if len(self.atomes) < 2:
         raise Exception("Une Molécule doit être composée de plusieurs atome.")
@@ -50,20 +55,39 @@ def __init(self, valeur):
     self.électron = sum(atome.électron for atome in self.atomes)
 
     self.masse = sum(atome.masse for atome in self.atomes)
-    self.masse_moléculaire_relative = sum(atome.masse_atomique_relative for atome in self.atomes)
+    self.masse_moléculaire_relative = sum(
+        atome.masse_atomique_relative 
+        for atome in self.atomes
+    )
 
 Molécule.__init__ = __init
 
 
 def __str(self):
 
-    return  (   "Molécule %s" % self.notation()
-            +("\n Proton(s): %s" % self.proton if utile.params.proton else '')
-            +("\n Neutron(s): %s" % self.neutron if utile.params.neutron else '')
-            +("\n Electron(s): %s" % self.électron if utile.params.électron else '')
-            +("\n Masse: %s" % self.masse if utile.params.masse else '')
-            +("\n Masse moléculaire relative: %s" % self.masse_moléculaire_relative if utile.params.masse_relative else '')
-            )
+    return (
+        "Molécule %s" % self.notation()
+        + (
+            "\n Proton(s): %s" % self.proton
+            if utile.params.proton else ''
+        )
+        + (
+            "\n Neutron(s): %s" % self.neutron
+            if utile.params.neutron else ''
+        )
+        + (
+            "\n Electron(s): %s" % self.électron
+            if utile.params.électron else ''
+        )
+        + (
+            "\n Masse: %s" % self.masse
+            if utile.params.masse else ''
+        )
+        + (
+            f"\n Masse moléculaire relative: {self.masse_moléculaire_relative}"
+            if utile.params.masse_relative else ''
+        )
+    )
 
 Molécule.__str__ = __str
 
@@ -89,7 +113,9 @@ def __add(self, obj):
         return Molécule(atomes)
 
     else:
-        raise Exception("Type '%s' non compatible avec type 'Molécule'." % type(obj))
+        raise Exception(
+            "Objet '%s' non compatible avec objet 'Molécule'." % type(obj)
+        )
 
 Molécule.__add__ = __add
 
@@ -116,7 +142,9 @@ def __sub(self, obj):
         return Molécule(atomes)
 
     else:
-        raise Exception("Type '%s' non compatible avec type 'Molécule'." % type(obj))
+        raise Exception(
+            "Objet '%s' non compatible avec objet 'Molécule'." % type(obj)
+        )
 
 Molécule.__sub__ = __sub
 

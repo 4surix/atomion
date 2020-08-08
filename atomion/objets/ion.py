@@ -36,6 +36,11 @@ Retours
         Différence entre le nombre de proton et d'électron
     .charge:str
         Charges électrique de l'ion
+
+    .notation()
+    .notation_symbole()
+    .notation_couche()
+    .notation_configuration()
 """
 
 from .. import utile
@@ -86,7 +91,9 @@ def __add(self, obj):
         return Ion(self.proton + obj.valeur)
 
     else:
-        raise Exception("Type '%s' non compatible avec type 'Atome'." % type(obj))
+        raise Exception(
+            "Objet '%s' non compatible avec objet 'Ion'." % type(obj)
+        )
 
 Ion.__add__ = __add
 
@@ -103,7 +110,9 @@ def __sub(self, obj):
         return Atome(self.proton - obj.valeur)
 
     else:
-        raise Exception("Type '%s' non compatible avec type 'Atome'." % type(obj))
+        raise Exception(
+            "Objet '%s' non compatible avec objet 'Ion'." % type(obj)
+        )
 
 Ion.__sub__ = __sub
 
@@ -115,17 +124,45 @@ Ion.__isub__ = __isub
 
 
 def __str(self): 
-    return  (  "Ion %s" % self.notation()
-            +("\n Elément: %s" % self.élément[utile.params.langue] if utile.params.élément else '')
-            +("\n Catégorie: %s" % self.catégorie[utile.params.langue] if utile.params.catégorie else '')
-            +("\n Proton(s): %s" % self.proton if utile.params.proton else '')
-            +("\n Neutron(s): %s" % self.neutron if utile.params.neutron else '')
-            +("\n Electron(s): %s" % self.électron if utile.params.électron else '')
-            +("\n Masse: %s" % self.masse if utile.params.masse else '')
-            +("\n Masse atomique relative: %s" % self.masse_atomique_relative if utile.params.masse_relative else '')
-            +("\n Couche électronique: %s" % self.notation_couche() if utile.params.couches else '')
-            +("\n Configuration électronique: %s" % self.notation_configuration() if utile.params.configuration else '')
-            )
+    return (
+        "Ion %s" % self.notation()
+        + (
+            "\n Elément: %s" % self.élément[utile.params.langue] 
+            if utile.params.élément else ''
+        )
+        + (
+            "\n Catégorie: %s" % self.catégorie[utile.params.langue] 
+            if utile.params.catégorie else ''
+        )
+        + (
+            "\n Proton(s): %s" % self.proton 
+            if utile.params.proton else ''
+        )
+        + (
+            "\n Neutron(s): %s" % self.neutron 
+            if utile.params.neutron else ''
+        )
+        + (
+            "\n Electron(s): %s" % self.électron 
+            if utile.params.électron else ''
+        )
+        + (
+            "\n Masse: %s" % self.masse 
+            if utile.params.masse else ''
+        )
+        + (
+            "\n Masse atomique relative: %s" % self.masse_atomique_relative
+            if utile.params.masse_relative else ''
+        )
+        + (
+            "\n Couche électronique: %s" % self.notation_couche() 
+            if utile.params.couches else ''
+        )
+        + (
+            "\n Configuration électronique: %s" % self.notation_configuration()
+            if utile.params.configuration else ''
+        )
+    )
 
 Ion.__str__ = __str
 
@@ -169,33 +206,6 @@ def notation_symbole(self, A=True, Z=True):
 Ion.notation_symbole = notation_symbole
 
 
-def notation_couche(self):
-    couches = [
-        ''.join(
-            utile.exposants[int(num)] 
-            for num in str(électron)
-        )
-        for électron in self.couches
-    ]
-    return ' '.join('(%s)%s' % r for r in zip(utile.notations_couche, couches))
+Ion.notation_couche = utile.notation_couche
 
-Ion.notation_couche = notation_couche
-
-
-def notation_configuration(self):
-    return ' '.join(
-        '%s%s' % (
-            notation, 
-            ''.join(
-                utile.exposants[int(num)] 
-                for num in str(électron)
-            )
-        )
-        for notation, électron in zip(
-            utile.notation_configuration_ion, 
-            self.configuration
-        ) 
-        if électron
-    )
-
-Ion.notation_configuration = notation_configuration
+Ion.notation_configuration = utile.notation_configuration
