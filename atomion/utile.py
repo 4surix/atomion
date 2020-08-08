@@ -493,40 +493,43 @@ def verif_stable(molécule) -> None:
 
         for i in range(len(charges)):
 
-            if not charges[i] or i == I:
+            if (not charges[I] 
+            or  not charges[i] 
+            or  i == I):
                 continue
 
-            if charges[i] > 2:
+            if charges[i] == 4:
                 
-                if charges[I] > 2:
-                    charges[I] -= 2
-                    charges[i] -= 2
+                if charges[I] == 4:
+                    charges[I] -= 3
+                    charges[i] -= 3
 
                 else:
-                    charges[I] = 0
                     charges[i] -= charges[I]
+                    charges[I] = 0
 
             else:
 
-                if charges[I] > 2:
+                if charges[I] == 4:
                     charges[I] -= charges[i]
-                    charges[i] -= charges[i]
+                    charges[i] = 0
 
                 else:
-
-                    if charges[I] > charges[i]:
-                        charge = charges[i]
-                    else:
-                        charge = charges[I]
+                    charge = min(charges[i], charges[I])
 
                     charges[I] -= charge
                     charges[i] -= charge
+
+            break
 
 
     if any(charges):
         # Il faut que toute les charges soit égal à 0
         #   sinon ce n'est pas stable.
-        raise Exception("Votre molécule %s n'est pas stable !" % molécule.notation())
+        raise Exception(
+            f"Votre molécule {molécule.notation()} n'est pas stable !"
+        )
+
 
 # Méthodes Atome/Ion
 
