@@ -10,7 +10,7 @@ Atome('H')
 Ion('H')
 
 # Créer une molécule
-Molécule('CH4')
+Molecule('CH4')
 
 
 ### Conversation
@@ -30,36 +30,60 @@ cuivre = Atome(ion_cuivre)
 Atome('C') + Proton(3) == Atome('F')
 
 # Addition d'atome donne une molécule
-Atome('O') + Atome('O') == Molécule('O2')
+Atome('O') + Atome('O') == Molecule('O2')
 
 # Multiplier un atome donne une molécule
-Atome('O') * 2 == Molécule('O2')
-
+if params.calculatrice:
+    # Utilisez `mul` sur calculatrice :
+    from atomion.utile import mul
+    mul(Atome('O'), 2) == Molecule('O2')
+else:
+    # Sur Python normal :
+    Atome('O') * 2 == Molecule('O2')
 
 # Addition de molécule
-Molécule('CO2') + Molécule('CH4') == Molécule('C2O2H4')
-
+Molecule('CO2') + Molecule('CH4') == Molecule('C2O2H4')
 
 # Ajout d'un atome à une molécule
-Molécule('C2H4') + Atome('C') == Molécule('C3H4')
+Molecule('C2H4') + Atome('C') == Molecule('C3H4')
 
 # Suppression d'un atome à une molécule
-Molécule('C2H4') - Atome('C') == Molécule('CH4')
+Molecule('C2H4') - Atome('C') == Molecule('CH4')
+
+
+### Raccourcis
+
+from atomion.raccourcis import *
+
+C + Proton(3) == F
+
+O + O == O2
+
+if params.calculatrice:
+    mul(O, 2) == O2
+else:
+    O * 2 == O2
+
+CO2 + CH4 == C2O2H4
+
+C2H4 + C == C3H4
+
+C2H4 - C == CH4
 
 
 ### Gestion des erreurs
 
-try: molécule = Molécule('H3')
+try: molecule = Molecule('H3')
 except exception.MoleculeInstable:
-	molécule = Molécule('H2')
+    molecule = Molecule('H2')
 
 try: carbone = Atome('Carbone')
 except exception.ValeurIncorrecte:
-	carbone = Atome('C')
+    carbone = Atome('C')
 
 try: oxygene = carbone + 2
 except exception.Incompatible:
-	oxygene = carbone + Proton(2)
+    oxygene = carbone + Proton(2)
 
 
 ### Informations
@@ -74,10 +98,10 @@ print('\n--- Ions ---\n')
 
 print(Ion('K'))
 
-# Pour les molécules
-print('\n--- Molécules ---\n')
+# Pour les Molecules
+print('\n--- Molecules ---\n')
 
-print(Molécule('O2'))
+print(Molecule('O2'))
 
 
 ### Démonstration
@@ -86,7 +110,7 @@ print(Molécule('O2'))
 print('\n--- Nombre électron suivant masse ---\n')
 
 carbone = Atome('C')
-demo = carbone.demonstration(recup='électron', avec='masse')
+demo = carbone.demonstration(recup='electron', avec='masse')
 print(demo)
 
 # Récupérer le nombre de neutron suivant le nombre de proton
