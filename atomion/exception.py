@@ -5,7 +5,7 @@ class Incompatible(Exception):
 
 		self.description = (
 			"Objet '%s' non compatible avec objet '%s'."
-			% (objet_1.__class__.__name__, objet_2.__class__.__name__)
+			% (type(objet_1), type(objet_2))
 		)
 
 	def __str__(self):
@@ -18,7 +18,7 @@ class MoleculeInstable(Exception):
 	def __init__(self, molecule):
 
 		self.description = (
-			f"La molécule '{molecule.notation()}' est instable !"
+			"La molécule '%s' est instable !" % molecule.notation()
 		)
 
 	def __str__(self):

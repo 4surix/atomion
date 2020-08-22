@@ -20,16 +20,16 @@ class Electron:
 
 class Atome:
 
-    __slots__ = ('élément', 'symbole', 'catégorie',
-                 'proton', 'neutron', 'nucléon', 'électron', 
+    __slots__ = ('element', 'symbole', 'categorie',
+                 'proton', 'neutron', 'nucleon', 'electron', 
                  'masse', 'masse_atomique_relative', 
                  'configuration', 'couches')
 
 
 class Ion:
 
-    __slots__ = ('élément', 'symbole', 'catégorie', 
-                 'proton', 'neutron', 'électron', 'nucléon',
+    __slots__ = ('element', 'symbole', 'categorie', 
+                 'proton', 'neutron', 'electron', 'nucleon',
                  'masse', 'masse_atomique_relative',
                  'configuration', 'couches', 
                  'diff', 'charge')
@@ -37,8 +37,8 @@ class Ion:
 
 ### 
 
-class Molécule:
+class Molecule:
 
     __slots__ = ('atomes', 
-                 'proton', 'neutron', 'électron', 
-                 'masse', 'masse_moléculaire_relative')
+                 'proton', 'neutron', 'electron', 
+                 'masse', 'masse_moleculaire_relative')

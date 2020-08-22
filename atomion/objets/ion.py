@@ -17,14 +17,14 @@ valeur
 Retours
 
 :Ion
-    .élément:str
+    .element:str
     .symbole:str
-    .catégorie:str
+    .categorie:str
 
     .proton:int
     .neutron:int
-    .électron:int
-    .nucléon:int
+    .electron:int
+    .nucleon:int
 
     .masse:float
     .masse_atomique_relative:float
@@ -46,10 +46,10 @@ Retours
 from .. import utile
 from .. import exception
 
-from .base import Molécule, Atome, Ion, Electron, Proton, Neutron
+from .base import Molecule, Atome, Ion, Electron, Proton, Neutron
 
 
-def __init(self, valeur=1, électron=0, neutron=None):
+def __init(self, valeur=1, electron=0, neutron=None):
 
     self.neutron = neutron
 
@@ -59,32 +59,31 @@ def __init(self, valeur=1, électron=0, neutron=None):
     drn_couche = self.couches[-1]
 
     if 0 < drn_couche < 5:
-        self.électron = self.proton - drn_couche
+        self.electron = self.proton - drn_couche
         self.charge = '+'
         del self.couches[-1]
 
     elif 4 < drn_couche < 8:
-        self.électron = self.proton + (8 - drn_couche)
+        self.electron = self.proton + (8 - drn_couche)
         self.charge = '-'
         self.couches[-1] = 8
 
     else:
         raise exception.ValeurIncorrecte(
-            "Un gaz noble (2 ou 8 sur sa dernière couche)"
-            + " ne peut pas devenir un Ion."
+            "Un gaz noble ne peut pas devenir un Ion."
         )
 
 
     if self.neutron is None:
         self.neutron = round(self.masse_atomique_relative) - self.proton
 
-    self.diff = abs(self.proton - self.électron)
+    self.diff = abs(self.proton - self.electron)
 
     self.masse = utile.get_masse(self)
 
-    self.nucléon = self.proton + self.neutron
+    self.nucleon = self.proton + self.neutron
 
-    self.configuration = utile.configuration_électronique(self)
+    self.configuration = utile.configuration_electronique(self)
 
 Ion.__init__ = __init
 
@@ -124,15 +123,15 @@ Ion.__isub__ = __isub
 
 
 def __str(self): 
-    return (
+    str__ = (
         "Ion %s" % self.notation()
         + (
-            "\n Elément: %s" % self.élément[utile.params.langue] 
-            if utile.params.élément else ''
+            "\n Elément: %s" % self.element[utile.params.langue] 
+            if utile.params.element else ''
         )
         + (
-            "\n Catégorie: %s" % self.catégorie[utile.params.langue] 
-            if utile.params.catégorie else ''
+            "\n Catégorie: %s" % self.categorie[utile.params.langue] 
+            if utile.params.categorie else ''
         )
         + (
             "\n Proton(s): %s" % self.proton 
@@ -143,8 +142,8 @@ def __str(self):
             if utile.params.neutron else ''
         )
         + (
-            "\n Electron(s): %s" % self.électron 
-            if utile.params.électron else ''
+            "\n Electron(s): %s" % self.electron 
+            if utile.params.electron else ''
         )
         + (
             "\n Masse: %s" % self.masse 
@@ -162,6 +161,12 @@ def __str(self):
             "\n Configuration électronique: %s" % self.notation_configuration()
             if utile.params.configuration else ''
         )
+    )
+
+    return (
+        str__ if not utile.params.calculatrice
+        else
+            str__.replace('è', 'e').replace('é', 'e')
     )
 
 Ion.__str__ = __str
@@ -187,20 +192,33 @@ Ion.notation = notation
 
 def notation_symbole(self, A=True, Z=True):
     return "%s%s%s%s%s" % (
-        ''.join(
-            utile.exposants[int(num)] 
-            for num in str(self.proton + self.neutron)
-        ) if A else '',
-        ''.join(
-            utile.sous_exposants[int(num)] 
-            for num in str(self.proton)
-        ) if Z else '',
-        self.symbole,
-        ''.join(
-            utile.exposants[int(num)] 
-            for num in str(self.diff)
-        ),
-        {'-':'⁻', '+':'⁺'}.get(self.charge)
+        '' if not A or utile.params.calculatrice
+        else
+            ''.join(
+                utile.exposants[int(num)] 
+                for num in str(self.proton + self.neutron)
+            )
+        ,
+        '' if not Z or utile.params.calculatrice
+        else
+            ''.join(
+                utile.sous_exposants[int(num)] 
+                for num in str(self.proton)
+            )
+        ,
+        self.symbole
+        ,
+        nbr if utile.params.calculatrice
+        else
+            ''.join(
+                utile.exposants[int(num)] 
+                for num in str(self.diff)
+            )
+        ,
+        {
+            '-': '⁻' if not utile.params.calculatrice else '-',
+            '+': '⁺' if not utile.params.calculatrice else '+'
+        }.get(self.charge)
     )
 
 Ion.notation_symbole = notation_symbole

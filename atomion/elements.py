@@ -4,7 +4,7 @@
 #   https://github.com/Bowserinator/Periodic-Table-JSON
 # J'ai rajoutée moi-même la partie fr.
 
-éléments = [
+elements = [
     {
         "name": {
             "en": "Hydrogen",

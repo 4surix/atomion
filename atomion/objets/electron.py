@@ -1,17 +1,17 @@
 """
 
-Objet d'un nombre d'électron servant pour les opérations/
+Objet d'un nombre d'électron servant pour les opérations.
 
 --------
 Augument
 
 valeur
     :Atome
-        Récupére le nombre d'éléctron de l'atome.
+        Récupére le nombre d'électron de l'atome.
     :Ion
-        Récupére le nombre d'éléctron de l'ion.
+        Récupére le nombre d'électron de l'ion.
     :int
-        Définie le nombre d'éléctron.
+        Définie le nombre d'électron.
 
 -------
 Retours
@@ -23,13 +23,13 @@ Retours
 
 from .. import exception
 
-from .base import Molécule, Atome, Ion, Electron, Proton, Neutron
+from .base import Molecule, Atome, Ion, Electron, Proton, Neutron
 
 
 def __init(self, valeur=1):
 
     if isinstance(valeur, (Atome, Ion)):
-        self.valeur = valeur.électron
+        self.valeur = valeur.electron
 
     elif isinstance(valeur, int):
         self.valeur = valeur

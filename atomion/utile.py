@@ -1,20 +1,41 @@
 
 from . import irregularites
 from . import exception
-from .elements import éléments
-from .objets.base import Molécule, Atome, Ion, Electron, Proton, Neutron
+from .elements import elements
+from .objets.base import Molecule, Atome, Ion, Electron, Proton, Neutron
+
+
+try: enumerate = enumerate; Atome('C') * 2
+except:
+
+    is_calculatrice = True
+
+    def enumerate(iterable, index=1):
+        for valeur in iterable:
+            yield index, valeur
+            index += 1
+
+    def mul(inicial, *elements):
+        for element in elements:
+            inicial = inicial.__mul__(element)
+        return inicial
+
+else:
+    is_calculatrice = False
 
 
 ### Paramètres
 
 class params:
+    calculatrice = is_calculatrice
+
     langue = 'fr'
-    élément = True
-    catégorie = True
+    element = True
+    categorie = True
     
     proton = True
     neutron = True
-    électron = True
+    electron = True
 
     masse = True
     masse_relative = True
@@ -32,7 +53,7 @@ class params:
 
 u = 1.660538921*(10**-27)
 
-masse_électron = 9.109*(10**-31)
+masse_electron = 9.109*(10**-31)
 masse_proton = 1.672649*(10**-27)
 masse_neutron = 1.67493*(10**-27)
 
@@ -110,34 +131,34 @@ fonctions_configuration_atome = (
 ) 
 
 fonctions_get = {
-    # électron(s) = (Masse de l'Atome - (Masse des protons + Masse des neutrons)) / Masse d'un életron
-    'électron': lambda obj: round(
+    # electron(s) = (Masse de l'Atome - (Masse des protons + Masse des neutrons)) / Masse d'un eletron
+    'electron': lambda obj: round(
         (
             obj.masse_atomique_relative * u
             - (
                 (masse_neutron * obj.neutron)
                 + (masse_proton * obj.proton)
             )
-        ) / masse_électron
+        ) / masse_electron
     ),
 
-    # Proton(s) = (Masse de l'Atome - (Masse des électrons + Masse des neutrons)) / Masse d'un proton
+    # Proton(s) = (Masse de l'Atome - (Masse des electrons + Masse des neutrons)) / Masse d'un proton
     'proton': lambda obj: round(
         (
             obj.masse_atomique_relative * u
             - (
-                (masse_électron * obj.électron)
+                (masse_electron * obj.electron)
                 + (masse_neutron * obj.neutron)
             )
         ) / masse_proton
     ),
 
-    # Neuton(s) = (Masse de l'Atome - (Masse des électrons + Masse des protons)) / Masse d'un neutron
+    # Neuton(s) = (Masse de l'Atome - (Masse des electrons + Masse des protons)) / Masse d'un neutron
     'neutron': lambda obj: round(
         (
             obj.masse_atomique_relative * u
             - (
-                (masse_électron * obj.électron)
+                (masse_electron * obj.electron)
                 + (masse_proton * obj.proton)
             )
         ) / masse_neutron
@@ -166,13 +187,13 @@ sous_exposants = tuple('₀₁₂₃₄₅₆₇₈₉')
 
 ### Utitaire
 
-def configuration_électronique(élément) -> list:
+def configuration_electronique(element) -> list:
     """Génére la configuration électronique d'un atome/ion.
 
     ---------
     Arguments
 
-    élément
+    element
         :Atome
         :Ion
 
@@ -185,20 +206,20 @@ def configuration_électronique(élément) -> list:
 
     couches = []
 
-    électrons = élément.électron
-    protons = élément.proton
+    electrons = element.electron
+    protons = element.proton
 
-    if isinstance(élément, Atome):
+    if isinstance(element, Atome):
         fonctions = fonctions_configuration_atome
-    elif isinstance(élément, Ion):
+    elif isinstance(element, Ion):
         fonctions = fonctions_configuration_ion
 
 
     for i in range(5):
-        couche, électrons = fonctions[i](électrons)
+        couche, electrons = fonctions[i](electrons)
         couches.extend(couche)
 
-        if électrons <= 0:
+        if electrons <= 0:
             break
 
 
@@ -240,9 +261,9 @@ def get_info(obj, valeur) -> None:
     None
     """
 
-    if valeur.__class__ == obj.__class__:
+    if isinstance(valeur, type(obj)):
         raise exception.ValeurIncorrecte(
-            "Cette objet est déjà un '%s' !" % obj.__class__.__name__
+            "Cette objet est déjà un '%s' !" % type(obj)
         )
 
     elif isinstance(valeur, (Ion, Atome)):
@@ -252,13 +273,13 @@ def get_info(obj, valeur) -> None:
 
     elif isinstance(valeur, int):
 
-        if valeur >= len(éléments):
+        if valeur >= len(elements):
             raise exception.ValeurIncorrecte(
                 "Le nombre de proton doit exister !"
             )
         elif valeur <= 0:
             raise exception.ValeurIncorrecte(
-                "Le nombre de proton doit être supérieur à zéro !"
+                "Le nombre de proton doit être superieur à zero !"
             )
         else:
             obj.proton = valeur
@@ -267,46 +288,49 @@ def get_info(obj, valeur) -> None:
 
         obj.proton = None
 
-        for proton, élément in enumerate(éléments):
-            if élément['symbol'] == valeur:
-                obj.proton = proton+1
+        proton = 1
+
+        for element in elements:
+            if element['symbol'] == valeur:
+                obj.proton = proton
                 break
+            proton += 1
 
         if not obj.proton:
             raise exception.ValeurIncorrecte(
-                f"Le symbole '{valeur}'"
+                "Le symbole '%s'" % valeur
                 + "ne correspond à aucun élément existant !"
             )
 
 
-    élément = éléments[obj.proton-1]
+    element = elements[obj.proton-1]
 
     (
-        obj.élément, 
+        obj.element, 
         obj.symbole, 
-        obj.catégorie,
+        obj.categorie,
         obj.couches, 
         obj.masse_atomique_relative
 
         ) = (
 
-        élément['name'],
-        élément['symbol'],
-        élément['category'],
-        élément['shells'][:],
-        élément['atomic_mass']
+        element['name'],
+        element['symbol'],
+        element['category'],
+        element['shells'][:],
+        element['atomic_mass']
     )
 
 
 def get_value(item:str, obj):
-    """Récupére une valeur d'un item.
+    """Recupere une valeur d'un item.
 
     ---------
     Arguments
 
     item
         :str
-            'électron'
+            'electron'
                 Récupére les électrons de l'objet
             'proton'
                 Récupére les protons de l'objet
@@ -320,7 +344,7 @@ def get_value(item:str, obj):
     -------
     Retours
 
-    Cela dépend.
+    Cela depend.
     """
     return fonctions_get.get(item, lambda x:None)(obj)
 
@@ -344,7 +368,7 @@ def get_masse(obj) -> float:
     return (
         (obj.proton*masse_proton) 
         + (obj.neutron*masse_neutron)
-        + (obj.électron*masse_électron)
+        + (obj.electron*masse_electron)
     )
 
 
@@ -369,7 +393,7 @@ def convertie_notation_vers_atomes(data:str) -> list:
     atomes = []
     nbr = ''
 
-    in_molécule = False
+    in_molecule = False
 
     chiffres = list('0123456789')
 
@@ -377,13 +401,13 @@ def convertie_notation_vers_atomes(data:str) -> list:
     for carac in data.strip():          
 
         if carac == ')':
-            # in_molécule == ['C', 'O', '2'] -> in_molécule == 'CO2'
-            in_molécule = ''.join(in_molécule)
+            # in_molecule == ['C', 'O', '2'] -> in_molecule == 'CO2'
+            in_molecule = ''.join(in_molecule)
 
 
-        elif in_molécule.__class__ == list:
-            # (CO2)3 -> in_molécule == ['C', 'O', '2']
-            in_molécule.append(carac)
+        elif isinstance(in_molecule, list):
+            # (CO2)3 -> in_molecule == ['C', 'O', '2']
+            in_molecule.append(carac)
 
 
         elif carac == '(':
@@ -395,28 +419,28 @@ def convertie_notation_vers_atomes(data:str) -> list:
                 atome = ''
                 nbr = ''
 
-            if in_molécule.__class__ == str:
+            if isinstance(in_molecule, str):
                 # CO2(H2)4(Ag7)2
                 #         ^
                 atomes.extend(
-                    convertie_notation_vers_atomes(in_molécule) 
+                    convertie_notation_vers_atomes(in_molecule) 
                     * (int(nbr) if nbr else 1)
                 )
                 nbr = ''
 
-            in_molécule = []
+            in_molecule = []
 
 
         elif carac.isupper():
 
-            if in_molécule:
+            if in_molecule:
                 # (H2)2Ca
                 #      ^
                 atomes.extend(
-                    convertie_notation_vers_atomes(in_molécule) 
+                    convertie_notation_vers_atomes(in_molecule) 
                     * (int(nbr) if nbr else 1)
                 )
-                in_molécule = False
+                in_molecule = False
                 nbr = ''
 
             if atome:
@@ -445,26 +469,26 @@ def convertie_notation_vers_atomes(data:str) -> list:
     if atome:
         atomes.extend([Atome(atome)] * (int(nbr) if nbr else 1))
 
-    elif in_molécule.__class__ == str:
+    elif isinstance(in_molecule, str):
         atomes.extend(
-            convertie_notation_vers_atomes(in_molécule) 
+            convertie_notation_vers_atomes(in_molecule) 
             * (int(nbr) if nbr else 1)
         )
-        in_molécule = False
+        in_molecule = False
         nbr = ''
 
 
     return atomes
 
 
-def verif_stable(molécule) -> None:
+def verif_stable(molecule) -> None:
     """Vérifie si une molécule est stable en vérifiant son nombre de liaison.
 
     ---------
     Arguments
 
-    molécule
-        :Molécule
+    molecule
+        :Molecule
 
     ---------
     Exception
@@ -481,17 +505,17 @@ def verif_stable(molécule) -> None:
         (
             ion.diff 
             for ion in [
-                élément if élément.__class__ == Ion
+                element if isinstance(element, Ion)
                 else
-                    Ion(élément)
-                for élément in molécule.atomes
+                    Ion(element)
+                for element in molecule.atomes
             ]
         ),
         reverse=True
     )
 
 
-    index_dernier_atome_liée = None
+    index_dernier_atome_liee = None
 
     range_charges = range(len(charges))
 
@@ -515,12 +539,12 @@ def verif_stable(molécule) -> None:
                     # Evite qu'un atome subit 2 liaisons de suite.
                     # Je ne commprend pas trop comment ça fonctionne
                     #    mais ça fonctionne.
-                    or i == index_dernier_atome_liée
+                    or i == index_dernier_atome_liee
                 )
             ):
                 continue
 
-            index_dernier_atome_liée = i
+            index_dernier_atome_liee = i
 
             if charges[i] == 4:
                 
@@ -548,36 +572,48 @@ def verif_stable(molécule) -> None:
     if any(charges):
         # Il faut que toute les charges soit égal à 0
         #   sinon ce n'est pas stable.
-        raise exception.MoleculeInstable(molécule)
+        raise exception.MoleculeInstable(molecule)
 
 
 # Méthodes Atome/Ion
 
 def notation_couche(self):
-    couches = [
-        ''.join(
-            exposants[int(num)] 
-            for num in str(électron)
-        )
-        for électron in self.couches
-    ]
+
     return ' '.join(
         '(%s)%s' % infos
-        for infos in zip(notations_couche, couches)
+        for infos in zip(
+            notations_couche,
+            (
+                (
+                    electron if params.calculatrice
+                    else
+                        ''.join(
+                            exposants[int(num)] 
+                            for num in str(electron)
+                        )
+                )
+                for electron in self.couches
+            )
+        )
     )
 
 def notation_configuration(self):
+
     return ' '.join(
         '%s%s' % (
-            notation, 
-            ''.join(
-                exposants[int(num)] 
-                for num in str(électron)
+            notation,
+            (
+                electron if params.calculatrice
+                else
+                    ''.join(
+                        exposants[int(num)] 
+                        for num in str(electron)
+                    )
             )
         )
-        for notation, électron in zip(
+        for notation, electron in zip(
             notation_configuration_atome, 
             self.configuration
         )
-        if électron
+        if electron
     )

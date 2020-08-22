@@ -1,42 +1,40 @@
 """
 
-Objet molécule.
+Objet Molecule.
 
 ---------
 Arguments
 
 valeur
     :str
-        Notation de la Molécule qui sera décodée.
+        Notation de la molécule qui sera decodée.
 
 ------
 Retour
 
-:Molécule
+:Molecule
     .atomes:list
-        Liste de tout les :Atomes composant la molécule.
+        Liste de tout les :Atomes composant la Molecule.
 
     .proton:int
         Nombre total de proton dans la molécule.
     .neutron:int
         Nombre total de neutron dans la molécule.
-    .électron:int
+    .electron:int
         Nombre total d'électron dans la molécule.
-    .nucléon:int
+    .nucleon:int
         Nombre total de nucléon dans la molécule.
 
     .masse:float
-    .masse_moléculaire_relative:float
+    .masse_moleculaire_relative:float
 
     .notation()
 """
 
-import copy
-
 from .. import utile
 from .. import exception
 
-from .base import Molécule, Atome, Ion, Electron, Proton, Neutron
+from .base import Molecule, Atome, Ion, Electron, Proton, Neutron
 
 
 def __init(self, valeur):
@@ -48,27 +46,27 @@ def __init(self, valeur):
 
     if len(self.atomes) < 2:
         raise exception.ValeurIncorrecte(
-            "Une Molécule doit être composée de plusieurs atomes."
+            "Une molécule doit être composée de plusieurs atomes."
         )
 
     utile.verif_stable(self)
 
     self.proton = sum(atome.proton for atome in self.atomes)
     self.neutron = sum(atome.neutron for atome in self.atomes)
-    self.électron = sum(atome.électron for atome in self.atomes)
+    self.electron = sum(atome.electron for atome in self.atomes)
 
     self.masse = sum(atome.masse for atome in self.atomes)
-    self.masse_moléculaire_relative = sum(
+    self.masse_moleculaire_relative = sum(
         atome.masse_atomique_relative 
         for atome in self.atomes
     )
 
-Molécule.__init__ = __init
+Molecule.__init__ = __init
 
 
 def __str(self):
 
-    return (
+    str__ = (
         "Molécule %s" % self.notation()
         + (
             "\n Proton(s): %s" % self.proton
@@ -79,79 +77,86 @@ def __str(self):
             if utile.params.neutron else ''
         )
         + (
-            "\n Electron(s): %s" % self.électron
-            if utile.params.électron else ''
+            "\n Electron(s): %s" % self.electron
+            if utile.params.electron else ''
         )
         + (
             "\n Masse: %s" % self.masse
             if utile.params.masse else ''
         )
         + (
-            f"\n Masse moléculaire relative: {self.masse_moléculaire_relative}"
+            "\n Masse moléculaire relative: %s"
+            % (self.masse_moleculaire_relative)
             if utile.params.masse_relative else ''
         )
     )
 
-Molécule.__str__ = __str
+    return (
+        str__ if not utile.params.calculatrice
+        else
+            str__.replace('è', 'e').replace('é', 'e')
+    )
+
+Molecule.__str__ = __str
 
 
 def __repr(self):
     return self.notation()
 
-Molécule.__repr__ = __repr
+Molecule.__repr__ = __repr
 
 
 def __add(self, obj):
 
-    if isinstance(obj, Molécule):
+    if isinstance(obj, Molecule):
 
-        atomes = copy.deepcopy(self.atomes)
+        atomes = self.atomes[:]
         atomes.extend(obj.atomes)
-        return Molécule(atomes)
+        return Molecule(atomes)
 
     elif isinstance(obj, Atome):
 
-        atomes = copy.deepcopy(self.atomes)
+        atomes = self.atomes[:]
         atomes.append(obj)
-        return Molécule(atomes)
+        return Molecule(atomes)
 
     else:
         raise exception.Incompatible(self, obj)
 
-Molécule.__add__ = __add
+Molecule.__add__ = __add
 
 
 def __iadd(self, obj):
     return self + obj
 
-Molécule.__iadd__ = __iadd
+Molecule.__iadd__ = __iadd
 
 
 def __sub(self, obj):
 
-    if isinstance(obj, Molécule):
+    if isinstance(obj, Molecule):
 
-        atomes = copy.deepcopy(self.atomes)
+        atomes = self.atomes[:]
         for atome in obj.atomes:
             atomes.remove(atome)
-        return Molécule(atomes)
+        return Molecule(atomes)
 
     elif isinstance(obj, Atome):
 
-        atomes = copy.deepcopy(self.atomes)
+        atomes = self.atomes[:]
         atomes.remove(obj)
-        return Molécule(atomes)
+        return Molecule(atomes)
 
     else:
         raise exception.Incompatible(self, obj)
 
-Molécule.__sub__ = __sub
+Molecule.__sub__ = __sub
 
 
 def __isub(self, obj):
     return self - obj
 
-Molécule.__isub__ = __isub
+Molecule.__isub__ = __isub
 
 
 def notation(self):
@@ -166,13 +171,17 @@ def notation(self):
 
     return ''.join(
         '%s%s' % (
-            atome, 
-            ''.join(
-                utile.sous_exposants[int(num)] 
-                for num in str(nbr)
-            ) if nbr != 1 else ''
-        ) 
+            atome,
+            '' if nbr == 1
+            else
+                nbr if not utile.params.calculatrice
+                else
+                    ''.join(
+                        utile.sous_exposants[int(num)] 
+                        for num in str(nbr)
+                    )
+        )
         for atome, nbr in atomes.items()
     )
 
-Molécule.notation = notation
+Molecule.notation = notation

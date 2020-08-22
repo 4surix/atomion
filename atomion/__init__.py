@@ -1,4 +1,6 @@
 # coding: utf-8
+# Python 3.6.2
+# ----------------------------------------------------------------------------
 
 """Module utilitaire pour les atomes, ions et molécules.
 
@@ -8,7 +10,7 @@ Ce module a pour but de manipuler des atomes, ions et molécules,
 Je suis très loin d'être proffesionelle dans ce domaine,
  donc il est fort probable qu'il y est des erreurs.
 
-Tout amélioration et suggestion sont la bienvenue.
+Toutes amélioration et suggestion sont la bienvenue.
 
 Lien du github : https://github.com/4surix/atomion
 """
@@ -17,10 +19,10 @@ Lien du github : https://github.com/4surix/atomion
 __version__ = '1.0.2'
 
 
-from .utile import params
-from . import exception
-
 from .objets import (
 	molecule, atome, ion, electron, proton, neutron, # Modules
-	Molécule, Atome, Ion, Electron, Proton, Neutron  # Objets
+	Molecule, Atome, Ion, Electron, Proton, Neutron  # Objets
 )
+
+from .utile import params
+from . import exceptions
