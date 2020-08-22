@@ -16,7 +16,7 @@ Lien du github : https://github.com/4surix/atomion
 """
 
 
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 
 from .objets import (
@@ -25,4 +25,4 @@ from .objets import (
 )
 
 from .utile import params
-from . import exceptions
+from . import exception
