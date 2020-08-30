@@ -74,7 +74,7 @@ C2H4 - C == CH4
 ### Gestion des erreurs
 
 try: molecule = Molecule('H3')
-except exception.MoleculeInstable:
+except exception.Instable:
     molecule = Molecule('H2')
 
 try: carbone = Atome('Carbone')
@@ -104,21 +104,10 @@ print('\n--- Molecules ---\n')
 print(Molecule('O2'))
 
 
-### Démonstration
+### Equilibrage d'équation
 
-# Récupérer le nombre d'électron suivant la masse
-print('\n--- Nombre électron suivant masse ---\n')
-
-carbone = Atome('C')
-demo = carbone.demonstration(recup='electron', avec='masse')
-print(demo)
-
-# Récupérer le nombre de neutron suivant le nombre de proton
-print('\n--- Nombre neutron suivant nombre proton ---\n')
-
-carbone = Atome('C')
-demo = carbone.demonstration(recup='neutron', avec='Z')
-print(demo)
+print(utile.equilibrage_equation_chimique('Cu2S + Cu2O -> Cu + SO2'))
+print(utile.equilibrage_equation_chimique('CH4 + H2O ->  CO2 + H2'))
 
 
 ### Fin

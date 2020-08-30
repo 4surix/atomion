@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Python 3.6.2
+# ----------------------------------------------------------------------------
+
 """
 
 Objet d'un nombre de neutron servant pour les opérations.
@@ -21,23 +25,27 @@ Retours
         Nombre de neutron
 """
 
+from . import base
+from .. import objets
 from .. import exception
 
-from .base import Molecule, Atome, Ion, Electron, Proton, Neutron
 
+class Neutron:
+    
+    __slots__ = ('valeur')
 
-def __init(self, valeur=1):
+    def __init__(self, valeur=1):
 
-    if isinstance(valeur, (Atome, Ion)):
-        self.valeur = valeur.neutron
+        if isinstance(valeur, (objets.Atome, objets.Ion)):
+            self.valeur = valeur.neutron
 
-    elif isinstance(valeur, int):
-        self.valeur = valeur
+        elif isinstance(valeur, int):
+            self.valeur = valeur
 
-    else:
-        raise exception.ValeurIncorrecte(
-            "Seulement les objets de type 'Atome', 'Ion' et 'int'"
-            + " peuvent être transformés en objet de type 'Neutron'."
-        )
+        else:
+            raise exception.ValeurIncorrecte(
+                "Seulement les objets de type 'Atome', 'Ion' et 'int'"
+                + " peuvent être transformés en objet de type 'Neutron'."
+            )
 
-Neutron.__init__ = __init
+base.Neutron = Neutron

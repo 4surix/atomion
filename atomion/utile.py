@@ -1,16 +1,24 @@
+# -*- coding: utf-8 -*-
+# Python 3.6.2
+# ----------------------------------------------------------------------------
+
 
 from . import irregularites
 from . import exception
 from .elements import elements
-from .objets.base import Molecule, Atome, Ion, Electron, Proton, Neutron
+from . import objets
 
 
-try: enumerate = enumerate; Atome('C') * 2
+### Verif si calculatrice
+
+try:
+    enumerate = enumerate
+    type('EssaieMul', (), {'__mul__': lambda self, objet: None}) * 2
 except:
 
     is_calculatrice = True
 
-    def enumerate(iterable, index=1):
+    def enumerate(iterable, index=0):
         for valeur in iterable:
             yield index, valeur
             index += 1
@@ -188,7 +196,9 @@ sous_exposants = tuple('₀₁₂₃₄₅₆₇₈₉')
 ### Utitaire
 
 def configuration_electronique(element) -> list:
-    """Génére la configuration électronique d'un atome/ion.
+    """
+
+    Génére la configuration électronique d'un atome/ion.
 
     ---------
     Arguments
@@ -209,9 +219,9 @@ def configuration_electronique(element) -> list:
     electrons = element.electron
     protons = element.proton
 
-    if isinstance(element, Atome):
+    if isinstance(element, objets.Atome):
         fonctions = fonctions_configuration_atome
-    elif isinstance(element, Ion):
+    elif isinstance(element, objets.Ion):
         fonctions = fonctions_configuration_ion
 
 
@@ -232,8 +242,10 @@ def configuration_electronique(element) -> list:
 
 
 def get_info(obj, valeur) -> None:
-    """Récupére les informations d'un atome grâce à son nombre de proton 
-         ou son symbole.
+    """
+
+    Récupére les informations d'un atome grâce à son nombre de proton
+      ou son symbole.
 
     ---------
     Arguments
@@ -266,7 +278,7 @@ def get_info(obj, valeur) -> None:
             "Cette objet est déjà un '%s' !" % type(obj)
         )
 
-    elif isinstance(valeur, (Ion, Atome)):
+    elif isinstance(valeur, (objets.Ion, objets.Atome)):
 
         obj.proton = valeur.proton
         obj.neutron = valeur.neutron
@@ -289,6 +301,8 @@ def get_info(obj, valeur) -> None:
         obj.proton = None
 
         proton = 1
+
+        valeur = valeur.strip()
 
         for element in elements:
             if element['symbol'] == valeur:
@@ -323,7 +337,9 @@ def get_info(obj, valeur) -> None:
 
 
 def get_value(item:str, obj):
-    """Recupere une valeur d'un item.
+    """
+
+    Recupere une valeur d'un item.
 
     ---------
     Arguments
@@ -350,7 +366,9 @@ def get_value(item:str, obj):
 
 
 def get_masse(obj) -> float:
-    """Récupére la masse de l'objet.
+    """
+
+    Récupére la masse de l'objet.
 
     ---------
     Arguments
@@ -373,7 +391,9 @@ def get_masse(obj) -> float:
 
 
 def convertie_notation_vers_atomes(data:str) -> list:
-    """Transforme un str en list d'atomes
+    """
+
+    Transforme un str en list d'atomes
 
     ---------
     Arguments
@@ -415,7 +435,7 @@ def convertie_notation_vers_atomes(data:str) -> list:
             if atome:
                 # CO2(H2)
                 #    ^
-                atomes.extend([Atome(atome)] * (int(nbr) if nbr else 1))
+                atomes.extend([objets.Atome(atome)] * (int(nbr) if nbr else 1))
                 atome = ''
                 nbr = ''
 
@@ -446,7 +466,7 @@ def convertie_notation_vers_atomes(data:str) -> list:
             if atome:
                 # CaAg
                 #   ^
-                atomes.extend([Atome(atome)] * (int(nbr) if nbr else 1))
+                atomes.extend([objets.Atome(atome)] * (int(nbr) if nbr else 1))
 
             atome = carac
             nbr = ''
@@ -467,7 +487,7 @@ def convertie_notation_vers_atomes(data:str) -> list:
     # Element restant
 
     if atome:
-        atomes.extend([Atome(atome)] * (int(nbr) if nbr else 1))
+        atomes.extend([objets.Atome(atome)] * (int(nbr) if nbr else 1))
 
     elif isinstance(in_molecule, str):
         atomes.extend(
@@ -481,14 +501,16 @@ def convertie_notation_vers_atomes(data:str) -> list:
     return atomes
 
 
-def verif_stable(molecule) -> None:
-    """Vérifie si une molécule est stable en vérifiant son nombre de liaison.
+def verif_stable(elements:list) -> bool:
+    """
+
+    Vérifie si des éléments sont stable 
+      en vérifiant leurs nombre de liaison.
 
     ---------
     Arguments
 
-    molecule
-        :Molecule
+    elements:list
 
     ---------
     Exception
@@ -505,10 +527,10 @@ def verif_stable(molecule) -> None:
         (
             ion.diff 
             for ion in [
-                element if isinstance(element, Ion)
+                element if isinstance(element, objets.IonMonoAtomique)
                 else
-                    Ion(element)
-                for element in molecule.atomes
+                    objets.IonMonoAtomique(element)
+                for element in elements
             ]
         ),
         reverse=True
@@ -568,11 +590,9 @@ def verif_stable(molecule) -> None:
                     charges[I] -= charge
                     charges[i] -= charge
 
-
-    if any(charges):
-        # Il faut que toute les charges soit égal à 0
-        #   sinon ce n'est pas stable.
-        raise exception.MoleculeInstable(molecule)
+    # Il faut que toute les charges soit égal à 0
+    #   sinon ce n'est pas stable.
+    return not any(charges)
 
 
 # Méthodes Atome/Ion
@@ -617,3 +637,137 @@ def notation_configuration(self):
         )
         if electron
     )
+
+
+### Equilibrage équation chimique
+
+def eec_analyse(partie):
+
+    info = []
+
+    for element in partie:
+
+        nombre_atomes = {}
+
+        for atome in (
+                element.atomes
+                if isinstance(element, objets.Molecule)
+                else
+                    [element]
+            ):
+
+            symbole = atome.symbole
+
+            if symbole not in nombre_atomes:
+                nombre_atomes[symbole] = 1
+            else:
+                nombre_atomes[symbole] += 1
+
+        info.append(nombre_atomes)
+
+    return info
+
+
+def eec_convertie(notation):
+
+    try: return objets.Molecule(notation, verif_stable=False)
+    except:
+        return objets.Atome(notation)
+
+
+def equilibrage_equation_chimique(equation):
+
+    partie_1, partie_2 = equation.split('->')
+
+    partie_1_molecules = [
+        eec_convertie(notation)
+        for notation in partie_1.split('+')
+    ]
+
+    partie_2_molecules = [
+        eec_convertie(notation)
+        for notation in partie_2.split('+')
+    ]
+
+    partie_1 = eec_analyse(partie_1_molecules)
+    partie_2 = eec_analyse(partie_2_molecules)
+
+    liste_symboles_atomes = {
+        symbole
+        for info in partie_1
+        for symbole in info
+    }
+
+    configuration = [
+        [1 for _ in range(len(partie_1))],
+        [1 for _ in range(len(partie_2))]
+    ]
+
+    equilibre = 0
+
+    nbr_liste_symboles_atomes = len(liste_symboles_atomes)
+
+    while equilibre != nbr_liste_symboles_atomes:
+
+        for symbole in liste_symboles_atomes:
+
+            nombre_total_p1 = sum(
+                info.get(symbole, 0) * configuration[0][i]
+                for i, info in enumerate(partie_1)
+            )
+
+            nombre_total_p2 = sum(
+                info.get(symbole, 0) * configuration[1][i]
+                for i, info in enumerate(partie_2)
+            )
+
+            if nombre_total_p1 < nombre_total_p2:
+
+                index = None
+                min_value = 2147483647
+
+                for i, info in enumerate(partie_1):
+                    value = info.get(symbole, 0) * configuration[0][i]
+
+                    if value and value < min_value:
+                        index = i
+                        min_value = value
+
+                configuration[0][index] += 1
+
+                equilibre = 0
+                break
+
+            elif nombre_total_p2 < nombre_total_p1:
+
+                index = None
+                min_value = 2147483647
+
+                for i, info in enumerate(partie_2):
+                    value = info.get(symbole, 0) * configuration[1][i]
+
+                    if value and value < min_value:
+                        index = i
+                        min_value = value
+
+                configuration[1][index] += 1
+
+                equilibre = 0
+                break
+
+            else:
+                equilibre += 1
+
+    return (
+        ' + '.join(
+            '%s%s' % (str(nbr) + ' ' if nbr != 1 else '', molecule.notation())
+            for nbr, molecule in zip(configuration[0], partie_1_molecules)
+        )
+        + ' -> '
+        + ' + '.join(
+            '%s%s' % (str(nbr) + ' ' if nbr != 1 else '', molecule.notation())
+            for nbr, molecule in zip(configuration[1], partie_2_molecules)
+        )
+    )
+
+eec = equilibrage_equation_chimique

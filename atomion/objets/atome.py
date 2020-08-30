@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Python 3.6.2
+# ----------------------------------------------------------------------------
+
 """
 
 Objet atome.
@@ -42,293 +46,197 @@ Atome
     .notation_configuration()
 """
 
+
+from typing import Union, Any, Optional
+
+
+from . import base
+from .base import (
+    Atome, Molecule,
+    Ion, IonMonoAtomique, IonPolyAtomique,
+    Electron, Proton, Neutron
+)
 from .. import utile
 from .. import exception
-
-from .base import Molecule, Atome, Ion, Electron, Proton, Neutron
-
-
-def __init(self, valeur=1, neutron=None):
-
-    self.neutron = neutron
-
-    utile.get_info(self, valeur)
-
-    self.electron = self.proton
-
-    if self.neutron is None:
-        self.neutron = round(self.masse_atomique_relative) - self.proton
-
-    self.masse = utile.get_masse(self)
-
-    self.nucleon = self.proton + self.neutron
-
-    self.configuration = utile.configuration_electronique(self)
-
-Atome.__init__ = __init
+from .. import objets
 
 
-def __add(self, obj):
-
-    if isinstance(obj, Proton):
-        return Atome(self.proton + obj.valeur)
-
-    elif isinstance(obj, Neutron):
-        return Atome(self.proton, self.neutron + obj.valeur)
-
-    elif isinstance(obj, Electron):
-        return Ion(self.proton, self.electron + obj.valeur)
-
-    elif isinstance(obj, Atome):
-        return Molecule([self, obj])
-
-    else:
-        raise exception.Incompatible(self, obj)
-
-Atome.__add__ = __add
-
-
-def __iadd(self, obj):
-    return self + obj
-
-Atome.__iadd__ = __iadd
-
-
-def __sub(self, obj):
-
-    if isinstance(obj, Proton):
-        return Atome(self.proton - obj.valeur)
-
-    elif isinstance(obj, Neutron):
-        return Atome(self.proton, self.neutron - obj.valeur)
-
-    elif isinstance(obj, Electron):
-        return Ion(self.proton, self.electron - obj.valeur)
-
-    else:
-        raise exception.Incompatible(self, obj)
-
-Atome.__sub__ = __sub
-
-
-def __isub(self, obj):
-    return self - obj
-
-Atome.__isub__ = __sub
-
-
-def __mul(self, obj):
-    return Molecule([self] * obj)
-
-Atome.__mul__ = __mul
-
-
-def __str(self):
-    str__ = (
-        "Atome %s" % self.notation()
-        + (
-            "\n Elément: %s" % self.element[utile.params.langue] 
-            if utile.params.element else ''
-        )
-        + (
-            "\n Catégorie: %s" % self.categorie[utile.params.langue] 
-            if utile.params.categorie else ''
-        )
-        + (
-            "\n Proton(s): %s" % self.proton 
-            if utile.params.proton else ''
-        )
-        + (
-            "\n Neutron(s): %s" % self.neutron 
-            if utile.params.neutron else ''
-        )
-        + (
-            "\n Electron(s): %s" % self.electron 
-            if utile.params.electron else ''
-        )
-        + (
-            "\n Masse: %s" % self.masse 
-            if utile.params.masse else ''
-        )
-        + (
-            "\n Masse atomique relative: %s" % self.masse_atomique_relative
-            if utile.params.masse_relative else ''
-        )
-        + (
-            "\n Couche électronique: %s" % self.notation_couche() 
-            if utile.params.couches else ''
-        )
-        + (
-            "\n Configuration électronique: %s" % self.notation_configuration()
-            if utile.params.configuration else ''
-        )
-    )
-
-    return (
-        str__ if not utile.params.calculatrice
-        else
-            str__.replace('è', 'e').replace('é', 'e')
-    )
-
-Atome.__str__ = __str
-
-
-def __repr(self):
-    return self.notation_symbole()
-
-Atome.__repr__ = __repr
-
-
-def __hash(self):
-    return hash(repr(self))
-
-Atome.__hash__ = __hash
-
-
-def __eq(self, obj):
-    return repr(self) == repr(obj)
-
-Atome.__eq__ = __eq
-
-
-def notation(self):
-    return "%s Z=%s A=%s" % (
-        self.symbole, self.proton, self.proton + self.neutron
-    ) 
-
-Atome.notation = notation
-
-
-def notation_symbole(self, A=True, Z=True):
-    return "%s%s%s" % (
-        '' if not A or utile.params.calculatrice
-        else
-            ''.join(
-                utile.exposants[int(num)] 
-                for num in str(self.proton + self.neutron)
-            )
-        ,
-        '' if not Z or utile.params.calculatrice
-        else
-            ''.join(
-                utile.sous_exposants[int(num)] 
-                for num in str(self.proton)
-            )
-        ,
-        self.symbole
-    )
-
-Atome.notation_symbole = notation_symbole
-
-
-Atome.notation_couche = utile.notation_couche
-
-Atome.notation_configuration = utile.notation_configuration
-
-
-def demonstration(self, recup, avec):
-    """Retourne une demonstration de calcul
-
-    Paramètres
-    -------
-    recup
-        :str
-            'electron'
-            'neutron'
-            'proton'
-
-    avec
-        :str
-            'masse'
-            'Z'
-
-
-    Retours
-    -------
-    Str
-        La demonstration
+class Atome:
+    """
+    ### &doc_id atome:class
     """
 
-    if recup == 'electron':
+    __slots__ = (
+        'element', 'symbole', 'categorie',
+        'proton', 'neutron', 'nucleon', 'electron', 
+        'masse', 'masse_atomique_relative', 
+        'configuration', 'couches'
+    )
 
-        if avec == 'masse':
+    def __init__(self, 
+            valeur:Union[int, str, IonMonoAtomique],
+            neutron:Optional[int] = None
+        ) -> None:
+        """
+        ### &doc_id atome:init
+        """
 
-            e = "electron %s = " % self.notation_symbole()
+        self.neutron = neutron
 
-            _masse_neutrons = utile.masse_neutron * self.neutron
-            _masse_protons = utile.masse_proton * self.proton
-            _masse_neutrons_protons = _masse_neutrons + _masse_protons
-            _masse_neutrons_protons_m_total = self.masse - _masse_neutrons_protons
+        utile.get_info(self, valeur)
 
-            demo = [
-            e + "(Masse de l'Atome - (Masse neutron x Nombre neutron + Masse proton x Nombre proton)) / Masse electron",
-            e + "(%s - (%s x %s + %s x %s)) / %s" % (self.masse, utile.masse_neutron, self.neutron, 
-                                                     utile.masse_proton, self.proton, utile.masse_electron),
-            e + "(%s - (%s + %s)) / %s" % (self.masse, _masse_neutrons, _masse_protons, utile.masse_electron),
-            e + "(%s - %s) / %s" % (self.masse, _masse_neutrons_protons, utile.masse_electron),
-            e + "%s / %s" % (_masse_neutrons_protons_m_total, utile.masse_electron),
-            e + "%s" % round(_masse_neutrons_protons_m_total / utile.masse_electron)
-            ]
+        self.electron = self.proton
 
-    if recup == 'neutron':
+        if self.neutron is None:
+            self.neutron = round(self.masse_atomique_relative) - self.proton
 
-        if avec == 'masse':
+        self.masse = utile.get_masse(self)
 
-            e = "Neutron %s = " % self.notation_symbole()
+        self.nucleon = self.proton + self.neutron
 
-            demo = [
-            e + "(Masse de l'Atome - (Masse electron x Nombre electron + Masse proton x Nombre proton)) / Masse neutron",
-            e + "(%s - (%s x %s + %s x %s)) / %s" % (self.masse, utile.masse_electron, self.electron, 
-                                                     utile.masse_proton, self.proton, masse_neutron),
-            e + "(%s - (%s + %s)) / %s" % (self.masse, utile.masse_electron * self.electron, 
-                                           utile.masse_proton * self.proton, masse_neutron),
-            e + "(%s - %s) / %s" % (self.masse, utile.masse_electron * self.neutron + utile.masse_proton * self.proton, 
-                                    masse_neutron),
-            e + "%s / %s" % (self.masse - (utile.masse_electron * self.electron + utile.masse_proton * self.proton), 
-                             masse_neutron),
-            e + "%s" % round((self.masse - (utile.masse_electron * self.electron + utile.masse_proton * self.proton)) / masse_neutron)
-            ]
+        self.configuration = utile.configuration_electronique(self)
 
-        if avec == 'Z':
+    def __add__(self, 
+            obj: Union[Proton, Neutron, Electron, Atome]
+        ) -> Union[Atome, Molecule, IonMonoAtomique]:
 
-            e = "Neutron %s = " % self.notation_symbole()
+        if isinstance(obj, objets.Proton):
+            return Atome(self.proton + obj.valeur)
 
-            demo = [
-            e + "nombre de nucleons - nombre de proton",
-            e + "A - Z",
-            e + "%s - %s" % (self.proton + self.neutron, self.proton),
-            e + "%s" % self.neutron
-            ]
+        elif isinstance(obj, objets.Neutron):
+            return Atome(self.proton, self.neutron + obj.valeur)
 
-    if recup == 'proton':
+        elif isinstance(obj, objets.Electron):
+            return IonMonoAtomique(self.proton, self.electron + obj.valeur)
 
-        if avec == 'masse':
+        elif isinstance(obj, objets.Atome):
+            return Molecule([self, obj])
 
-            e = "Proton %s = " % self.notation_symbole()
+        else:
+            raise exception.Incompatible(self, obj)
 
-            demo = [
-            e + "(Masse de l'Atome - (Masse neutron x Nombre neutron + Masse electron x Nombre electron)) / Masse proton",
-            e + "(%s - (%s x %s + %s x %s)) / %s" % (self.masse, utile.masse_neutron, self.neutron, 
-                                                     utile.masse_electron, self.electron, utile.masse_proton),
-            e + "(%s - (%s + %s)) / %s" % (self.masse, utile.masse_neutron * self.neutron, 
-                                           masse_electron * self.electron, masse_proton),
-            e + "(%s - %s) / %s" % (self.masse, masse_neutron * self.neutron + masse_electron * self.electron, 
-                                    masse_proton),
-            e + "%s / %s" % (self.masse - (masse_neutron * self.neutron + masse_electron * self.electron), 
-                             masse_proton),
-            e + "%s" % round((self.masse - (masse_neutron * self.neutron + masse_electron * self.electron)) / masse_proton)
-            ]
+    def __iadd__(self, 
+            obj: Union[Proton, Neutron, Electron, Atome]
+        ) -> Union[Atome, Molecule, IonMonoAtomique]:
+        return self + obj
 
-        if avec == 'Z':
+    def __sub__(self, 
+            obj: Union[Proton, Neutron, Electron]
+        ) -> Union[Atome, IonMonoAtomique]:
 
-            e = "Proton %s = " % self.notation_symbole()
+        if isinstance(obj, objets.Proton):
+            return Atome(self.proton - obj.valeur)
 
-            demo = [
-                e + "nombre de proton",
-                e + "Z",
-                e + "%s" % self.proton
-            ]
+        elif isinstance(obj, objets.Neutron):
+            return Atome(self.proton, self.neutron - obj.valeur)
 
-    return '\n'.join(demo)
+        elif isinstance(obj, objets.Electron):
+            return IonMonoAtomique(self.proton, self.electron - obj.valeur)
 
-Atome.demonstration = demonstration
+        else:
+            raise exception.Incompatible(self, obj)
+
+    def __isub__(self, 
+            obj: Union[Proton, Neutron, Electron]
+        ) -> Union[Atome, IonMonoAtomique]:
+        return self - obj
+
+    def __mul__(self, obj: int) -> Molecule:
+        return Molecule([self] * obj)
+
+    def __str__(self) -> str:
+        str__ = (
+            "Atome %s" % self.notation()
+            + (
+                "\n Elément: %s" % self.element[utile.params.langue] 
+                if utile.params.element else ''
+            )
+            + (
+                "\n Catégorie: %s" % self.categorie[utile.params.langue] 
+                if utile.params.categorie else ''
+            )
+            + (
+                "\n Proton(s): %s" % self.proton 
+                if utile.params.proton else ''
+            )
+            + (
+                "\n Neutron(s): %s" % self.neutron 
+                if utile.params.neutron else ''
+            )
+            + (
+                "\n Electron(s): %s" % self.electron 
+                if utile.params.electron else ''
+            )
+            + (
+                "\n Masse: %s" % self.masse 
+                if utile.params.masse else ''
+            )
+            + (
+                "\n Masse atomique relative: %s" 
+                % self.masse_atomique_relative
+                if utile.params.masse_relative else ''
+            )
+            + (
+                "\n Couche électronique: %s" % self.notation_couche() 
+                if utile.params.couches else ''
+            )
+            + (
+                "\n Configuration électronique: %s" 
+                % self.notation_configuration()
+                if utile.params.configuration else ''
+            )
+        )
+
+        return (
+            str__ if not utile.params.calculatrice
+            else
+                str__.replace('è', 'e').replace('é', 'e')
+        )
+
+    def __repr__(self) -> str:
+        return self.notation_symbole()
+
+    def __hash__(self) -> int:
+        return hash(repr(self))
+
+    def __eq__(self, obj: Any) -> bool:
+        return repr(self) == repr(obj)
+
+    def notation(self) -> str:
+        """
+        ### &doc_id atome:notation
+        """
+        return "%s Z=%s A=%s" % (
+            self.symbole, self.proton, self.proton + self.neutron
+        )
+
+    def notation_symbole(self, A:bool = True, Z:bool = True) -> str:
+        """
+        ### &doc_id atome:notation_symbole
+        """
+
+        return "%s%s%s" % (
+            '' if not A or utile.params.calculatrice
+            else
+                ''.join(
+                    utile.exposants[int(num)] 
+                    for num in str(self.proton + self.neutron)
+                )
+            ,
+            '' if not Z or utile.params.calculatrice
+            else
+                ''.join(
+                    utile.sous_exposants[int(num)] 
+                    for num in str(self.proton)
+                )
+            ,
+            self.symbole
+        )
+
+    
+    notation_couche = utile.notation_couche
+
+    notation_configuration = utile.notation_configuration
+
+
+base.Atome = Atome

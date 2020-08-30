@@ -1,4 +1,6 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+# Python 3.6.2
+# ----------------------------------------------------------------------------
 
 # La quasi-totalité des informations viennent de : 
 #   https://github.com/Bowserinator/Periodic-Table-JSON

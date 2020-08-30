@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Python 3.6.2
+# ----------------------------------------------------------------------------
+
 """
 
 Objet d'un nombre de proton servant pour les opérations.
@@ -6,8 +10,8 @@ Objet d'un nombre de proton servant pour les opérations.
 Augument
 
 valeur
-    :Atome
-        Récupére le nombre de proton de l'atome.
+    :objets.Atome
+        Récupére le nombre de proton de l'objets.Atome.
     :Ion
         Récupére le nombre de proton de l'ion.
     :int
@@ -21,23 +25,27 @@ Retours
         Nombre de proton
 """
 
+from . import base
 from .. import exception
+from .. import objets
 
-from .base import Molecule, Atome, Ion, Electron, Proton, Neutron
 
+class Proton:
 
-def __init(self, valeur=1):
+    __slots__ = ('valeur')
 
-    if isinstance(valeur, (Atome, Ion)):
-        self.valeur = valeur.proton
+    def __init__(self, valeur=1):
 
-    elif isinstance(valeur, int):
-        self.valeur = valeur
+        if isinstance(valeur, (objets.Atome, objets.Ion)):
+            self.valeur = valeur.proton
 
-    else:
-        raise exception.ValeurIncorrecte(
-            "Seulement les objets de type 'Atome', 'Ion' et 'int'"
-            + " peuvent être transformés en objet de type 'Proton'."
-        )
+        elif isinstance(valeur, int):
+            self.valeur = valeur
 
-Proton.__init__ = __init
+        else:
+            raise exception.ValeurIncorrecte(
+                "Seulement les objets de type 'Atome', 'Ion' et 'int'"
+                + " peuvent être transformés en objet de type 'Proton'."
+            )
+
+base.Proton = Proton

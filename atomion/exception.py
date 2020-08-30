@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Python 3.6.2
+# ----------------------------------------------------------------------------
+
 
 class Incompatible(Exception):
 
@@ -13,12 +17,12 @@ class Incompatible(Exception):
 		return self.description
 
 
-class MoleculeInstable(Exception):
+class Instable(Exception):
 
-	def __init__(self, molecule):
+	def __init__(self, element):
 
 		self.description = (
-			"La molécule '%s' est instable !" % molecule.notation()
+			"L'élément '%s' est instable !" % element.notation()
 		)
 
 	def __str__(self):

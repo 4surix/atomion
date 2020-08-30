@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Python 3.6.2
+# ----------------------------------------------------------------------------
+
 """
 
 Objet d'un nombre d'électron servant pour les opérations.
@@ -6,8 +10,8 @@ Objet d'un nombre d'électron servant pour les opérations.
 Augument
 
 valeur
-    :Atome
-        Récupére le nombre d'électron de l'atome.
+    :objets.Atome
+        Récupére le nombre d'électron de l'objets.Atome.
     :Ion
         Récupére le nombre d'électron de l'ion.
     :int
@@ -21,23 +25,27 @@ Retours
         Nombre d'électron
 """
 
+from . import base
 from .. import exception
+from .. import objets
 
-from .base import Molecule, Atome, Ion, Electron, Proton, Neutron
 
+class Electron:
 
-def __init(self, valeur=1):
+    __slots__ = ('valeur')
 
-    if isinstance(valeur, (Atome, Ion)):
-        self.valeur = valeur.electron
+    def __init__(self, valeur=1):
 
-    elif isinstance(valeur, int):
-        self.valeur = valeur
+        if isinstance(valeur, (objets.Atome, objets.Ion)):
+            self.valeur = valeur.electron
 
-    else:
-        raise exception.ValeurIncorrecte(
-            "Seulement les objets de type 'Atome', 'Ion' et 'int'"
-            + " peuvent être transformés en objet de type 'Electron'."
-        )
+        elif isinstance(valeur, int):
+            self.valeur = valeur
 
-Electron.__init__ = __init
+        else:
+            raise exception.ValeurIncorrecte(
+                "Seulement les objets de type 'Atome', 'Ion' et 'int'"
+                + " peuvent être transformés en objet de type 'Electron'."
+            )
+
+base.Electron = Electron
