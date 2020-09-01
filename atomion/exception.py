@@ -22,7 +22,7 @@ class Instable(Exception):
 	def __init__(self, element):
 
 		self.description = (
-			"L'élément '%s' est instable !" % element.notation()
+			"L'élément '%s' est instable !" % element.notation_symbole()
 		)
 
 	def __str__(self):

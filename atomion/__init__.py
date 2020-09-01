@@ -19,13 +19,9 @@ Lien du github : https://github.com/4surix/atomion
 """
 
 
-__version__ = '1.1.0-pre'
+__version__ = '1.1.0'
 
 
-from .objets import (
-	molecule, atome, ion, electron, proton, neutron, # Modules
-	Molecule, Atome, Ion, Electron, Proton, Neutron  # Objets
-)
-
+from .objets import *
 from .utile import params
 from . import exception

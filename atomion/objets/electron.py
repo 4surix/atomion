@@ -2,41 +2,28 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
-"""
 
-Objet d'un nombre d'électron servant pour les opérations.
-
---------
-Augument
-
-valeur
-    :objets.Atome
-        Récupére le nombre d'électron de l'objets.Atome.
-    :Ion
-        Récupére le nombre d'électron de l'ion.
-    :int
-        Définie le nombre d'électron.
-
--------
-Retours
-
-:Electron
-    .valeur:int
-        Nombre d'électron
-"""
-
-from . import base
-from .. import exception
 from .. import objets
+from ..objets import (
+    Atome, Molecule,
+    Ion, IonMonoAtomique, IonPolyAtomique,
+    Electron, Proton, Neutron
+)
+from .. import exception
+
+from ..utile.typing import Union, Any, Optional
 
 
 class Electron:
+    """
+    ### &doc_id particule:electron
+    """
 
     __slots__ = ('valeur')
 
-    def __init__(self, valeur=1):
+    def __init__(self, valeur:Optional[int] = 1) -> None:
 
-        if isinstance(valeur, (objets.Atome, objets.Ion)):
+        if isinstance(valeur, (Atome, Ion)):
             self.valeur = valeur.electron
 
         elif isinstance(valeur, int):
@@ -48,4 +35,11 @@ class Electron:
                 + " peuvent être transformés en objet de type 'Electron'."
             )
 
-base.Electron = Electron
+objets.Electron = Electron
+
+def MAJ_TYPE():
+
+    variables = globals()
+
+    for name_obj in objets.listes_noms:
+        variables[name_obj] = getattr(objets, name_obj)

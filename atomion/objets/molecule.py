@@ -2,46 +2,23 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
-"""
 
-Objet Molecule.
-
----------
-Arguments
-
-valeur
-    :str
-        Notation de la molécule qui sera decodée.
-
-------
-Retour
-
-:Molecule
-    .atomes:list
-        Liste de tout les :Atomes composant la Molecule.
-
-    .proton:int
-        Nombre total de proton dans la molécule.
-    .neutron:int
-        Nombre total de neutron dans la molécule.
-    .electron:int
-        Nombre total d'électron dans la molécule.
-    .nucleon:int
-        Nombre total de nucléon dans la molécule.
-
-    .masse:float
-    .masse_moleculaire_relative:float
-
-    .notation()
-"""
-
-from . import base
+from .. import objets
+from ..objets import (
+    Atome, Molecule,
+    Ion, IonMonoAtomique, IonPolyAtomique,
+    Electron, Proton, Neutron
+)
 from .. import utile
 from .. import exception
-from .. import objets
+
+from ..utile.typing import Union, Any, Optional, List
 
 
 class Molecule:
+    """
+    ### &doc_id molecule:class
+    """
 
     __slots__ = (
         'atomes', 
@@ -49,11 +26,24 @@ class Molecule:
         'masse', 'masse_moleculaire_relative'
     )
 
-    def __init__(self, valeur, *, verif_stable=True):
+    def __init__(self, 
+            valeur:Union[str, IonPolyAtomique, List[Atome]],
+            *args,
+            verif_stable:bool = True
+        ) -> None:
+        """
+        ### &doc_id molecule:init
+        """
 
         self.atomes = (
-            utile.convertie_notation_vers_atomes(valeur)
-            if isinstance(valeur, str) else valeur
+            valeur if isinstance(valeur, list)
+            else
+                [
+                    Atome(e)
+                    for e in valeur.ions
+                ] if isinstance(valeur, IonPolyAtomique)
+                else
+                    utile.convertie_notation_vers('atomes', valeur) 
         )
 
         if len(self.atomes) < 2:
@@ -75,10 +65,10 @@ class Molecule:
             for atome in self.atomes
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
 
         str__ = (
-            "Molécule %s" % self.notation()
+            "Molécule %s" % self.notation_symbole()
             + (
                 "\n Proton(s): %s" % self.proton
                 if utile.params.proton else ''
@@ -108,18 +98,20 @@ class Molecule:
                 str__.replace('è', 'e').replace('é', 'e')
         )
 
-    def __repr__(self):
-        return self.notation()
+    def __repr__(self) -> str:
+        return self.notation_symbole()
 
-    def __add__(self, obj):
+    def __add__(self, 
+            obj: Union[Molecule, Atome]
+        ) -> Molecule:
 
-        if isinstance(obj, objets.Molecule):
+        if isinstance(obj, Molecule):
 
             atomes = self.atomes[:]
             atomes.extend(obj.atomes)
             return Molecule(atomes)
 
-        elif isinstance(obj, objets.Atome):
+        elif isinstance(obj, Atome):
 
             atomes = self.atomes[:]
             atomes.append(obj)
@@ -128,31 +120,54 @@ class Molecule:
         else:
             raise exception.Incompatible(self, obj)
 
-    def __iadd__(self, obj):
+    def __iadd__(self, 
+            obj: Union[Molecule, Atome]
+        ) -> Molecule:
         return self + obj
 
-    def __sub__(self, obj):
+    def __sub__(self, 
+            obj: Union[Molecule, Atome]
+        ) -> Union[None, Atome, Molecule]:
 
-        if isinstance(obj, objets.Molecule):
+        if isinstance(obj, Molecule):
 
             atomes = self.atomes[:]
             for atome in obj.atomes:
                 atomes.remove(atome)
-            return Molecule(atomes)
 
-        elif isinstance(obj, objets.Atome):
+            return (
+                None if not atomes
+                else
+                    atomes[0] if len(atomes) == 1
+                    else
+                        Molecule(atomes)
+            )
+
+        elif isinstance(obj, Atome):
 
             atomes = self.atomes[:]
             atomes.remove(obj)
-            return Molecule(atomes)
+
+            return (
+                None if not atomes
+                else
+                    atomes[0] if len(atomes) == 1
+                    else
+                        Molecule(atomes)
+            )
 
         else:
             raise exception.Incompatible(self, obj)
 
-    def __isub__(self, obj):
+    def __isub__(self, 
+            obj: Union[Molecule, Atome]
+        ) -> Union[None, Atome, Molecule]:
         return self - obj
 
-    def notation(self):
+    def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
+        """
+        ### &doc_id molecule:notation_symbole
+        """
 
         atomes = {}
 
@@ -178,4 +193,11 @@ class Molecule:
         )
 
 
-base.Molecule = Molecule
+objets.Molecule = Molecule
+
+def MAJ_TYPE():
+
+    variables = globals()
+
+    for name_obj in objets.listes_noms:
+        variables[name_obj] = getattr(objets, name_obj)

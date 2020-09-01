@@ -2,63 +2,17 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
-"""
 
-Objet atome.
-
----------
-Arguments
-
-valeur
-    :Atome
-        Léve une erreur
-    :Ion
-        Transforme l'ion en atome.
-    :int
-        Equivaut au nombre de proton et créer un Atome.
-
-neutron
-    :int
-        Définie le nombre de proton pour l'isotope.
-
-------
-Retour
-
-Atome
-    .element:str
-    .symbole:str
-    .categorie:str
-
-    .proton:int
-    .neutron:int
-    .electron:int
-    .nucleon:int
-
-    .masse:float
-    .masse_atomique_relative:float
-
-    .configuration:list
-    .couches:list
-
-    .notation()
-    .notation_symbole()
-    .notation_couche()
-    .notation_configuration()
-"""
-
-
-from typing import Union, Any, Optional
-
-
-from . import base
-from .base import (
+from .. import objets
+from ..objets import (
     Atome, Molecule,
     Ion, IonMonoAtomique, IonPolyAtomique,
     Electron, Proton, Neutron
 )
 from .. import utile
 from .. import exception
-from .. import objets
+
+from ..utile.typing import Union, Any, Optional
 
 
 class Atome:
@@ -74,7 +28,8 @@ class Atome:
     )
 
     def __init__(self, 
-            valeur:Union[int, str, IonMonoAtomique],
+            valeur:Union[int, str, IonMonoAtomique], 
+            *args,
             neutron:Optional[int] = None
         ) -> None:
         """
@@ -100,16 +55,16 @@ class Atome:
             obj: Union[Proton, Neutron, Electron, Atome]
         ) -> Union[Atome, Molecule, IonMonoAtomique]:
 
-        if isinstance(obj, objets.Proton):
+        if isinstance(obj, Proton):
             return Atome(self.proton + obj.valeur)
 
-        elif isinstance(obj, objets.Neutron):
+        elif isinstance(obj, Neutron):
             return Atome(self.proton, self.neutron + obj.valeur)
 
-        elif isinstance(obj, objets.Electron):
+        elif isinstance(obj, Electron):
             return IonMonoAtomique(self.proton, self.electron + obj.valeur)
 
-        elif isinstance(obj, objets.Atome):
+        elif isinstance(obj, Atome):
             return Molecule([self, obj])
 
         else:
@@ -124,13 +79,13 @@ class Atome:
             obj: Union[Proton, Neutron, Electron]
         ) -> Union[Atome, IonMonoAtomique]:
 
-        if isinstance(obj, objets.Proton):
+        if isinstance(obj, Proton):
             return Atome(self.proton - obj.valeur)
 
-        elif isinstance(obj, objets.Neutron):
+        elif isinstance(obj, Neutron):
             return Atome(self.proton, self.neutron - obj.valeur)
 
-        elif isinstance(obj, objets.Electron):
+        elif isinstance(obj, Electron):
             return IonMonoAtomique(self.proton, self.electron - obj.valeur)
 
         else:
@@ -210,7 +165,7 @@ class Atome:
             self.symbole, self.proton, self.proton + self.neutron
         )
 
-    def notation_symbole(self, A:bool = True, Z:bool = True) -> str:
+    def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
         """
         ### &doc_id atome:notation_symbole
         """
@@ -239,4 +194,11 @@ class Atome:
     notation_configuration = utile.notation_configuration
 
 
-base.Atome = Atome
+objets.Atome = Atome
+
+def MAJ_TYPE():
+
+    variables = globals()
+
+    for name_obj in objets.listes_noms:
+        variables[name_obj] = getattr(objets, name_obj)

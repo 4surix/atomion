@@ -2,6 +2,9 @@
 
 Module pour atomes, ions et molécules.  
   
+- 🇫🇷 [Documentation en français !](https://4surix.github.io/atomion-doc/FR/annotated.html)
+- 🇪🇸 [Documentacion en español !](https://4surix.github.io/atomion-doc/ES/annotated.html)
+  
 Vous trouverez un fichier `exemple.py` avec les diverses fonctionnalités.  
   
 Le module est compatible avec `Micro Python 1.9.4`, donc aussi pour les calculatrices !  

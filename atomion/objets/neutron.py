@@ -2,41 +2,28 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
-"""
 
-Objet d'un nombre de neutron servant pour les opérations.
-
---------
-Augument
-
-valeur
-    :Atome
-        Récupére le nombre de neutron de l'atome.
-    :Ion
-        Récupére le nombre de neutron de l'ion.
-    :int
-        Définie le nombre de neutron.
-
--------
-Retours
-
-:Neutron
-    .valeur:int
-        Nombre de neutron
-"""
-
-from . import base
 from .. import objets
+from ..objets import (
+    Atome, Molecule,
+    Ion, IonMonoAtomique, IonPolyAtomique,
+    Electron, Proton, Neutron
+)
 from .. import exception
+
+from ..utile.typing import Union, Any, Optional
 
 
 class Neutron:
-    
+    """
+    ### &doc_id particule:neutron
+    """
+
     __slots__ = ('valeur')
 
-    def __init__(self, valeur=1):
+    def __init__(self, valeur:Optional[int] = 1) -> None:
 
-        if isinstance(valeur, (objets.Atome, objets.Ion)):
+        if isinstance(valeur, (Atome, Ion)):
             self.valeur = valeur.neutron
 
         elif isinstance(valeur, int):
@@ -48,4 +35,11 @@ class Neutron:
                 + " peuvent être transformés en objet de type 'Neutron'."
             )
 
-base.Neutron = Neutron
+objets.Neutron = Neutron
+
+def MAJ_TYPE():
+
+    variables = globals()
+
+    for name_obj in objets.listes_noms:
+        variables[name_obj] = getattr(objets, name_obj)

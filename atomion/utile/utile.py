@@ -3,17 +3,26 @@
 # ----------------------------------------------------------------------------
 
 
-from . import irregularites
-from . import exception
-from .elements import elements
-from . import objets
+from .. import objets
+from ..objets import (
+    Atome, Molecule,
+    Ion, IonMonoAtomique, IonPolyAtomique,
+    Electron, Proton, Neutron
+)
+from .. import irregularites
+from .. import exception
+from ..elements import elements
 
 
 ### Verif si calculatrice
 
 try:
     enumerate = enumerate
-    type('EssaieMul', (), {'__mul__': lambda self, objet: None}) * 2
+    type(
+        'EssaieMul',
+        (), 
+        {'__mul__': lambda self, objet: None}
+    )() * 2
 except:
 
     is_calculatrice = True
@@ -219,9 +228,9 @@ def configuration_electronique(element) -> list:
     electrons = element.electron
     protons = element.proton
 
-    if isinstance(element, objets.Atome):
+    if isinstance(element, Atome):
         fonctions = fonctions_configuration_atome
-    elif isinstance(element, objets.Ion):
+    elif isinstance(element, IonMonoAtomique):
         fonctions = fonctions_configuration_ion
 
 
@@ -278,7 +287,7 @@ def get_info(obj, valeur) -> None:
             "Cette objet est déjà un '%s' !" % type(obj)
         )
 
-    elif isinstance(valeur, (objets.Ion, objets.Atome)):
+    elif isinstance(valeur, (IonMonoAtomique, Atome)):
 
         obj.proton = valeur.proton
         obj.neutron = valeur.neutron
@@ -390,7 +399,7 @@ def get_masse(obj) -> float:
     )
 
 
-def convertie_notation_vers_atomes(data:str) -> list:
+def convertie_notation_vers(type_obj, data:str) -> list:
     """
 
     Transforme un str en list d'atomes
@@ -417,6 +426,11 @@ def convertie_notation_vers_atomes(data:str) -> list:
 
     chiffres = list('0123456789')
 
+    if type_obj == 'atomes':
+        type_obj = Atome
+    elif type_obj == 'ions':
+        type_obj = IonMonoAtomique
+
 
     for carac in data.strip():          
 
@@ -435,7 +449,7 @@ def convertie_notation_vers_atomes(data:str) -> list:
             if atome:
                 # CO2(H2)
                 #    ^
-                atomes.extend([objets.Atome(atome)] * (int(nbr) if nbr else 1))
+                atomes.extend([type_obj(atome)] * (int(nbr) if nbr else 1))
                 atome = ''
                 nbr = ''
 
@@ -466,7 +480,7 @@ def convertie_notation_vers_atomes(data:str) -> list:
             if atome:
                 # CaAg
                 #   ^
-                atomes.extend([objets.Atome(atome)] * (int(nbr) if nbr else 1))
+                atomes.extend([type_obj(atome)] * (int(nbr) if nbr else 1))
 
             atome = carac
             nbr = ''
@@ -487,11 +501,11 @@ def convertie_notation_vers_atomes(data:str) -> list:
     # Element restant
 
     if atome:
-        atomes.extend([objets.Atome(atome)] * (int(nbr) if nbr else 1))
+        atomes.extend([type_obj(atome)] * (int(nbr) if nbr else 1))
 
     elif isinstance(in_molecule, str):
         atomes.extend(
-            convertie_notation_vers_atomes(in_molecule) 
+            convertie_notation_vers('atomes', in_molecule) 
             * (int(nbr) if nbr else 1)
         )
         in_molecule = False
@@ -527,9 +541,9 @@ def verif_stable(elements:list) -> bool:
         (
             ion.diff 
             for ion in [
-                element if isinstance(element, objets.IonMonoAtomique)
+                element if isinstance(element, IonMonoAtomique)
                 else
-                    objets.IonMonoAtomique(element)
+                    IonMonoAtomique(element)
                 for element in elements
             ]
         ),
@@ -651,7 +665,7 @@ def eec_analyse(partie):
 
         for atome in (
                 element.atomes
-                if isinstance(element, objets.Molecule)
+                if isinstance(element, Molecule)
                 else
                     [element]
             ):
@@ -670,9 +684,9 @@ def eec_analyse(partie):
 
 def eec_convertie(notation):
 
-    try: return objets.Molecule(notation, verif_stable=False)
+    try: return Molecule(notation, verif_stable=False)
     except:
-        return objets.Atome(notation)
+        return Atome(notation)
 
 
 def equilibrage_equation_chimique(equation):
@@ -760,14 +774,34 @@ def equilibrage_equation_chimique(equation):
 
     return (
         ' + '.join(
-            '%s%s' % (str(nbr) + ' ' if nbr != 1 else '', molecule.notation())
+            '%s%s' % (
+                '' if nbr == 1 
+                else 
+                    str(nbr) + ' '
+                , 
+                molecule.notation_symbole(A=False, Z=False)
+            )
             for nbr, molecule in zip(configuration[0], partie_1_molecules)
         )
         + ' -> '
         + ' + '.join(
-            '%s%s' % (str(nbr) + ' ' if nbr != 1 else '', molecule.notation())
+            '%s%s' % (
+                '' if nbr == 1
+                else
+                    str(nbr) + ' '
+                , 
+                molecule.notation_symbole(A=False, Z=False)
+            )
             for nbr, molecule in zip(configuration[1], partie_2_molecules)
         )
     )
 
 eec = equilibrage_equation_chimique
+
+
+def MAJ_TYPE():
+
+    variables = globals()
+
+    for name_obj in objets.listes_noms:
+        variables[name_obj] = getattr(objets, name_obj)

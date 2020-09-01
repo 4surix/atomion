@@ -1,6 +1,23 @@
-from . import molecule, atome, ion, electron, proton, neutron
-from .base import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Electron, Proton, Neutron
+
+Neutron = Proton = Electron = Atome = Ion = IonMonoAtomique  \
+= IonPolyAtomique = Molecule = None
+
+listes_noms = (
+    'Neutron',
+    'Proton',
+    'Electron',
+    'Atome',
+    'Ion',
+    'IonMonoAtomique',
+    'IonPolyAtomique',
+    'Molecule'
 )
+
+from . import molecule, atome, ion, electron, proton, neutron
+
+from .. import utile
+
+for module in [
+        molecule, atome, ion, electron, proton, neutron, utile
+    ]:
+    module.MAJ_TYPE()

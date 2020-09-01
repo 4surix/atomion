@@ -48,9 +48,9 @@ INSTABLE = {
     'H3',
     'CH5'
 }
-
+Molecule('CH3CHCH(OH)')
 for notation in {*STABLE, *INSTABLE}:
-    try: Molécule(notation)
+    try: Molecule(notation)
     except:
     	print('' if notation in INSTABLE else '[!]', 'Instable:', notation)
     else:

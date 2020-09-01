@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------
 
 
-from . import objets
+from .objets import Atome, Molecule
 from .elements import elements
 
 
@@ -13,7 +13,7 @@ variables = globals()
 ### Atomes
 
 for element in elements:
-    atome = objets.Atome(element['symbol'])
+    atome = Atome(element['symbol'])
     variables[atome.symbole] = atome
 
 
@@ -47,7 +47,7 @@ for symbole in [
     'CH3CHO',
     'C2O2H4'
 ]:
-    molecule = objets.Molecule(symbole)
+    molecule = Molecule(symbole)
     variables[symbole] = molecule
 
 
@@ -56,5 +56,4 @@ for symbole in [
 del variables['elements']
 del variables['element']
 del variables['symbole']
-del variables['objets']
 del globals()['variables']
