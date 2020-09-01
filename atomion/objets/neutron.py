@@ -35,7 +35,14 @@ class Neutron:
                 + " peuvent être transformés en objet de type 'Neutron'."
             )
 
+    def __repr__(self) -> str:
+        return 'Neutron(%s)' % self.valeur
+
+    def __eq__(self, obj: Any) -> bool:
+        return repr(self) == repr(obj)
+
 objets.Neutron = Neutron
+
 
 def MAJ_TYPE():
 

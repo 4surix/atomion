@@ -98,9 +98,6 @@ class Molecule:
                 str__.replace('è', 'e').replace('é', 'e')
         )
 
-    def __repr__(self) -> str:
-        return self.notation_symbole()
-
     def __add__(self, 
             obj: Union[Molecule, Atome]
         ) -> Molecule:
@@ -163,6 +160,12 @@ class Molecule:
             obj: Union[Molecule, Atome]
         ) -> Union[None, Atome, Molecule]:
         return self - obj
+
+    def __repr__(self) -> str:
+        return self.notation_symbole()
+
+    def __eq__(self, obj: Any) -> bool:
+        return repr(self) == repr(obj)
 
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
         """

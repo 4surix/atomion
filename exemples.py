@@ -50,6 +50,7 @@ if params.calculatrice:
 
     # Utilisez `mul` sur calculatrice :
     from atomion.utile import mul
+
     assert mul(Atome('O'), 2) == Molecule('O2')
 
 else:
@@ -127,7 +128,8 @@ print(Ion('CO2'))
 print('\n--- Equilibrage équation chimique ---\n')
 
 print(utile.equilibrage_equation_chimique('Cu2S + Cu2O -> Cu + SO2'))
-print(utile.equilibrage_equation_chimique('CH4 + H2O ->  CO2 + H2'))
+# Ou :
+print(utile.eec('CH4 + H2O ->  CO2 + H2'))
 
 
 ### Fin

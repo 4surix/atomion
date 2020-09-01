@@ -35,7 +35,14 @@ class Electron:
                 + " peuvent être transformés en objet de type 'Electron'."
             )
 
+    def __repr__(self) -> str:
+        return 'Electron(%s)' % self.valeur
+
+    def __eq__(self, obj: Any) -> bool:
+        return repr(self) == repr(obj)
+
 objets.Electron = Electron
+
 
 def MAJ_TYPE():
 

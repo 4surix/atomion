@@ -195,6 +195,9 @@ class IonMonoAtomique(Ion):
     def __repr__(self):
         return self.notation_symbole()
 
+    def __eq__(self, obj: Any) -> bool:
+        return repr(self) == repr(obj)
+
     def notation(self):
         """
         ### &doc_id ionMonoAtomique:notation
@@ -341,9 +344,6 @@ class IonPolyAtomique(Ion):
                 str__.replace('è', 'e').replace('é', 'e')
         )
 
-    def __repr__(self) -> str:
-        return self.notation_symbole()
-
     def __add__(self, 
             obj: Union[IonMonoAtomique, IonPolyAtomique]
         ) -> IonPolyAtomique:
@@ -406,6 +406,12 @@ class IonPolyAtomique(Ion):
             obj: Union[IonMonoAtomique, IonPolyAtomique]
         ) -> Union[None, IonMonoAtomique, IonPolyAtomique]:
         return self - obj
+
+    def __repr__(self) -> str:
+        return self.notation_symbole()
+
+    def __eq__(self, obj: Any) -> bool:
+        return repr(self) == repr(obj)
 
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
         """

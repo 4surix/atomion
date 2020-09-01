@@ -35,7 +35,14 @@ class Proton:
                 + " peuvent être transformés en objet de type 'Proton'."
             )
 
+    def __repr__(self) -> str:
+        return 'Proton(%s)' % self.valeur
+
+    def __eq__(self, obj: Any) -> bool:
+        return repr(self) == repr(obj)
+
 objets.Proton = Proton
+
 
 def MAJ_TYPE():
 
