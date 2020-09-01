@@ -431,7 +431,7 @@ class IonPolyAtomique(Ion):
                 atome,
                 '' if nbr == 1
                 else
-                    nbr if not utile.params.calculatrice
+                    nbr if utile.params.calculatrice
                     else
                         ''.join(
                             utile.sous_exposants[int(num)] 

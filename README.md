@@ -1,9 +1,6 @@
 # Atomion
 
-Module pour atomes, ions et molécules.  
-  
-- 🇫🇷 [Documentation en français !](https://4surix.github.io/atomion-doc/FR/annotated.html)
-- 🇪🇸 [Documentacion en español !](https://4surix.github.io/atomion-doc/ES/annotated.html)
+Module pour atomes, ions _(monoatomiques/polyatomiques)_ et molécules.  
   
 Vous trouverez un fichier `exemple.py` avec les diverses fonctionnalités.  
   
@@ -24,8 +21,10 @@ eau = Molecule('H2O')
 print(eau)
 
 chlorure = Ion('Cl')
+carbonate = Ion('CO3')
 
 print(chlorure)
+print(carbonate)
 
 from atomion.raccourcis import *
 
@@ -35,3 +34,11 @@ eau = H2O
 
 print(eau)
 ```
+
+# Documentation
+
+Elle n'est pas fini, mais disponible :
+- 🇫🇷 [En français](https://4surix.github.io/atomion-doc/fr/annotated.html)
+- 🇪🇸 [En español](https://4surix.github.io/atomion-doc/es/annotated.html)  
+  
+_Fait avec [DoxyTH](https://github.com/BioTheWolff/DoxyTH)._
