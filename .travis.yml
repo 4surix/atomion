@@ -2,5 +2,4 @@ language: python
 python:
 - "3.6"
 script:
-- pip3.6 install .
 - python -m unittest discover -v -s tests
