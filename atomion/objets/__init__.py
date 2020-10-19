@@ -18,6 +18,7 @@ from . import molecule, atome, ion, electron, proton, neutron
 from .. import utile
 
 for module in [
-        molecule, atome, ion, electron, proton, neutron, utile
+        molecule, atome, ion, electron, proton, neutron,
+        utile, utile.equation
     ]:
     module.MAJ_TYPE()

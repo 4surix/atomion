@@ -23,5 +23,6 @@ __version__ = '1.1.0'
 
 
 from .objets import *
-from .utile import params
+from .utile import params, mol
+from .utile.equation import Equation, Reaction
 from . import exception
