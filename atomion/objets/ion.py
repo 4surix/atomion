@@ -55,7 +55,7 @@ class IonMonoAtomique(Ion):
             return object.__new__(cls)
 
     __slots__ = (
-        'element', 'symbole', 'categorie', 
+        'nom', 'symbole', 'categorie', 
         'proton', 'neutron', 'electron', 'nucleon',
         'masse', 'masse_atomique_relative',
         'configuration', 'couches', 
@@ -147,8 +147,8 @@ class IonMonoAtomique(Ion):
         str__ = (
             "Ion monoatomique %s" % self.notation()
             + (
-                "\n Elément: %s" % self.element[utile.params.langue] 
-                if utile.params.element else ''
+                "\n Elément: %s" % self.nom[utile.params.langue] 
+                if utile.params.nom else ''
             )
             + (
                 "\n Catégorie: %s" % self.categorie[utile.params.langue] 
