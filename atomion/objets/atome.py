@@ -62,7 +62,8 @@ class Atome:
             return Atome(self.proton, self.neutron + obj.valeur)
 
         elif isinstance(obj, Electron):
-            return IonMonoAtomique(self.proton, self.electron + obj.valeur)
+            # Si on ajoute des electrons la charge est négatif.
+            return IonMonoAtomique(self.proton, charge = -obj.valeur)
 
         elif isinstance(obj, Atome):
             return Molecule([self, obj])
@@ -86,7 +87,8 @@ class Atome:
             return Atome(self.proton, self.neutron - obj.valeur)
 
         elif isinstance(obj, Electron):
-            return IonMonoAtomique(self.proton, self.electron - obj.valeur)
+            # Si on enlève des electrons la charge est positif.
+            return IonMonoAtomique(self.proton, charge = +obj.valeur)
 
         else:
             raise exception.Incompatible(self, obj)
