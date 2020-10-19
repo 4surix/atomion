@@ -515,26 +515,9 @@ def convertie_notation_vers(type_obj, data:str) -> list:
     return atomes
 
 
-def verif_stable(elements:list) -> bool:
+def verif_stable(elements:List[Union[Atome, Ion]]) -> bool:
     """
-
-    Vérifie si des éléments sont stable 
-      en vérifiant leurs nombre de liaison.
-
-    ---------
-    Arguments
-
-    elements:list
-
-    ---------
-    Exception
-
-    Lève une exception si ce n'est pas stable.
-
-    -------
-    Retours
-
-    None
+    Vérifie si des éléments sont stable en vérifiant leurs nombre de liaison.
     """
 
     charges = sorted(
@@ -553,7 +536,9 @@ def verif_stable(elements:list) -> bool:
 
     index_dernier_atome_liee = None
 
-    range_charges = range(len(charges))
+    nbr_charge = len(charges)
+
+    range_charges = range(nbr_charge)
 
     for I in range_charges:
 
@@ -592,17 +577,55 @@ def verif_stable(elements:list) -> bool:
                     charges[i] -= charges[I]
                     charges[I] = 0
 
-            else:
+            elif charges[i] == 3:
+                
+                if (
+                    charges[I] == 4 
+                    or (
+                        # Si il n'y a que 2 éléments restant
+                        #   avec 3 liaisons disponibles,
+                        #   alors ils peuvent se lier entre eux avec 3 liaisons
+                        #   vu qu'il ne reste aucun autre élément à se lier.
+                        charges[I] == 3
+                        and nbr_charge == I + 1
+                    )
+                ):
+                    charges[I] -= 3
+                    charges[i] -= 3
 
-                if charges[I] == 4:
-                    charges[I] -= charges[i]
-                    charges[i] = 0
+                elif charges[I] == 3:
+                    charges[I] -= 2
+                    charges[i] -= 2
 
                 else:
-                    charge = min(charges[i], charges[I])
+                    charges[i] -= charges[I]
+                    charges[I] = 0
 
-                    charges[I] -= charge
-                    charges[i] -= charge
+            elif charges[i] == 2:
+                
+                if (
+                    charges[I] == 4
+                    or charges[I] == 3
+                    or (
+                        # Si il n'y a que 2 éléments restant
+                        #   avec 2 liaisons disponibles,
+                        #   alors ils peuvent se lier entre eux avec 2 liaisons
+                        #   vu qu'il ne reste aucun autre élément à se lier.
+                        charges[I] == 2
+                        and nbr_charge == I + 1
+                    )
+                ):
+                    charges[I] -= 2
+                    charges[i] -= 2
+
+                else: # 2 ou 1
+                    charges[I] -= 1
+                    charges[i] -= 1
+
+            else: # charges[i] == 1
+                charges[I] -= 1
+                charges[i] -= 1
+
 
     # Il faut que toute les charges soit égal à 0
     #   sinon ce n'est pas stable.
