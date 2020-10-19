@@ -57,6 +57,7 @@ class Molecule:
 
         self.proton = sum(atome.proton for atome in self.atomes)
         self.neutron = sum(atome.neutron for atome in self.atomes)
+        self.nucleon = self.proton + self.neutron
         self.electron = sum(atome.electron for atome in self.atomes)
 
         self.masse = sum(atome.masse for atome in self.atomes)
