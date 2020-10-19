@@ -45,6 +45,41 @@ else:
     objets.Ion = Ion
 
 
+def decode_notation(
+        notation:str,
+        charge:Union[None, int]
+    ) -> Tuple[str, Union[None, int]]:
+
+    notation = notation.strip()
+
+    if '{' == notation[0] and notation[-1] == '}':
+
+        args = notation[1:-1].split(' ')
+        notation = args.pop(0)
+
+        if args: # {Ag 2+}
+            charge = args.pop(0)
+        else: # {Ag}
+            charge = None
+
+        charge = (
+            None if not charge
+            else
+                int(
+                    # '2+' -> '+'
+                    charge[-1]
+                    # '+' & '-' -> '1'
+                    # '2+' -> '2'
+                    + {
+                        '-': '1',
+                        '+': '1'
+                    }.get(charge, charge[:-1])
+                )
+        )
+
+    return notation, charge
+
+
 class IonMonoAtomique(Ion):
     """
     ### &doc_id ionMonoAtomique:class
@@ -64,14 +99,16 @@ class IonMonoAtomique(Ion):
 
     def __init__(self, 
             valeur:Union[int, str, Atome],
-            *args,
-            neutron:Optional[int] = None
+            *,
+            neutron:Optional[int] = None,
+            charge:Optional[int] = None
         ) -> None:
         """
         ### &doc_id ionMonoAtomique:init
         """
 
-        self.neutron = neutron
+        if isinstance(valeur, str):
+            valeur, charge = decode_notation(valeur, charge)
 
         utile.get_info(self, valeur)
 
@@ -92,11 +129,17 @@ class IonMonoAtomique(Ion):
                 "Un gaz noble ne peut pas devenir un ion monoatomique."
             )
 
+        self.neutron = (
+            neutron if neutron is not None
+            else
+                round(self.masse_atomique_relative) - self.proton
+        )
 
-        if self.neutron is None:
-            self.neutron = round(self.masse_atomique_relative) - self.proton
-
-        self.diff = abs(self.proton - self.electron)
+        if charge:
+            self.diff = abs(charge)
+            self.electron = self.proton - charge
+        else:
+            self.diff = abs(self.proton - self.electron)
 
         self.masse = utile.get_masse(self)
 
@@ -214,7 +257,9 @@ class IonMonoAtomique(Ion):
         """
         ### &doc_id ionMonoAtomique:notation_symbole
         """
-        return "%s%s%s%s%s" % (
+        return "%s%s%s%s%s%s%s" % (
+            '{' if utile.params.calculatrice and charge else ''
+            ,
             '' if not A or utile.params.calculatrice
             else
                 ''.join(
@@ -231,17 +276,27 @@ class IonMonoAtomique(Ion):
             ,
             self.symbole
             ,
-            self.diff if utile.params.calculatrice
+            ' ' if utile.params.calculatrice and charge else ''
+            ,
+            '' if not charge
             else
-                ''.join(
-                    utile.exposants[int(num)] 
-                    for num in str(self.diff)
+                '%s%s' % (
+                    self.diff if utile.params.calculatrice
+                    else
+                        '' if self.diff == 1
+                        else
+                            ''.join(
+                                utile.exposants[int(num)] 
+                                for num in str(self.diff)
+                            )
+                    ,
+                    {
+                        '-': '⁻' if not utile.params.calculatrice else '-',
+                        '+': '⁺' if not utile.params.calculatrice else '+'
+                    }.get(self.charge)
                 )
             ,
-            {
-                '-': '⁻' if not utile.params.calculatrice else '-',
-                '+': '⁺' if not utile.params.calculatrice else '+'
-            }.get(self.charge)
+            '}' if utile.params.calculatrice and charge else ''
         )
 
     notation_couche = utile.notation_couche
@@ -274,6 +329,10 @@ class IonPolyAtomique(Ion):
         """
         ### &doc_id ionPolyAtomique:init
         """
+
+        diff = None
+        if isinstance(valeur, str):
+            valeur, diff = decode_notation(valeur, diff)
 
         self.ions = (
             valeur if isinstance(valeur, list)
@@ -310,6 +369,12 @@ class IonPolyAtomique(Ion):
             ion.masse_atomique_relative 
             for ion in self.ions
         )
+
+        if diff:
+            self.diff = abs(diff)
+            self.electron = self.proton - self.diff
+        else:
+            self.diff = abs(self.proton - self.electron)
 
     def __str__(self) -> str:
 
