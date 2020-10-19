@@ -2,6 +2,7 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
+from .typing import *
 
 from .. import objets
 from ..objets import (
@@ -9,6 +10,7 @@ from ..objets import (
     Ion, IonMonoAtomique, IonPolyAtomique,
     Electron, Proton, Neutron
 )
+
 from .. import irregularites
 from .. import exception
 from ..elements import elements
@@ -21,7 +23,7 @@ try:
     type(
         'EssaieMul',
         (), 
-        {'__mul__': lambda self, objet: None}
+        {'__mul__': lambda self, objet: 1 * objet}
     )() * 2
 except:
 
@@ -47,7 +49,8 @@ class params:
     calculatrice = is_calculatrice
 
     langue = 'fr'
-    element = True
+
+    nom = True
     categorie = True
     
     proton = True
@@ -148,7 +151,11 @@ fonctions_configuration_atome = (
 ) 
 
 fonctions_get = {
-    # electron(s) = (Masse de l'Atome - (Masse des protons + Masse des neutrons)) / Masse d'un eletron
+    # electron(s) = (
+    #   Masse de l'Atome - (
+    #       Masse des protons + Masse des neutrons
+    #   )
+    # ) / Masse d'un eletron
     'electron': lambda obj: round(
         (
             obj.masse_atomique_relative * u
@@ -159,7 +166,11 @@ fonctions_get = {
         ) / masse_electron
     ),
 
-    # Proton(s) = (Masse de l'Atome - (Masse des electrons + Masse des neutrons)) / Masse d'un proton
+    # Proton(s) = (
+    #   Masse de l'Atome - (
+    #       Masse des electrons + Masse des neutrons
+    #   )
+    # ) / Masse d'un proton
     'proton': lambda obj: round(
         (
             obj.masse_atomique_relative * u
@@ -170,7 +181,11 @@ fonctions_get = {
         ) / masse_proton
     ),
 
-    # Neuton(s) = (Masse de l'Atome - (Masse des electrons + Masse des protons)) / Masse d'un neutron
+    # Neuton(s) = (
+    #   Masse de l'Atome - (
+    #       Masse des electrons + Masse des protons
+    #   )
+    # ) / Masse d'un neutron
     'neutron': lambda obj: round(
         (
             obj.masse_atomique_relative * u
@@ -190,8 +205,8 @@ notation_configuration_ion = (
 )
 
 notation_configuration_atome = (
-    '1s','2s','2p','3s','3p','4s','3d','4p','5s','4d','5p','6s','4f','5d','6p',
-    '7s','5f','6d','7p'
+    '1s','2s','2p','3s','3p','4s','3d','4p','5s','4d','5p','6s','4f','5d',
+    '6p', '7s','5f','6d','7p'
 )
 
 notations_couche = (
@@ -204,7 +219,7 @@ sous_exposants = tuple('₀₁₂₃₄₅₆₇₈₉')
 
 ### Utitaire
 
-def configuration_electronique(element) -> list:
+def configuration_electronique(element:Union[Atome, Ion]) -> List[int]:
     """
 
     Génére la configuration électronique d'un atome/ion.
@@ -250,7 +265,10 @@ def configuration_electronique(element) -> list:
     return couches
 
 
-def get_info(obj, valeur) -> None:
+def get_info(
+        obj:Union[Atome, Ion],
+        valeur:Union[str, int, Ion, Atome]
+    ) -> None:
     """
 
     Récupére les informations d'un atome grâce à son nombre de proton
@@ -329,7 +347,7 @@ def get_info(obj, valeur) -> None:
     element = elements[obj.proton-1]
 
     (
-        obj.element, 
+        obj.nom, 
         obj.symbole, 
         obj.categorie,
         obj.couches, 
@@ -345,7 +363,7 @@ def get_info(obj, valeur) -> None:
     )
 
 
-def get_value(item:str, obj):
+def get_value(item:str, obj:Union[Atome, Ion]) -> int:
     """
 
     Recupere une valeur d'un item.
@@ -374,7 +392,7 @@ def get_value(item:str, obj):
     return fonctions_get.get(item, lambda x:None)(obj)
 
 
-def get_masse(obj) -> float:
+def get_masse(obj:Union[Atome, Ion]) -> float:
     """
 
     Récupére la masse de l'objet.
@@ -399,27 +417,15 @@ def get_masse(obj) -> float:
     )
 
 
-def convertie_notation_vers(type_obj, data:str) -> list:
+def convertie_notation_vers(
+        type_obj:str, data:str
+    ) -> List[Union[Ion, Atome]]:
     """
-
     Transforme un str en list d'atomes
-
-    ---------
-    Arguments
-
-    data
-        :str
-            Notation de l'atome
-
-    -------
-    Retours
-
-    :list
-        Liste contenant une liste d'atome.
     """
 
-    atome = ''
-    atomes = []
+    element = ''
+    elements = []
     nbr = ''
 
     in_molecule = False
@@ -446,17 +452,19 @@ def convertie_notation_vers(type_obj, data:str) -> list:
 
         elif carac == '(':
 
-            if atome:
+            if element:
                 # CO2(H2)
                 #    ^
-                atomes.extend([type_obj(atome)] * (int(nbr) if nbr else 1))
-                atome = ''
+                elements.extend(
+                    [type_obj(element)] * (int(nbr) if nbr else 1)
+                )
+                element = ''
                 nbr = ''
 
             if isinstance(in_molecule, str):
                 # CO2(H2)4(Ag7)2
                 #         ^
-                atomes.extend(
+                elements.extend(
                     convertie_notation_vers_atomes(in_molecule) 
                     * (int(nbr) if nbr else 1)
                 )
@@ -470,26 +478,28 @@ def convertie_notation_vers(type_obj, data:str) -> list:
             if in_molecule:
                 # (H2)2Ca
                 #      ^
-                atomes.extend(
+                elements.extend(
                     convertie_notation_vers_atomes(in_molecule) 
                     * (int(nbr) if nbr else 1)
                 )
                 in_molecule = False
                 nbr = ''
 
-            if atome:
+            if element:
                 # CaAg
                 #   ^
-                atomes.extend([type_obj(atome)] * (int(nbr) if nbr else 1))
+                elements.extend(
+                    [type_obj(element)] * (int(nbr) if nbr else 1)
+                )
 
-            atome = carac
+            element = carac
             nbr = ''
 
 
         elif carac.islower():
             # Ca
             #  ^
-            atome += carac
+            element += carac
 
 
         elif carac in chiffres:
@@ -500,19 +510,21 @@ def convertie_notation_vers(type_obj, data:str) -> list:
 
     # Element restant
 
-    if atome:
-        atomes.extend([type_obj(atome)] * (int(nbr) if nbr else 1))
+    if element:
+        elements.extend(
+            [type_obj(element)] * (int(nbr) if nbr else 1)
+        )
 
     elif isinstance(in_molecule, str):
-        atomes.extend(
-            convertie_notation_vers('atomes', in_molecule) 
+        elements.extend(
+            convertie_notation_vers(type_obj, in_molecule) 
             * (int(nbr) if nbr else 1)
         )
         in_molecule = False
         nbr = ''
 
 
-    return atomes
+    return elements
 
 
 def verif_stable(elements:List[Union[Atome, Ion]]) -> bool:
@@ -634,7 +646,7 @@ def verif_stable(elements:List[Union[Atome, Ion]]) -> bool:
 
 # Méthodes Atome/Ion
 
-def notation_couche(self):
+def notation_couche(self:Union[Atome, IonMonoAtomique]):
 
     return ' '.join(
         '(%s)%s' % infos
@@ -654,7 +666,7 @@ def notation_couche(self):
         )
     )
 
-def notation_configuration(self):
+def notation_configuration(self:Union[Atome, IonMonoAtomique]):
 
     return ' '.join(
         '%s%s' % (

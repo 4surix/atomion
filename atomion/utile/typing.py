@@ -6,10 +6,6 @@ except ImportError:
     class Hashable: pass
     class Awaitable: pass
     class Coroutine: pass
-    class AsyncIterable: pass
-    class AsyncIterator: pass
-    class Iterable: pass
-    class Iterator: pass
     class Reversible: pass
     class Sized: pass
     class Container: pass
@@ -36,7 +32,9 @@ except ImportError:
     Union = Optional = Generic = NamedTuple = Callable     \
     = AbstractSet = MutableSet = Mapping = MutableMapping  \
     = Sequence = MutableSequence = Tuple = List = Set      \
-    = FrozenSet = Dict = DefaultDict = IO = __Subscriptable()
+    = FrozenSet = Dict = DefaultDict = IO = Iterator       \
+    = Iterable = AsyncIterable = AsyncIterator             \
+    = __Subscriptable()
 
 
     TextIO = IO[str]

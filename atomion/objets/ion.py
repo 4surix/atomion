@@ -12,7 +12,9 @@ from ..objets import (
 from .. import utile
 from .. import exception
 
-from ..utile.typing import Union, Any, Optional, List
+from ..utile.typing import (
+    Union, Any, Optional, List, Tuple
+)
 
 
 if utile.params.calculatrice:
@@ -256,7 +258,10 @@ class IonMonoAtomique(Ion):
             self.proton + self.neutron
         )
 
-    def notation_symbole(self, *args, A:bool = True, Z:bool = True):
+    def notation_symbole(self, 
+            *args,
+            A:bool = True, Z:bool = True, charge:bool = True
+        ):
         """
         ### &doc_id ionMonoAtomique:notation_symbole
         """
@@ -341,7 +346,7 @@ class IonPolyAtomique(Ion):
             valeur if isinstance(valeur, list)
             else
                 [
-                    Ion(e) 
+                    IonMonoAtomique(e) 
                     for e in valeur.atomes
                 ] if isinstance(valeur, Molecule)
                 else
@@ -495,15 +500,15 @@ class IonPolyAtomique(Ion):
 
         ions = {}
 
-        for atome in self.ions:
-            atome = atome.notation_symbole(A=False, Z=False)
-            if atome not in ions:
-                ions[atome] = 0
-            ions[atome] += 1
+        for ion in self.ions:
+            ion = ion.notation_symbole(A=False, Z=False, charge=False)
+            if ion not in ions:
+                ions[ion] = 0
+            ions[ion] += 1
 
         return ''.join(
             '%s%s' % (
-                atome,
+                ion,
                 '' if nbr == 1
                 else
                     nbr if utile.params.calculatrice
@@ -513,7 +518,7 @@ class IonPolyAtomique(Ion):
                             for num in str(nbr)
                         )
             )
-            for atome, nbr in ions.items()
+            for ion, nbr in ions.items()
         )
 
 

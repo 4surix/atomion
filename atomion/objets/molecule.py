@@ -39,8 +39,8 @@ class Molecule:
             valeur if isinstance(valeur, list)
             else
                 [
-                    Atome(e)
-                    for e in valeur.ions
+                    Atome(ion)
+                    for ion in valeur.ions
                 ] if isinstance(valeur, IonPolyAtomique)
                 else
                     utile.convertie_notation_vers('atomes', valeur) 
