@@ -238,6 +238,9 @@ class IonMonoAtomique(Ion):
     def __repr__(self):
         return self.notation_symbole()
 
+    def __hash__(self) -> int:
+        return hash(repr(self))
+
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
 
@@ -475,8 +478,15 @@ class IonPolyAtomique(Ion):
     def __repr__(self) -> str:
         return self.notation_symbole()
 
+    def __hash__(self) -> int:
+        return hash(repr(self))
+
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
+
+    def __iter__(self):
+        for ion in self.ions:
+            yield ion
 
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
         """
