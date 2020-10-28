@@ -52,7 +52,7 @@ class Molecule:
             )
 
         if verif_stable:
-            if not utile.verif_stable(self.atomes):
+            if not utile.verif_espece_stable(self.atomes):
                 raise exception.Instable(self)
 
         self.proton = sum(atome.proton for atome in self.atomes)

@@ -359,7 +359,7 @@ class IonPolyAtomique(Ion):
             )
 
         if verif_stable:
-            utile.verif_stable(self.ions)
+            utile.verif_espece_stable(self.ions)
 
         charge = sum(
             int('%s%s' % (ion.charge, ion.diff))

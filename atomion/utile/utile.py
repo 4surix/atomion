@@ -527,7 +527,7 @@ def convertie_notation_vers(
     return elements
 
 
-def verif_stable(elements:List[Union[Atome, Ion]]) -> bool:
+def verif_espece_stable(elements:List[Union[Atome, Ion]]) -> bool:
     """
     Vérifie si des éléments sont stable en vérifiant leurs nombre de liaison.
     """
