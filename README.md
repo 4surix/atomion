@@ -10,12 +10,12 @@
 [![PyPI](https://img.shields.io/pypi/v/atomion)](https://pypi.org/project/atomion/)
 [![GitHub issues](https://img.shields.io/github/issues/4surix/atomion)](https://github.com/4surix/atomion/issues)
 
-Module servant à manipuler facilement des atomes, ions _(monoatomiques/polyatomiques)_ et molécules.  
-  
-Vous trouverez un fichier [`exemples.py`](https://github.com/4surix/atomion/blob/master/exemples.py) avec les diverses fonctionnalités.  
-  
-Le module est compatible avec `Micro Python 1.9.4`, donc aussi pour les calculatrices ! 
-  
+Module servant à manipuler facilement des atomes, ions _(monoatomiques/polyatomiques)_ et molécules.
+
+Vous trouverez un fichier [`exemples.py`](https://github.com/4surix/atomion/blob/master/exemples.py) avec les diverses fonctionnalités.
+
+Le module est compatible avec `Micro Python 1.9.4`, donc aussi pour les calculatrices !
+
 # Aperçu
 
 ```python
@@ -61,17 +61,20 @@ eau = H2O
 
 print(eau)
 ```
+
 Pour voir le reste des fonctionnalités, regardez le fichier [`exemples.py`](https://github.com/4surix/atomion/blob/master/exemples.py).
 
 # Prochainement
-  
+
 ### v1.3.0
+
 - Ajout quarks (up et down).
 - Ajout objet Noyau.
-    - Contiendra objet `Proton` et `Neutron`.
-    - S'additionnera aux objets Electron pour former des atomes/ions.
+  - Contiendra objet `Proton` et `Neutron`.
+  - S'additionnera aux objets Electron pour former des atomes/ions.
 
 ### v1.4.0
+
 - Ajout fusion nucléaire.
 - Ajout fission nucléaire.
 
@@ -79,45 +82,46 @@ Pour voir le reste des fonctionnalités, regardez le fichier [`exemples.py`](htt
 
 ### Ordinateur
 
-- Ouvrez une invite de commande.  
+- Ouvrez une invite de commande.
   <details>
     <summary>Comment faire ?</summary>
 
-    Appuyez sur la touche `Windows` + la touche `R`, et écrivez `cmd` dans la fenêtre qui s'est ouverte.
+  Appuyez sur la touche `Windows` + la touche `R`, et écrivez `cmd` dans la fenêtre qui s'est ouverte.
   </details>
-  
-- Assurez-vous d'avoir `Python >=3.6` d'installé. 
+
+- Assurez-vous d'avoir `Python >=3.6` d'installé.
   <details>
     <summary>Comment savoir ?</summary>
 
-    Ecrivez `python --version` dans l'invite de commande. Si Python est installé cela affichera la version qui doit être supérieur à `3.6`.
-    Si ce n'est pas le cas, [installer Python](https://www.python.org/downloads/) dans une version égal ou supérieur à 3.6 pour éviter les soucis de compatibilité.
+  Ecrivez `python --version` dans l'invite de commande. Si Python est installé cela affichera la version qui doit être supérieur à `3.6`.
+  Si ce n'est pas le cas, [installer Python](https://www.python.org/downloads/) dans une version égal ou supérieur à 3.6 pour éviter les soucis de compatibilité.
   </details>
-  
-- Vérifiez que `pip` est installé. 
+
+- Vérifiez que `pip` est installé.
   <details>
     <summary>Comment vérifier ?</summary>
 
-    Ecrivez `pip --version` dans l'invite de commande. Si `pip` est installé cela affichera la version qui doit être supérieur à `10.0.0`.  
-    Si ce n'est pas le cas, écrivez `python -m pip install --upgrade pip` pour mettre à jour.
+  Ecrivez `pip --version` dans l'invite de commande. Si `pip` est installé cela affichera la version qui doit être supérieur à `10.0.0`.  
+   Si ce n'est pas le cas, écrivez `python -m pip install --upgrade pip` pour mettre à jour.
   </details>
-  
-- Ecrivez la commande suivante :  
-    ```sh
-    pip install atomion
-    ```
-  
-- L'ors de nouvelle mise à jour il suffira de rajouter `--upgrade` pour mettre le module à jour : 
-    ```sh
-    pip install atomion --upgrade
-    ```
+
+- Ecrivez la commande suivante :
+  ```sh
+  pip install atomion
+  ```
+- Lors de nouvelle mise à jour il suffira de rajouter `--upgrade` pour mettre le module à jour :
+
+  ```sh
+  pip install atomion --upgrade
+  ```
 
 - Ensuite créez un nouveau fichier, importez le module, et amusez vous !
-    ```python
-    from atomion import *
 
-    print(Atome('C') + Molecule('O2'))
-    ```
+  ```python
+  from atomion import *
+
+  print(Atome('C') + Molecule('O2'))
+  ```
 
 ### Calculatrice
 
@@ -129,11 +133,12 @@ _**Attention**, pour les calculatrices qui ne peuvent pas avoir de dossiers, il 
 - Ouvrez le dossier que vous avez déplacé et mettez le dossier `atomion` dans votre calculatrice _(que vous aurez branchée à votre ordi via câble USB ou autre)_.
 - Vous pouvez aussi rajouter le fichier `exemples.py` dans votre calculatrice, cela permettra de vérifier que tout fonctionne quand vous l'exécuterez.
 - Si vous n'avez plus rien d'autre à faire, débranchez votre calculatrice, exécutez le fichier `exemples.py` si vous l'avez mis, et si tout fonctionne, amusez-vous !
- 
+
 # Documentation
 
-Elle n'est pas fini, mais disponible :
+Elle n'est pas finie, mais disponible :
+
 - 🇫🇷 [En français](https://4surix.github.io/atomion-doc/fr/annotated.html)
-- 🇪🇸 [En español](https://4surix.github.io/atomion-doc/es/annotated.html)  
-  
+- 🇪🇸 [En español](https://4surix.github.io/atomion-doc/es/annotated.html)
+
 _Fait avec [DoxyTH](https://github.com/BioTheWolff/DoxyTH)._
