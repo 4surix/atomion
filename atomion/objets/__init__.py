@@ -6,7 +6,7 @@ Neutron = Proton = Electron                \
 = Atome = Molecule                         \
 = Ion = IonMonoAtomique = IonPolyAtomique  \
 = Noyau                                    \
-= Quark                                    \
+= Quark = QUp = QDown                      \
 = None
 
 listes_noms = (

@@ -3,6 +3,9 @@
 # ----------------------------------------------------------------------------
 
 
+import random
+
+
 from .. import objets
 from ..objets import (
 	Proton, Neutron
@@ -55,6 +58,36 @@ class Quark:
         return repr(self) == repr(obj)
 
 objets.Quark = Quark
+
+
+class QUp(Quark):
+
+    def __init__(self, charge_couleur:str = None):
+
+        Quark.__init__(
+            self, 
+            + 2/3, 
+            charge_couleur if charge_couleur
+            else
+                random.choice(CHARGES_COULEURS.values())
+        )
+
+objets.QUp = QUp
+
+
+class QDown(Quark):
+
+    def __init__(self, charge_couleur:str = None):
+
+        Quark.__init__(
+            self, 
+            - 1/3, 
+            charge_couleur if charge_couleur
+            else
+                random.choice(CHARGES_COULEURS.values())
+        )
+
+objets.QDown = QDown
 
 
 def MAJ_TYPE():
