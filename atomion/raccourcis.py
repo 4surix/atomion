@@ -7,6 +7,8 @@ from .objets import Atome, Molecule
 from .elements import elements
 
 
+###>>> CAPTURE FICHIER CALC
+
 variables = globals()
 
 
@@ -57,3 +59,5 @@ del variables['elements']
 del variables['element']
 del variables['symbole']
 del globals()['variables']
+
+###<<< CAPTURE FICHIER CALC

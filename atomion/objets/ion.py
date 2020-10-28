@@ -17,35 +17,7 @@ from ..utile.typing import (
 )
 
 
-if utile.params.calculatrice:
-
-    def Ion(*args, **kwargs):
-
-        try: return IonMonoAtomique(*args, **kwargs)
-        except Exception as exception_IMA:
-            try: return IonPolyAtomique(*args, **kwargs)
-            except Exception as exception_IPA:
-                raise exception_IMA
-
-    objets.Ion = Ion
-
-    class Ion:
-        pass
-
-else:
-
-    class Ion:
-        
-        def __new__(cls, *args, **kwargs):
-
-            try: return IonMonoAtomique(*args, **kwargs)
-            except Exception as exception_IMA:
-                try: return IonPolyAtomique(*args, **kwargs)
-                except Exception as exception_IPA:
-                    raise exception_IMA
-
-    objets.Ion = Ion
-
+###>>> CAPTURE FICHIER CALC
 
 def decode_notation(
         notation:str,
@@ -82,14 +54,29 @@ def decode_notation(
     return notation, charge
 
 
+class Ion:
+    pass
+
+
+if not utile.params.calculatrice:
+
+    class Ion:
+        
+        def __new__(cls, *args, **kwargs):
+
+            try: return IonMonoAtomique(*args, **kwargs)
+            except Exception as exception_IMA:
+                try: return IonPolyAtomique(*args, **kwargs)
+                except Exception as exception_IPA:
+                    raise exception_IMA
+
+    objets.Ion = Ion
+
+
 class IonMonoAtomique(Ion):
     """
     ### &doc_id ionMonoAtomique:class
     """
-
-    if not utile.params.calculatrice:
-        def __new__(cls, *args, **kwargs):
-            return object.__new__(cls)
 
     __slots__ = (
         'nom', 'symbole', 'categorie', 
@@ -98,6 +85,10 @@ class IonMonoAtomique(Ion):
         'configuration', 'couches', 
         'diff', 'charge'
     )
+
+    if not utile.params.calculatrice:
+        def __new__(cls, *args, **kwargs):
+            return object.__new__(cls)
 
     def __init__(self, 
             valeur:Union[int, str, Atome],
@@ -319,15 +310,15 @@ class IonPolyAtomique(Ion):
     ### &doc_id ionPolyAtomique:class
     """
 
-    if not utile.params.calculatrice:
-        def __new__(cls, *args, **kwargs):
-            return object.__new__(cls)
-
     __slots__ = (
         'ions', 
         'proton', 'neutron', 'electron', 'nucleon',
         'masse', 'masse_moleculaire_relative'
     )
+
+    if not utile.params.calculatrice:
+        def __new__(cls, *args, **kwargs):
+            return object.__new__(cls)
 
     def __init__(self, 
             valeur:Union[str, Molecule, List[IonMonoAtomique]],
@@ -521,13 +512,25 @@ class IonPolyAtomique(Ion):
             for ion, nbr in ions.items()
         )
 
-
 objets.IonPolyAtomique = IonPolyAtomique
 
 
+if utile.params.calculatrice:
+
+    def Ion(*args, **kwargs):
+
+        try: return IonMonoAtomique(*args, **kwargs)
+        except Exception as exception_IMA:
+            try: return IonPolyAtomique(*args, **kwargs)
+            except Exception as exception_IPA:
+                raise exception_IMA
+
+    objets.Ion = Ion
+
+###<<< CAPTURE FICHIER CALC
+
+
 def MAJ_TYPE():
-
     variables = globals()
-
     for name_obj in objets.listes_noms:
         variables[name_obj] = getattr(objets, name_obj)

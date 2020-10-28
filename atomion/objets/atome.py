@@ -15,6 +15,8 @@ from .. import exception
 from ..utile.typing import Union, Any, Optional
 
 
+###>>> CAPTURE FICHIER CALC
+
 class Atome:
     """
     ### &doc_id atome:class
@@ -195,6 +197,7 @@ class Atome:
 
     notation_configuration = utile.notation_configuration
 
+###<<< CAPTURE FICHIER CALC
 
 objets.Atome = Atome
 

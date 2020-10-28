@@ -2,6 +2,8 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
+###>>> CAPTURE FICHIER CALC
+
 """
 
 Module utilitaire pour les atomes, ions et molécules.
@@ -20,6 +22,8 @@ Lien du github : https://github.com/4surix/atomion
 
 
 __version__ = '1.2.0'
+
+###<<< CAPTURE FICHIER CALC
 
 
 from .objets import *

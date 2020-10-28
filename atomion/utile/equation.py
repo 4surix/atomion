@@ -15,6 +15,8 @@ from ..objets import (
 from .. import exception
 
 
+###>>> CAPTURE FICHIER CALC
+
 def convertie(notation:str) -> Union[Ion, Molecule, Atome]:
 
     if '{' == notation[0] and notation[-1] == '}':
@@ -447,6 +449,8 @@ class Reaction:
             for espece, quantité in self.final().items()
             if not quantité
         ]
+
+###<<< CAPTURE FICHIER CALC
 
 
 def MAJ_TYPE():

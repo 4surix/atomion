@@ -2,6 +2,7 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
+###>>> CAPTURE FICHIER CALC
 
 configuration = {
     24: [1, 5],
@@ -25,3 +26,5 @@ configuration = {
     96: [7, 1],
     103: [0, 1]
 }
+
+###<<< CAPTURE FICHIER CALC

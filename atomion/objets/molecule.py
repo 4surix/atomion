@@ -15,6 +15,8 @@ from .. import exception
 from ..utile.typing import Union, Any, Optional, List
 
 
+###>>> CAPTURE FICHIER CALC
+
 class Molecule:
     """
     ### &doc_id molecule:class
@@ -203,8 +205,10 @@ class Molecule:
             for atome, nbr in atomes.items()
         )
 
+###<<< CAPTURE FICHIER CALC
 
 objets.Molecule = Molecule
+
 
 def MAJ_TYPE():
 

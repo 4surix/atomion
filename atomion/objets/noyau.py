@@ -12,6 +12,8 @@ from .. import exception
 from ..utile.typing import Union, Any, Optional
 
 
+###>>> CAPTURE FICHIER CALC
+
 class Noyau:
 
     __slots__ = ('proton', 'neutron')
@@ -57,6 +59,8 @@ class Noyau:
 
         else:
             raise exception.Incompatible(self, obj)
+
+###<<< CAPTURE FICHIER CALC
 
 objets.Noyau = Noyau
 

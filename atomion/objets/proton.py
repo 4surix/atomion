@@ -14,6 +14,8 @@ from .. import exception
 from ..utile.typing import Union, Any, Optional
 
 
+###>>> CAPTURE FICHIER CALC
+
 class Proton:
     """
     ### &doc_id particule:proton
@@ -53,6 +55,8 @@ class Proton:
 
         else:
             raise exception.Incompatible(self, obj)
+
+###<<< CAPTURE FICHIER CALC
 
 objets.Proton = Proton
 

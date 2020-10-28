@@ -14,6 +14,8 @@ from .. import exception
 from ..utile.typing import Union, Any, Optional
 
 
+###>>> CAPTURE FICHIER CALC
+
 class Electron:
     """
     ### &doc_id particule:electron
@@ -40,6 +42,8 @@ class Electron:
 
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
+
+###<<< CAPTURE FICHIER CALC
 
 objets.Electron = Electron
 

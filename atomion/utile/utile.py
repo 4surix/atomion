@@ -16,6 +16,8 @@ from .. import exception
 from ..elements import elements
 
 
+###>>> CAPTURE FICHIER CALC
+
 ### Verif si calculatrice
 
 try:
@@ -686,6 +688,8 @@ def notation_configuration(self:Union[Atome, IonMonoAtomique]):
         )
         if electron
     )
+
+###<<< CAPTURE FICHIER CALC
 
 
 def MAJ_TYPE():

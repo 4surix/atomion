@@ -6,6 +6,8 @@
 #   https://github.com/Bowserinator/Periodic-Table-JSON
 # J'ai rajoutée moi-même la partie fr.
 
+###>>> CAPTURE FICHIER CALC
+
 elements = [
     {
         "name": {
@@ -2658,3 +2660,5 @@ elements = [
         "density": 3
     }
 ]
+
+###<<< CAPTURE FICHIER CALC

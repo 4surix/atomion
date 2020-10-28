@@ -15,6 +15,8 @@ from .. import exception
 from ..utile.typing import Union, Any, Optional, List
 
 
+###>>> CAPTURE FICHIER CALC
+
 CHARGES_ELECTRIQUES = [
     - 1/3,
     + 2/3
@@ -142,6 +144,8 @@ class BiQuark:
 
         else:
             raise exception.Incompatible(self, obj)
+
+###<<< CAPTURE FICHIER CALC
 
 
 def MAJ_TYPE():

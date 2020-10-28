@@ -14,6 +14,8 @@ from .. import exception
 from ..utile.typing import Union, Any, Optional
 
 
+###>>> CAPTURE FICHIER CALC
+
 class Neutron:
     """
     ### &doc_id particule:neutron
@@ -53,6 +55,8 @@ class Neutron:
 
         else:
             raise exception.Incompatible(self, obj)
+
+###<<< CAPTURE FICHIER CALC
 
 objets.Neutron = Neutron
 

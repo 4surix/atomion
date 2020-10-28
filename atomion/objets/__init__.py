@@ -2,12 +2,16 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
+###>>> CAPTURE FICHIER CALC
+
 Neutron = Proton = Electron                \
 = Atome = Molecule                         \
 = Ion = IonMonoAtomique = IonPolyAtomique  \
 = Noyau                                    \
 = Quark = QUp = QDown                      \
 = None
+
+###<<< CAPTURE FICHIER CALC
 
 listes_noms = (
     'Neutron',
