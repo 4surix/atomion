@@ -41,6 +41,19 @@ class Proton:
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
 
+    def __add__(self, 
+            obj: Union[Proton, Neutron]
+        ) -> Union[Proton, Noyau]:
+
+        if isinstance(obj, Proton):
+            return Proton(self.valeur + obj.valeur)
+
+        elif isinstance(obj, Neutron):
+            return Noyau(self, obj)
+
+        else:
+            raise exception.Incompatible(self, obj)
+
 objets.Proton = Proton
 
 
