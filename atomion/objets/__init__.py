@@ -14,10 +14,14 @@ listes_noms = (
     'Proton',
     'Electron',
     'Atome',
+    'Molecule',
     'Ion',
     'IonMonoAtomique',
     'IonPolyAtomique',
-    'Molecule'
+    'Noyau',
+    'Quark',
+    'QUp',
+    'QDown'
 )
 
 from . import (
