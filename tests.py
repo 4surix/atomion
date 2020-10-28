@@ -84,6 +84,30 @@ class TestAddition(unittest.TestCase):
             Molecule('C3H4')
         )
 
+    def test_proton_proton(self):
+        self.assertEqual(
+            Proton(2) + Proton(3),
+            Proton(5)
+        )
+
+    def test_neutron_neutron(self):
+        self.assertEqual(
+            Neutron(2) + Neutron(3),
+            Neutron(5)
+        )
+
+    def test_proton_neutron(self):
+        self.assertEqual(
+            Proton(2) + Neutron(3),
+            Noyau(Proton(2), Neutron(3))
+        )
+
+    def test_neutron_proton(self):
+        self.assertEqual(
+            Neutron(2) + Proton(3),
+            Noyau(Proton(3), Neutron(2))
+        )
+
 
 class TestSubstraction(unittest.TestCase):
 
