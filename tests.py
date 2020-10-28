@@ -108,13 +108,13 @@ class TestAddition(unittest.TestCase):
             Noyau(Proton(3), Neutron(2))
         )
 
-    def test_noyeau_electron__atome(self):
+    def test_noyau_electron__atome(self):
         self.assertEqual(
             Noyau(Proton(3), Neutron(4)) + Electron(3),
             Atome(3)
         )
 
-    def test_noyeau_electron__ion(self):
+    def test_noyau_electron__ion(self):
         self.assertEqual(
             Noyau(Proton(3), Neutron(4)) + Electron(2),
             Ion(3)
