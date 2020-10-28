@@ -5,9 +5,9 @@
 
 from .. import objets
 from ..objets import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Electron, Proton, Neutron
+    Atome, IonMonoAtomique,
+    Proton, Neutron,
+    Noyau
 )
 from .. import exception
 

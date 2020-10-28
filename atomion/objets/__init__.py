@@ -2,8 +2,11 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
-Neutron = Proton = Electron = Atome = Ion = IonMonoAtomique  \
-= IonPolyAtomique = Molecule = None
+Neutron = Proton = Electron                \
+= Atome = Molecule                         \
+= Ion = IonMonoAtomique = IonPolyAtomique  \
+= Noyau                                    \
+= None
 
 listes_noms = (
     'Neutron',
@@ -16,12 +19,14 @@ listes_noms = (
     'Molecule'
 )
 
-from . import molecule, atome, ion, electron, proton, neutron
+from . import (
+    molecule, atome, ion, noyau, electron, proton, neutron
+)
 
 from .. import utile
 
 for module in [
-        molecule, atome, ion, electron, proton, neutron,
+        molecule, atome, ion, noyau, electron, proton, neutron,
         utile, utile.equation
     ]:
     module.MAJ_TYPE()

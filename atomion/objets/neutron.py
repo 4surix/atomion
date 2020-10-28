@@ -5,9 +5,9 @@
 
 from .. import objets
 from ..objets import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Electron, Proton, Neutron
+    Atome, IonMonoAtomique,
+    Proton, Neutron,
+    Noyau
 )
 from .. import exception
 
@@ -23,7 +23,7 @@ class Neutron:
 
     def __init__(self, valeur:Optional[int] = 1) -> None:
 
-        if isinstance(valeur, (Atome, Ion)):
+        if isinstance(valeur, (Atome, IonMonoAtomique)):
             self.valeur = valeur.neutron
 
         elif isinstance(valeur, int):
