@@ -120,6 +120,18 @@ class TestAddition(unittest.TestCase):
             Ion(3)
         )
 
+    def test_quark__proton(self):
+        self.assertEqual(
+            QUp(1) + QUp(2) + QDown(3),
+            Proton()
+        )
+
+    def test_quark__neutron(self):
+        self.assertEqual(
+            QUp(1) + QDown(2) + QDown(3),
+            Neutron()
+        )
+
 
 class TestSubstraction(unittest.TestCase):
 
