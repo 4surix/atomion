@@ -6,6 +6,7 @@ Neutron = Proton = Electron                \
 = Atome = Molecule                         \
 = Ion = IonMonoAtomique = IonPolyAtomique  \
 = Noyau                                    \
+= Quark                                    \
 = None
 
 listes_noms = (
@@ -20,13 +21,13 @@ listes_noms = (
 )
 
 from . import (
-    molecule, atome, ion, noyau, electron, proton, neutron
+    molecule, atome, ion, noyau, electron, proton, neutron, quark
 )
 
 from .. import utile
 
 for module in [
-        molecule, atome, ion, noyau, electron, proton, neutron,
+        molecule, atome, ion, noyau, electron, proton, neutron, quark,
         utile, utile.equation
     ]:
     module.MAJ_TYPE()
