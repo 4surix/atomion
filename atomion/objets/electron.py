@@ -9,6 +9,7 @@ from ..objets import (
     Ion, IonMonoAtomique, IonPolyAtomique,
     Electron, Proton, Neutron
 )
+from .. import utile
 from .. import exception
 
 from ..utile.typing import Union, Any, Optional
@@ -38,10 +39,18 @@ class Electron:
             )
 
     def __repr__(self) -> str:
-        return 'Electron(%s)' % self.valeur
+        return self.notation_symbole()
 
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
+
+    def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
+
+        return "%se%s" % (
+            str(self.valeur)
+            ,
+            '-' if utile.params.calculatrice else '⁻'
+        )
 
 ###<<< CAPTURE FICHIER CALC
 
