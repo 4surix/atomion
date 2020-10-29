@@ -34,7 +34,6 @@ for symbole in [
     'C3H4',
     'C2H2',
     'C6H6',
-    'C2H5Br',
     'C2H5OH',
     'C6H6O',
     'C2H4O2',
