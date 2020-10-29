@@ -9,6 +9,7 @@ from ..objets import (
     Proton, Neutron,
     Noyau
 )
+from .. import utile
 from .. import exception
 
 from ..utile.typing import Union, Any, Optional
@@ -38,7 +39,7 @@ class Neutron:
             )
 
     def __repr__(self) -> str:
-        return 'Neutron(%s)' % self.valeur
+        return self.notation_symbole()
 
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
@@ -55,6 +56,23 @@ class Neutron:
 
         else:
             raise exception.Incompatible(self, obj)
+
+    def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
+
+        return "%s%sn%s" % (
+            '' if not A or utile.params.calculatrice
+            else
+                ''.join(
+                    utile.exposants[int(num)] 
+                    for num in str(self.valeur)
+                )
+            ,
+            '' if not Z or utile.params.calculatrice
+            else
+                utile.sous_exposants[0]
+            ,
+            '' if utile.params.calculatrice else utile.exposants[0]
+        )
 
 ###<<< CAPTURE FICHIER CALC
 
