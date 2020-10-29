@@ -99,6 +99,18 @@ class TestException(unittest.TestCase):
             lambda: Atome('Carbone')
         )
 
+    def test_molecule_valeurIncorrecte_nombre(self):
+        self.assertRaises(
+            exception.ValeurIncorrecte,
+            lambda: Molecule('C')
+        )
+
+    def test_molecule_valeurIncorrecte_gazNoble(self):
+        self.assertRaises(
+            exception.ValeurIncorrecte,
+            lambda: Molecule('HeC')
+        )
+
     def test_atome_incompatible(self):
         self.assertRaises(
             exception.Incompatible,
