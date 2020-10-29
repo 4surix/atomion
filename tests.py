@@ -108,7 +108,7 @@ class TestException(unittest.TestCase):
     def test_molecule_valeurIncorrecte_gazNoble(self):
         self.assertRaises(
             exception.ValeurIncorrecte,
-            lambda: Molecule('HeC')
+            lambda: Molecule('HeNTaI')
         )
 
     def test_atome_incompatible(self):
