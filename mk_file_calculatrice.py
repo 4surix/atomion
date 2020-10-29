@@ -23,10 +23,11 @@ parties = [
     'objets/ion.py',
     'objets/molecule.py',
     'objets/neutron.py',
-    'objets/noyau.py',
     'objets/proton.py',
-    'objets/quark.py',
-    'utile/equation.py'
+    'objets/noyau.py',     # <--- Peut être retiré
+    'utile/equation.py',   # <--- Peut être retiré
+    'objets/quark.py',     # <--- Peut être retiré
+    'raccourcie.py'        # <--- Peut être retiré
 ]
 
 for partie in parties:
