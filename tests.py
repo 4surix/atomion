@@ -50,6 +50,28 @@ class TestObjet(unittest.TestCase):
         ]:
             Molecule(symbole)
 
+    def test_str(self):
+        str(Quark(+ 2/3, 'R'))
+        str(Proton())
+        str(Neutron())
+        str(Electron())
+        str(Noyau(Proton(6), Neutron(6)))
+        str(Atome('C'))
+        str(Molecule('O2'))
+        str(Ion('K'))
+        str(Ion('CO2'))
+
+    def test_repr(self):
+        repr(Quark(+ 2/3, 'R'))
+        repr(Proton())
+        repr(Neutron())
+        repr(Electron())
+        repr(Noyau(Proton(6), Neutron(6)))
+        repr(Atome('C'))
+        repr(Molecule('O2'))
+        repr(Ion('K'))
+        repr(Ion('CO2'))
+
 
 class TestException(unittest.TestCase):
 
