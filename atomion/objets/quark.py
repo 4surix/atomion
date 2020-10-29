@@ -2,8 +2,11 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
+###>>> CAPTURE FICHIER CALC
 
 import random
+
+###<<< CAPTURE FICHIER CALC
 
 
 from .. import objets
