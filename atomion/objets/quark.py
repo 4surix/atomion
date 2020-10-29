@@ -54,10 +54,7 @@ class Quark:
         self.charge_couleur = charge_couleur
 
     def __repr__(self) -> str:
-        return 'Quark{%s, %s}' % (
-            self.charge_electrique,
-            self.charge_couleur
-        )
+        return self.notation_symbole()
 
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
@@ -69,6 +66,14 @@ class Quark:
 
         else:
             raise exception.Incompatible(self, obj)
+
+    def notation_symbole(self) -> str:
+
+        if self.charge_electrique == + 2/3:
+            return 'u'
+
+        if self.charge_electrique == - 1/3:
+            return 'd'
 
 objets.Quark = Quark
 
