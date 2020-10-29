@@ -53,6 +53,13 @@ class Molecule:
                 "Une molécule doit être composée de plusieurs atomes."
             )
 
+        for atome in self.atomes:
+            try: Ion(atome)
+            except exception.ValeurIncorrecte:
+                raise exception.ValeurIncorrecte(
+                    "Une molécule ne peut pas avoir de gaz noble."
+                )
+
         if verif_stable:
             if not utile.verif_espece_stable(self.atomes):
                 raise exception.Instable(self)
