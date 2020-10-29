@@ -398,7 +398,12 @@ elements = [
         ],
         "atomic_mass": 40.0784,
         "density": 1.55
-    },
+    }
+]
+
+###<<< CAPTURE FICHIER CALC
+
+elements += [
     {
         "name": {
             "en": "Scandium",
