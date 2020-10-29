@@ -107,6 +107,13 @@ class IonMonoAtomique(Ion):
 
         drn_couche = self.couches[-1]
 
+        if self.symbole in (
+            'He', 'Ne', 'Ar', 'Kr', 'Xe', 'Rn'
+        ):
+            raise exception.ValeurIncorrecte(
+                "Un gaz noble ne peut pas devenir un ion monoatomique."
+            )
+
         if 0 < drn_couche < 5:
             self.electron = self.proton - drn_couche
             self.charge = '+'
@@ -116,11 +123,6 @@ class IonMonoAtomique(Ion):
             self.electron = self.proton + (8 - drn_couche)
             self.charge = '-'
             self.couches[-1] = 8
-
-        else:
-            raise exception.ValeurIncorrecte(
-                "Un gaz noble ne peut pas devenir un ion monoatomique."
-            )
 
         self.neutron = (
             neutron if neutron is not None

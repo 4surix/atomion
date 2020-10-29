@@ -54,8 +54,9 @@ class Molecule:
             )
 
         for atome in self.atomes:
-            try: Ion(atome)
-            except exception.ValeurIncorrecte:
+            if atome.symbole in (
+                'He', 'Ne', 'Ar', 'Kr', 'Xe', 'Rn'
+            ):
                 raise exception.ValeurIncorrecte(
                     "Une molécule ne peut pas avoir de gaz noble."
                 )
