@@ -1,18 +1,34 @@
 - [Atomion](https://github.com/4surix/atomion#atomion)
 - [Aperçu](https://github.com/4surix/atomion#aper%C3%A7u)
-- [Prochainement](https://github.com/4surix/atomion#prochainement)
 - [Installer](https://github.com/4surix/atomion#installer)
-- [Documentation](https://github.com/4surix/atomion#documentation)
+- [Licence](https://github.com/4surix/atomion#licence)
 
 # Atomion
 
 [![Build Status](https://travis-ci.com/4surix/atomion.svg?branch=master)](https://travis-ci.com/4surix/atomion)
 [![PyPI](https://img.shields.io/pypi/v/atomion)](https://pypi.org/project/atomion/)
 [![GitHub issues](https://img.shields.io/github/issues/4surix/atomion)](https://github.com/4surix/atomion/issues)
+[![Download](https://img.shields.io/pypi/dm/atomion)](https://pypi.org/project/atomion/)
+![Version python](https://img.shields.io/pypi/pyversions/atomion)
+![Code size](https://img.shields.io/github/languages/code-size/4surix/atomion)
+![Code size file](https://img.shields.io/badge/code%20size%20file%20calc-34%20kB-blue)
 
-Module servant à manipuler facilement des atomes, ions _(monoatomiques/polyatomiques)_ et molécules.
+Module servant à manipuler facilement :
+- Quark
+- Proton, Neutron, Electron
+- Noyau
+- Atome
+- Ion _(monoatomique/polyatomique)_
+- Molécule
+- Equation chimique
+- Réaction chimique
+##### Prochainement
+- Fusion nucléaire
+- Fission nucléaire
+- Gluons
+- Antimatière
 
-Vous trouverez un fichier [`exemples.py`](https://github.com/4surix/atomion/blob/master/exemples.py) avec les diverses fonctionnalités.
+Vous trouverez un dossier [`exemples`](https://github.com/4surix/atomion/blob/master/exemples) avec les diverses fonctionnalités.
 
 Le module est compatible avec `Micro Python 1.9.4`, donc aussi pour les calculatrices !
 
@@ -58,25 +74,9 @@ from atomion.raccourcis import *
 eau = H * 2 + O
 # Ou
 eau = H2O
-
-print(eau)
 ```
 
-Pour voir le reste des fonctionnalités, regardez le fichier [`exemples.py`](https://github.com/4surix/atomion/blob/master/exemples.py).
-
-# Prochainement
-
-### v1.3.0
-
-- Ajout quarks (up et down).
-- Ajout objet Noyau.
-  - Contiendra objet `Proton` et `Neutron`.
-  - S'additionnera aux objets Electron pour former des atomes/ions.
-
-### v1.4.0
-
-- Ajout fusion nucléaire.
-- Ajout fission nucléaire.
+Pour voir le reste des fonctionnalités, regardez le dossier [`exemples`](https://github.com/4surix/atomion/blob/master/exemples).
 
 # Installer
 
@@ -86,7 +86,7 @@ Pour voir le reste des fonctionnalités, regardez le fichier [`exemples.py`](htt
   <details>
     <summary>Comment faire ?</summary>
 
-  Appuyez sur la touche `Windows` + la touche `R`, et écrivez `cmd` dans la fenêtre qui s'est ouverte.
+  Sur Windows, appuyez sur la touche `Windows` + la touche `R`, et écrivez `cmd` dans la fenêtre qui s'est ouverte.
   </details>
 
 - Assurez-vous d'avoir `Python >=3.6` d'installé.
@@ -101,7 +101,7 @@ Pour voir le reste des fonctionnalités, regardez le fichier [`exemples.py`](htt
   <details>
     <summary>Comment vérifier ?</summary>
 
-  Ecrivez `pip --version` dans l'invite de commande. Si `pip` est installé cela affichera la version qui doit être supérieur à `10.0.0`.  
+  Ecrivez `pip --version` dans l'invite de commande. Si `pip` est installé cela affichera la version qui doit être supérieur à `20.0.0`.  
    Si ce n'est pas le cas, écrivez `python -m pip install --upgrade pip` pour mettre à jour.
   </details>
 
@@ -125,20 +125,17 @@ Pour voir le reste des fonctionnalités, regardez le fichier [`exemples.py`](htt
 
 ### Calculatrice
 
-_**Attention**, pour les calculatrices qui ne peuvent pas avoir de dossiers, il n'est pas possible d'utiliser le module, mais une version en un seul fichier est en cours pour que vous puissiez l'utiliser._
+- [Téléchargez le code.](https://github.com/4surix/atomion/archive/master.zip)
+- Ouvrez le `.zip` et glissez le dossier qui se trouve à l'intérieur autre part (dans un endroit accessible).
+- Ouvrez le dossier que vous avez déplacé et executer le fichier `mk_file_calculatrice.py`.
+- Un fichier `atomion.py` va se créer, mettez le dans votre calculatrice _(que vous aurez branchée à votre ordi via câble USB ou autre)_.
+- Si vous n'avez plus rien d'autre à faire, débranchez votre calculatrice et amusez-vous !
+  
+Si le fichier est trop grand, installer [`python_minifier`](https://pypi.org/project/python-minifier/) (`pip install python-minifier`), et recréer le fichier.  
+  
+Si vous avez un problème, n'hésitez pas à regarder les [issues](https://github.com/4surix/atomion/issues) déjà exitantes ou à en ouvrir une.  
 
-- Repérez le bouton vert avec écrit "Code" sur cette page et appuyez dessus.
-- Cliquez sur `Download ZIP`.
-- Une fois le téléchargement terminé, ouvrez le `.zip` et glissez le dossier qui se trouve à l'intérieur autre part (dans un endroit accessible).
-- Ouvrez le dossier que vous avez déplacé et mettez le dossier `atomion` dans votre calculatrice _(que vous aurez branchée à votre ordi via câble USB ou autre)_.
-- Vous pouvez aussi rajouter le fichier `exemples.py` dans votre calculatrice, cela permettra de vérifier que tout fonctionne quand vous l'exécuterez.
-- Si vous n'avez plus rien d'autre à faire, débranchez votre calculatrice, exécutez le fichier `exemples.py` si vous l'avez mis, et si tout fonctionne, amusez-vous !
+# Licence
 
-# Documentation
-
-Elle n'est pas finie, mais disponible :
-
-- 🇫🇷 [En français](https://4surix.github.io/atomion-doc/fr/annotated.html)
-- 🇪🇸 [En español](https://4surix.github.io/atomion-doc/es/annotated.html)
-
-_Fait avec [DoxyTH](https://github.com/BioTheWolff/DoxyTH)._
+Je ne sais pas quelle licence mettre.  
+Tout ce que je veux c'est que tout le monde puisse l'utiliser gratuitement et librement que cela soit pour le privé, dans leur projet publique, à but éducatif ; mais je ne veux pas qu'une personne : puisse se faire de l'argent avec le projet atomion, prétend que le code du projet atomion soit le sien et pas le mien, ne cite pas le projet atomion dans leur projet.
