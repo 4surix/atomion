@@ -125,6 +125,10 @@ class TestAddition(unittest.TestCase):
         b = Atome('F')
         self.assertTrue(a == b and a.proton == b.proton == 9)
 
+    def test_atome_neutron(self):
+        a = Atome('C') + Neutron(2)
+        self.assertTrue(a.neutron == 8)
+
     def test_atome_electron(self):
         a = Atome('Cl') + Electron(1)
         b = Ion('Cl')
@@ -206,6 +210,10 @@ class TestSubstraction(unittest.TestCase):
         a = Atome('C') - Proton(3)
         b = Atome('Li')
         self.assertTrue(a == b and a.proton == b.proton == 3)
+
+    def test_atome_neutron(self):
+        a = Atome('C') - Neutron(2)
+        self.assertTrue(a.neutron == 4)
 
     def test_atome_electron(self):
         a = Atome('Al') - Electron(3)
