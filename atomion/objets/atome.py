@@ -61,7 +61,7 @@ class Atome:
             return Atome(self.proton + obj.valeur)
 
         elif isinstance(obj, Neutron):
-            return Atome(self.proton, self.neutron + obj.valeur)
+            return Atome(self.proton, neutron = self.neutron + obj.valeur)
 
         elif isinstance(obj, Electron):
             # Si on ajoute des electrons la charge est négatif.
@@ -86,7 +86,7 @@ class Atome:
             return Atome(self.proton - obj.valeur)
 
         elif isinstance(obj, Neutron):
-            return Atome(self.proton, self.neutron - obj.valeur)
+            return Atome(self.proton, neutron = self.neutron - obj.valeur)
 
         elif isinstance(obj, Electron):
             # Si on enlève des electrons la charge est positif.
