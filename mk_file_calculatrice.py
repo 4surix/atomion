@@ -71,6 +71,7 @@ if python_minifier:
         preserve_locals=None,
         rename_globals=True,
         preserve_globals=[
+            # Objets
             'Neutron',
             'Proton',
             'Electron',
@@ -85,7 +86,11 @@ if python_minifier:
             'QDown',
             'Equation',
             'Reaction',
+            # Globales
             'params',
+            'u',
+            'mol',
+            # Exceptions
             'ValeurIncorrecte',
             'Instable',
             'Incompatible'
