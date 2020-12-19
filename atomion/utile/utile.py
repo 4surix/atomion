@@ -419,6 +419,17 @@ def get_masse(obj:Union[Atome, Ion]) -> float:
     )
 
 
+def convertie_notation(notation:str) -> Union[Ion, Molecule, Atome]:
+
+    if '{' == notation[0] and notation[-1] == '}':
+        return Ion(notation)
+
+    else:
+        try: return Molecule(notation, verif_stable=False)
+        except exception.ValeurIncorrecte:
+            return Atome(notation)
+
+
 def convertie_notation_vers(
         type_obj:str, data:str
     ) -> List[Union[Ion, Atome]]:

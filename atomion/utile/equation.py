@@ -2,6 +2,7 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
+from . import utile
 from .utile import *
 from .typing import *
 
@@ -15,16 +16,6 @@ from .. import exception
 
 
 ###>>> CAPTURE FICHIER CALC
-
-def convertie_notation(notation:str) -> Union[Ion, Molecule, Atome]:
-
-    if '{' == notation[0] and notation[-1] == '}':
-        return Ion(notation)
-
-    else:
-        try: return Molecule(notation, verif_stable=False)
-        except exception.ValeurIncorrecte:
-            return Atome(notation)
 
 
 def analyse(
@@ -108,12 +99,12 @@ class Equation:
             reactifs, produits = notation.split(' -> ')
 
         self.reactifs = [
-            convertie_notation(notation.strip())
+            utile.convertie_notation(notation.strip())
             for notation in reactifs.split(' + ')
         ] if type(reactifs) == str else reactifs 
 
         self.produits = [
-            convertie_notation(notation.strip())
+            utile.convertie_notation(notation.strip())
             for notation in produits.split(' + ')
         ] if type(produits) == str else produits 
 
@@ -211,7 +202,7 @@ class Equation:
                 if symbole not in symboles_produits:
 
                     Union[Atome, IonMonoAtomique]; 
-                    element = convertie_notation(symbole)
+                    element = utile.convertie_notation(symbole)
 
                     self.spectatrices.append(element)
 
