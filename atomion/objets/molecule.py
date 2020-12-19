@@ -114,16 +114,10 @@ class Molecule:
         ) -> Molecule:
 
         if isinstance(obj, Molecule):
-
-            atomes = self.atomes[:]
-            atomes.extend(obj.atomes)
-            return Molecule(atomes)
+            return Molecule(self.atomes + obj.atomes)
 
         elif isinstance(obj, Atome):
-
-            atomes = self.atomes[:]
-            atomes.append(obj)
-            return Molecule(atomes)
+            return Molecule(self.atomes + [obj])
 
         else:
             raise exception.Incompatible(self, obj)

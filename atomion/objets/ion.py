@@ -416,16 +416,10 @@ class IonPolyAtomique(Ion):
         ) -> IonPolyAtomique:
 
         if isinstance(obj, IonPolyAtomique):
-
-            ions = self.ions[:]
-            ions.extend(obj.ions)
-            return IonPolyAtomique(ions)
+            return IonPolyAtomique(self.ions + obj.ions)
 
         elif isinstance(obj, IonMonoAtomique):
-
-            ions = self.ions[:]
-            ions.append(obj)
-            return IonPolyAtomique(ions)
+            return IonPolyAtomique(self.ions + [obj])
 
         else:
             raise exception.Incompatible(self, obj)
