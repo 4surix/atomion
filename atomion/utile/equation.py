@@ -2,9 +2,8 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
-from .typing import *
-
 from .utile import *
+from .typing import *
 
 from .. import objets
 from ..objets import (
@@ -17,14 +16,14 @@ from .. import exception
 
 ###>>> CAPTURE FICHIER CALC
 
-def convertie(notation:str) -> Union[Ion, Molecule, Atome]:
+def convertie_notation(notation:str) -> Union[Ion, Molecule, Atome]:
 
     if '{' == notation[0] and notation[-1] == '}':
         return Ion(notation)
 
     else:
         try: return Molecule(notation, verif_stable=False)
-        except:
+        except exception.ValeurIncorrecte:
             return Atome(notation)
 
 
@@ -88,33 +87,46 @@ class Equation:
         'is_equilibre', 
         'coefficients', 
         'spectatrices', 'reactifs', 'produits',
-        'notation'
+        'notation', 'demi_equation'
     )
 
-    def __init__(self, notation:str):
+    def __init__(
+            self,
+            notation:str = None,
+            *,
+            demi_equation:bool = False,
 
-        reactifs, produits = notation.split(' -> ')
+            reactifs = None,
+            produits = None,
+            coefficients = None,
+            is_equilibre = False
+        ):
+
+        self.demi_equation = demi_equation
+
+        if notation:
+            reactifs, produits = notation.split(' -> ')
 
         self.reactifs = [
-            convertie(notation.strip())
+            convertie_notation(notation.strip())
             for notation in reactifs.split(' + ')
-        ]
+        ] if type(reactifs) == str else reactifs 
 
         self.produits = [
-            convertie(notation.strip())
+            convertie_notation(notation.strip())
             for notation in produits.split(' + ')
-        ]
+        ] if type(produits) == str else produits 
 
         self.spectatrices = []
 
         self.coefficients = [
             [1] * len(self.reactifs),
             [1] * len(self.produits)
-        ]
+        ] if not coefficients else coefficients
 
         self.maj_notation()
 
-        self.is_equilibre = False
+        self.is_equilibre = is_equilibre
 
     def __str__(self):
         return self.notation
@@ -131,7 +143,7 @@ class Equation:
         self.notation = (
             ' + '.join(
                 '%s%s' % (
-                    '' if nbr == 1 
+                    '' if nbr == 1
                     else 
                         str(nbr) + ' '
                     ,
@@ -185,31 +197,39 @@ class Equation:
                 if symbole not in symboles_produits:
                     symboles_produits.append(symbole)
 
-        # Collecte des possibles élements spectateurs.
 
-        for symbole in symboles_reactifs:
+        ### Collecte des possibles élements spectateurs.
+        #
 
-            if symbole not in symboles_produits:
+        if not self.demi_equation:
+            # Dans le cas d'une demi-équation, exemple : {Cr2O7 2-} -> {Cr 3+},
+            #  certain réactif ne sont pas dans les produits, et vise-versa,
+            #  donc le code ci-dessous va les enlever.
 
-                Union[Atome, IonMonoAtomique]; element = convertie(symbole)
+            for symbole in symboles_reactifs:
 
-                self.spectatrices.append(element)
+                if symbole not in symboles_produits:
 
-                symboles_reactifs.remove(symbole)
+                    Union[Atome, IonMonoAtomique]; 
+                    element = convertie_notation(symbole)
 
-                for element__ in self.reactifs:
-                    if not (
-                        (
-                            isinstance(element__, (IonPolyAtomique, Molecule))
-                            and element in element__
-                        )
-                        or
-                        (
-                            isinstance(element__, (IonMonoAtomique, Atome))
-                            and element == element__
-                        ) 
-                    ):
-                        self.reactifs.remove(element__)
+                    self.spectatrices.append(element)
+
+                    symboles_reactifs.remove(symbole)
+
+                    for element__ in self.reactifs:
+                        if not (
+                            (
+                                isinstance(element__, (IonPolyAtomique, Molecule))
+                                and element in element__
+                            )
+                            or
+                            (
+                                isinstance(element__, (IonMonoAtomique, Atome))
+                                and element == element__
+                            ) 
+                        ):
+                            self.reactifs.remove(element__)
 
         # Equilibrage.
 
@@ -233,6 +253,16 @@ class Equation:
             while nbr_symboles_equilibres != nbr_symboles:
 
                 for symbole in liste_symboles_atomes:
+
+                    if (
+                        # Dans le cas d'une demi-équation, 
+                        #  on ne fait pas attention en premier
+                        #  à l'hydrogéne et l'oxygéne.
+                        self.demi_equation
+                        and symbole in ['H', 'O']
+                    ):
+                        nbr_symboles_equilibres += 1
+                        continue
 
                     nombre_total_p1 = sum(
                         element.get(symbole, 0) * configuration[0][i]
@@ -300,7 +330,19 @@ class Equation:
                     for index, element, charge in info_charges_produits
                 )
 
-                if charge_total_p1 < charge_total_p2:
+                if (
+                    not (
+                        # Si les charges des 2 côtés sont toutes les 2
+                        #  soit positif soit négatif, impossible de les équilibrer
+                        #  en changeant leur coefficients.
+                        (charge_total_p1 < 0 and charge_total_p2 < 0)
+                        or (charge_total_p1 > 0 and charge_total_p2 > 0)
+                    )
+                    or charge_total_p1 == charge_total_p2
+                ):
+                    break
+                
+                elif charge_total_p1 < charge_total_p2:
 
                     min_value = 1000000000
 
@@ -333,8 +375,119 @@ class Equation:
 
                     total_equilibre = False
 
-                else:
-                    break
+
+        if self.demi_equation:
+
+            ### Equilibre de l'oxygéne en rajoutant de l'H2O
+            #
+
+            nombre_total_p1 = sum(
+                element.get('O', 0) * configuration[0][i]
+                for i, element in enumerate(info_atomes_reactifs)
+            )
+
+            nombre_total_p2 = sum(
+                element.get('O', 0) * configuration[1][i]
+                for i, element in enumerate(info_atomes_produits)
+            )
+
+            if nombre_total_p1 == nombre_total_p2:
+                pass
+
+            elif nombre_total_p1 < nombre_total_p2:
+                self.reactifs.append(Molecule('H2O'))
+                info_atomes_reactifs.append({'H': 2, 'O': 1})
+                configuration[0].append(nombre_total_p2 - nombre_total_p1)
+
+            elif nombre_total_p1 > nombre_total_p2:
+                self.produits.append(Molecule('H2O'))
+                info_atomes_produits.append({'H': 2, 'O': 1})
+                configuration[1].append(nombre_total_p1 - nombre_total_p2)
+
+
+            ### Equilibre de l'hydrogéne en rajoutant des ions H+
+            #
+
+            nombre_total_p1 = sum(
+                element.get('H', 0) * configuration[0][i]
+                for i, element in enumerate(info_atomes_reactifs)
+            )
+
+            nombre_total_p2 = sum(
+                element.get('H', 0) * configuration[1][i]
+                for i, element in enumerate(info_atomes_produits)
+            )
+
+            if nombre_total_p1 == nombre_total_p2:
+                pass
+
+            elif nombre_total_p1 < nombre_total_p2:
+                ion = Ion('H')
+                self.reactifs.append(ion)
+                info_atomes_reactifs.append({'H': 1})
+                info_charges_reactifs.append(
+                    (
+                        len(configuration[0]),
+                        ion,
+                        1
+                    )
+                )
+                configuration[0].append(nombre_total_p2 - nombre_total_p1)
+
+            elif nombre_total_p1 < nombre_total_p2:
+                ion = Ion('H')
+                self.produits.append(ion)
+                info_atomes_produits.append({'H': 1})
+                info_charges_produits.append(
+                    (
+                        len(configuration[1]),
+                        ion,
+                        1
+                    )
+                )
+                configuration[1].append(nombre_total_p1 - nombre_total_p2)
+
+
+            ### Equilibre des charges
+            #
+
+            charge_total_p1 = sum(
+                charge * configuration[0][index]
+                for index, element, charge in info_charges_reactifs
+            )
+
+            charge_total_p2 = sum(
+                charge * configuration[1][index]
+                for index, element, charge in info_charges_produits
+            )
+
+            if charge_total_p1 == charge_total_p2:
+                pass
+
+            elif charge_total_p1 > charge_total_p2:
+                electron = Electron()
+                self.reactifs.append(electron)
+                info_charges_reactifs.append(
+                    (
+                        len(configuration[0]),
+                        electron,
+                        -1
+                    )
+                )
+                configuration[0].append(charge_total_p1 - charge_total_p2)
+
+            elif charge_total_p1 < charge_total_p2:
+                electron = Electron()
+                self.produits.append(electron)
+                info_charges_produits.append(
+                    (
+                        len(configuration[1]),
+                        electron,
+                        -1
+                    )
+                )
+                configuration[1].append(charge_total_p2 - charge_total_p1)
+
 
         self.is_equilibre = True
         self.maj_notation()
