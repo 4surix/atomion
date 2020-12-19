@@ -47,7 +47,7 @@ class Electron:
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
         return "%se%s" % (
-            str(self.valeur)
+            '' if self.valeur == 1 else self.valeur
             ,
             '-' if utile.params.calculatrice else '⁻'
         )
