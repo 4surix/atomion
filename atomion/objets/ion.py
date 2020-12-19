@@ -315,7 +315,8 @@ class IonPolyAtomique(Ion):
     __slots__ = (
         'ions', 
         'proton', 'neutron', 'electron', 'nucleon',
-        'masse', 'masse_moleculaire_relative'
+        'masse', 'masse_moleculaire_relative',
+        'diff', 'charge'
     )
 
     if not utile.params.calculatrice:
@@ -334,6 +335,7 @@ class IonPolyAtomique(Ion):
         diff = None
         if isinstance(valeur, str):
             valeur, diff = decode_notation(valeur, diff)
+
 
         self.ions = (
             valeur if isinstance(valeur, list)
@@ -354,11 +356,6 @@ class IonPolyAtomique(Ion):
         if verif_stable:
             utile.verif_espece_stable(self.ions)
 
-        charge = sum(
-            int('%s%s' % (ion.charge, ion.diff))
-            for ion in self.ions
-        )
-
         self.proton = sum(ion.proton for ion in self.ions)
         self.neutron = sum(ion.neutron for ion in self.ions)
         self.electron = sum(ion.electron for ion in self.ions)
@@ -371,11 +368,15 @@ class IonPolyAtomique(Ion):
             for ion in self.ions
         )
 
-        if diff:
-            self.diff = abs(diff)
-            self.electron = self.proton - self.diff
+        if not diff:
+            diff = self.proton - self.electron
+
+        if diff < 0:
+            self.charge = '-'
         else:
-            self.diff = abs(self.proton - self.electron)
+            self.charge = '+'
+
+        self.diff = abs(diff)
 
     def __str__(self) -> str:
 
@@ -486,7 +487,10 @@ class IonPolyAtomique(Ion):
         for ion in self.ions:
             yield ion
 
-    def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
+    def notation_symbole(
+            self, *args, 
+            A:bool = True, Z:bool = True, charge:bool = True
+        ) -> str:
         """
         ### &doc_id ionPolyAtomique:notation_symbole
         """
@@ -499,19 +503,46 @@ class IonPolyAtomique(Ion):
                 ions[ion] = 0
             ions[ion] += 1
 
-        return ''.join(
-            '%s%s' % (
-                ion,
-                '' if nbr == 1
-                else
-                    nbr if utile.params.calculatrice
+        return '%s%s%s%s%s' % (
+            '{' if utile.params.calculatrice and charge else ''
+            ,
+            ''.join(
+                '%s%s' % (
+                    ion
+                    ,
+                    '' if nbr == 1
                     else
-                        ''.join(
-                            utile.sous_exposants[int(num)] 
-                            for num in str(nbr)
-                        )
+                        nbr if utile.params.calculatrice
+                        else
+                            ''.join(
+                                utile.sous_exposants[int(num)] 
+                                for num in str(nbr)
+                            )
+                )
+                for ion, nbr in ions.items()
             )
-            for ion, nbr in ions.items()
+            ,
+            ' ' if utile.params.calculatrice and charge else ''
+            ,
+            '' if not charge
+            else
+                '%s%s' % (
+                    self.diff if utile.params.calculatrice
+                    else
+                        '' if self.diff == 1
+                        else
+                            ''.join(
+                                utile.exposants[int(num)] 
+                                for num in str(self.diff)
+                            )
+                    ,
+                    {
+                        '-': '⁻' if not utile.params.calculatrice else '-',
+                        '+': '⁺' if not utile.params.calculatrice else '+'
+                    }.get(self.charge)
+                )
+            ,
+            '}' if utile.params.calculatrice and charge else ''
         )
 
 objets.IonPolyAtomique = IonPolyAtomique
