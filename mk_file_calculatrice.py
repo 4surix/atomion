@@ -34,7 +34,7 @@ parties = [
     'utile/equation.py',
     'objets/quark.py',
     'raccourcis.py',
-    'couple.py',
+    'couples.py',
     'utile/oxydo_reduction.py'
 ]
 
