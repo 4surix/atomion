@@ -493,9 +493,9 @@ class Reaction:
     )
 
     def __init__(self, 
-            *,
             equation:Equation,
             quantites_reactifs:Dict[Union[Atome, Ion, Molecule], int] = None,
+            *,
             quantites_produits:Dict[Union[Atome, Ion, Molecule], int] = None
         ):
 
@@ -506,10 +506,10 @@ class Reaction:
             
             quantites_reactifs = {}
 
-            for coefficient, espece in zip(
-                    self.equation.coefficients[1], self.equation.produits
-                ):
-                xf = quantites_produits[espece] / coefficient
+            coefficient = self.equation.coefficients[1][0]
+            espece = self.equation.produits[0]
+
+            xf = quantites_produits[espece] / coefficient
 
             for coefficient, espece in zip(
                     self.equation.coefficients[0], self.equation.reactifs
