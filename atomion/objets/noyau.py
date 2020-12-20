@@ -77,7 +77,7 @@ class Noyau:
             if neutrons < 0:
                 # On retire les neutrons en trop.
                 # Noyau(2, 1) << Noyau(2, 2) == Noyau(4, 3)
-                atome.noyau.neutron.valeur += neutron
+                atome.noyau.neutron.valeur += neutrons
 
             elif neutrons > 0:
                 # On rajoute les neutrons qui ne sont pas 
