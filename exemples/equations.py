@@ -15,3 +15,8 @@ equation.coefficients == [[3, 2], [3, 2]]
 equation.spectatrices == []
 equation.reactifs == [Ion('Cu'), Atome('Al')]
 equation.produits == [Atome('Cu'), Atome('Al')]
+
+# Demi-équation
+equation = DemiEquation('Cl2', '{Cl -}')
+equation.equilibrer()
+equation == 'Cl₂ + 2 e⁻ -> 2 Cl⁻'

@@ -53,12 +53,22 @@ Helium = (
         +
         (QUp(1) + QDown(2) + QDown(3)) # Neutron
         +
-        (Quark(+ 2/3, 'R') + Quark(+ 2/3, 'V') + Quark(- 1/3, 'B')) # Proton
+        (Quark(+ 2/3, 1) + Quark(+ 2/3, 2) + Quark(- 1/3, 3)) # Proton
         +
-        (Quark(+ 2/3, 'R') + Quark(- 1/3, 'V') + Quark(- 1/3, 'B')) # Neuton
+        (Quark(+ 2/3, 1) + Quark(- 1/3, 2) + Quark(- 1/3, 3)) # Neutron
     )
     +
     Electron(2)
 )
 # Reviens à écrire :
+Helium = (
+    (   # Noyau
+        Proton(2)
+        +
+        Neutron(2)
+    )
+    +
+    Electron(2)
+)
+# Qui reviens à écrire :
 Helium = Atome('H')
