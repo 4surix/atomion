@@ -107,8 +107,8 @@ class OxydoReduction:
         ### Attributs
         #
 
-        self.demi_equation_don = demi_equation_don
-        self.demi_equation_gain = demi_equation_gain
+        self.demi_equation_don = self.don = demi_equation_don
+        self.demi_equation_gain = self.gain = demi_equation_gain
         self.equation = Equation(
             reactifs = (
                 demi_equation_don.reactifs + demi_equation_gain.reactifs
