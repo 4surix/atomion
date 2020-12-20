@@ -36,6 +36,6 @@ from .. import utile
 
 for module in [
         molecule, atome, ion, noyau, electron, proton, neutron, quark,
-        utile, utile.equation
+        utile, utile.equation, utile.oxydo_reduction
     ]:
     module.MAJ_TYPE()
