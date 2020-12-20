@@ -7,6 +7,7 @@ from .. import objets
 from ..objets import (
     Atome, Molecule,
     Ion, IonMonoAtomique, IonPolyAtomique,
+    Noyau,
     Electron, Proton, Neutron
 )
 from .. import utile
@@ -26,7 +27,7 @@ class Atome:
         'nom', 'symbole', 'categorie',
         'proton', 'neutron', 'nucleon', 'electron', 
         'masse', 'masse_atomique_relative', 
-        'configuration', 'couches'
+        'configuration', 'couches', 'noyau'
     )
 
     def __init__(self, 
@@ -52,6 +53,8 @@ class Atome:
         self.nucleon = self.proton + self.neutron
 
         self.configuration = utile.configuration_electronique(self)
+
+        self.noyau = Noyau(Proton(self.proton), Neutron(self.neutron))
 
     def __add__(self, 
             obj: Union[Proton, Neutron, Electron, Atome]
