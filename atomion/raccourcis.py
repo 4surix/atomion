@@ -22,33 +22,35 @@ for element in elements:
 ### Molécules
 
 for symbole in [
-    'CH4',
-    'C6H12O6',
+    'H2',
     'O2',
+    'CH4',
+    'H2O',
+    'SO3',
     'CO2',
     'NH3',
     'C60',
-    'C2H6',
     'CH4',
+    'NH3',
+    'C2H6',
     'C2H4',
     'C3H4',
     'C2H2',
     'C6H6',
-    'C2H5OH',
+    'Cr2O7',
     'C6H6O',
-    'C2H4O2',
     'C2H4O',
     'C3H6O',
-    'H2O',
-    'SO3',
+    'C2H5OH',
+    'C2H4O2',
     'C4H10O',
-    'NH3',
-    'C2H5CHO',
     'C2H3OH',
     'CH3CHO',
-    'C2O2H4'
+    'C2O2H4',
+    'C2H5CHO',
+    'C6H12O6'
 ]:
-    molecule = Molecule(symbole)
+    molecule = Molecule(symbole, verif_stable=False)
     variables[symbole] = molecule
 
 
