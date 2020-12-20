@@ -12,7 +12,7 @@
 ![Version python](https://img.shields.io/pypi/pyversions/atomion)
 ![Version micropython](https://img.shields.io/badge/micropython-1.9.4-blue)
 ![Code size](https://img.shields.io/github/languages/code-size/4surix/atomion)
-![Code size file](https://img.shields.io/badge/code%20size%20file%20calc-34%20kB-blue)
+![Code size file](https://img.shields.io/badge/code%20size%20file%20calc-41%20kB-blue)
 
 Module servant à manipuler facilement :
 - Quark
@@ -35,7 +35,7 @@ Vous trouverez un dossier [`exemples`](https://github.com/4surix/atomion/blob/ma
 
 Le module est compatible avec `Micro Python 1.9.4`, donc aussi pour les calculatrices !
 
-# Aperçu/Résumé
+# Aperçu
 
 ```python
 from atomion import *
@@ -71,9 +71,9 @@ neutron = QUp('R') + QDown('B') + QDown('V')
 
 
 # Fusion
-NoyauH = Noyau(Proton(1), Neutron(1))
-NoyauHe, *Particules = NoyauH << NoyauH
-He = NoyauHe + Electron(2)
+noyauH = Noyau(Proton(1), Neutron(1))
+noyauHe, *particules = noyauH << noyauH
+atomeHe = noyauHe + Electron(2)
 
 
 equation = Equation('H2 + O2 -> H2O')
@@ -95,8 +95,8 @@ oxydoR = OxydoReduction(
     Ion('{Cr2O7 2-}'),
     Atome('Fe')
 )
-oxydoR.don = 'Fe -> Fe²⁺ + 2 e⁻'
-oxydoR.gain = 'Cr₂O₇²⁻ + 14 H⁺ + 6 e⁻ -> 2 Cr³⁺ + 7 H₂O'
+oxydoR.don == 'Fe -> Fe²⁺ + 2 e⁻'
+oxydoR.gain == 'Cr₂O₇²⁻ + 14 H⁺ + 6 e⁻ -> 2 Cr³⁺ + 7 H₂O'
 ```
 
 Pour voir le reste des fonctionnalités, regardez le dossier [`exemples`](https://github.com/4surix/atomion/blob/master/exemples).
