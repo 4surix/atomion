@@ -478,7 +478,7 @@ def convertie_notation_vers(
                 # CO2(H2)4(Ag7)2
                 #         ^
                 elements.extend(
-                    convertie_notation_vers_atomes(in_molecule) 
+                    convertie_notation_vers(type_obj, in_molecule) 
                     * (int(nbr) if nbr else 1)
                 )
                 nbr = ''
@@ -492,7 +492,7 @@ def convertie_notation_vers(
                 # (H2)2Ca
                 #      ^
                 elements.extend(
-                    convertie_notation_vers_atomes(in_molecule) 
+                    convertie_notation_vers(type_obj, in_molecule) 
                     * (int(nbr) if nbr else 1)
                 )
                 in_molecule = False
