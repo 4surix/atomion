@@ -13,6 +13,7 @@ from ..objets import (
     Electron, Proton, Neutron
 )
 from .. import exception
+from .. import couples
 
 
 ###>>> CAPTURE FICHIER CALC
@@ -70,6 +71,24 @@ def analyse_charges(
             )
 
     return info
+
+
+def DemiEquation(
+        reactif:Union[str, Atome, Molecule, Ion], 
+        produit:Union[str, Atome, Molecule, Ion] = None
+    ):
+
+    if isinstance(reactif, str):
+        reactif = utile.convertie_notation(reactif)
+
+    if isinstance(produit, str):
+        produit = utile.convertie_notation(produit)
+
+    return Equation(
+        reactifs = [reactif],
+        produits = [produit if produit else couples.get_produit(reactif)],
+        demi_equation = True
+    )
 
 
 class Equation:
