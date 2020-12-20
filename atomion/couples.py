@@ -3,6 +3,7 @@
 # ----------------------------------------------------------------------------
 
 from . import utile
+from . import exception
 
 
 couples = []
@@ -47,3 +48,8 @@ def get_produit(element):
 
         if e2 == element:
             return e1
+
+    raise exception.ValeurIncorrecte(
+        f"Le couple comportant l'élément {repr(element)} n'est pas connu du module."
+        + " N'hésitez pas à l'ajouter."
+    )
