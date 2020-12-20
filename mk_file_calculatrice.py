@@ -33,7 +33,9 @@ parties = [
     'objets/noyau.py',
     'utile/equation.py',
     'objets/quark.py',
-    'raccourcis.py'
+    'raccourcis.py',
+    'couple.py',
+    'utile/oxydo_reduction.py'
 ]
 
 for partie in parties:
