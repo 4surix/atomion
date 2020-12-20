@@ -5,12 +5,13 @@
 from .. import objets
 from ..objets import (
     Atome, IonMonoAtomique,
+    Noyau,
     Electron, Proton, Neutron
 )
 from .. import utile
 from .. import exception
 
-from ..utile.typing import Union, Any, Optional
+from ..utile.typing import Union, Any, Optional, List
 
 
 ###>>> CAPTURE FICHIER CALC
@@ -57,6 +58,41 @@ class Noyau:
 
         else:
             raise exception.Incompatible(self, obj)
+
+    def __lshift__(self, obj:Noyau) -> List[ Union[Noyau, Neutron] ]:
+        # Fusion
+
+        if isinstance(obj, Noyau):
+
+            int; protons = self.proton.valeur + obj.proton.valeur
+            int; neutrons = self.neutron.valeur + obj.neutron.valeur
+
+            nouvelles_especes = [] 
+
+            atome = Atome(protons)
+            neutrons -= atome.neutron
+
+            nouvelles_especes.append(atome.noyau)
+
+            if neutrons < 0:
+                # On retire les neutrons en trop.
+                # Noyau(2, 1) << Noyau(2, 2) == Noyau(4, 3)
+                atome.noyau.neutron.valeur += neutron
+
+            elif neutrons > 0:
+                # On rajoute les neutrons qui ne sont pas 
+                #  dans le nouveau noyau mais qui étaient là de base.
+                # Noyau(2, 3) << Noyau(2, 2) == [Neutron(), Noyau(4, 4)]
+                nouvelles_especes.append(Neutron(neutrons))
+
+            return nouvelles_especes
+
+        else:
+            raise exception.Incompatible(self, obj)
+
+    def __rshift__(self, obj):
+        # Fission
+        return NotImplemented
 
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
