@@ -3,11 +3,24 @@
 # ----------------------------------------------------------------------------
 
 
-from .objets import Atome, Molecule
+from .objets import Atome, Molecule, Electron, Neutron, Proton
 from .elements import elements
 
 
 ###>>> CAPTURE FICHIER CALC
+
+e = Electron()
+n = Neutron()
+p = Proton()
+
+
+u = 1.660538921*(10**-27)
+mol = 6.02*(10**23)
+
+Me = 9.109*(10**-31)
+Mp = 1.672649*(10**-27)
+Mn = 1.67493*(10**-27)
+
 
 variables = globals()
 
