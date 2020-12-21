@@ -166,6 +166,12 @@ class Molecule:
         ) -> Union[None, Atome, Molecule]:
         return self - obj
 
+    def __mul__(self, obj: int) -> Molecule:
+        return Molecule(self.atomes * obj)
+
+    def __rmul__(self, obj: int) -> Molecule:
+        return self * obj
+
     def __repr__(self) -> str:
         return self.notation_symbole()
 

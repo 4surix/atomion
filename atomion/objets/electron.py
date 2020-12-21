@@ -44,6 +44,12 @@ class Electron:
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
 
+    def __mul__(self, obj: int) -> Electron:
+        return Electron(self.valeur * obj)
+
+    def __rmul__(self, obj: int) -> Electron:
+        return self * obj
+
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
         return "%se%s" % (

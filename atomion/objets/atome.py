@@ -106,6 +106,9 @@ class Atome:
     def __mul__(self, obj: int) -> Molecule:
         return Molecule([self] * obj)
 
+    def __rmul__(self, obj: int) -> Molecule:
+        return self * obj
+
     def __str__(self) -> str:
         str__ = (
             "Atome %s" % self.notation()

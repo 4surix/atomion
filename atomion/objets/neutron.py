@@ -57,6 +57,12 @@ class Neutron:
         else:
             raise exception.Incompatible(self, obj)
 
+    def __mul__(self, obj: int) -> Neutron:
+        return Neutron(self.valeur * obj)
+
+    def __rmul__(self, obj: int) -> Neutron:
+        return self * obj
+
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
         return "%s%sn%s" % (

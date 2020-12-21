@@ -57,6 +57,12 @@ class Proton:
         else:
             raise exception.Incompatible(self, obj)
 
+    def __mul__(self, obj: int) -> Proton:
+        return Proton(self.valeur * obj)
+
+    def __rmul__(self, obj: int) -> Proton:
+        return self * obj
+
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
         return "%s%sp%s" % (
