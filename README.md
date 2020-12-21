@@ -12,7 +12,7 @@
 ![Version python](https://img.shields.io/pypi/pyversions/atomion)
 ![Version micropython](https://img.shields.io/badge/micropython-1.9.4-blue)
 ![Code size](https://img.shields.io/github/languages/code-size/4surix/atomion)
-![Code size file](https://img.shields.io/badge/code%20size%20file%20calc-41%20kB-blue)
+![Code size file](https://img.shields.io/badge/code%20size%20file%20calc-57%20kB-blue)
 
 Module servant à manipuler facilement :
 - Quark
@@ -26,8 +26,9 @@ Module servant à manipuler facilement :
 - Demi-équation
 - Oxydo-réduction
 - _Fusion nucléaire (Non-fini)_
-##### Prochainement
+##### Prévues :
 - Fission nucléaire
+- Reaction acido-basique
 - Gluons
 - Antimatière
 
