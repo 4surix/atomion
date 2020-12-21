@@ -518,8 +518,16 @@ class Reaction:
             quantites_produits:Dict[Union[Atome, Ion, Molecule], int] = None
         ):
 
-        self.equation = equation.equilibrer()
+        if isinstance(equation, str):
+            equation = Equation(equation)
 
+        if isinstance(equation, Equation):
+            self.equation = equation.equilibrer()
+
+        else:
+            raise exception.ValeurIncorrecte(
+                "L'équation doit être un objet de type 'Equation' ou du texte."
+            )
 
         if quantites_produits:
             
