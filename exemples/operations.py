@@ -34,6 +34,8 @@ if params.calculatrice:
 else:
     # Sur Python normal :
     Atome('O') * 2 == Molecule('O2')
+    # Ou
+    2 * Atome('O') == Molecule('O2')
 
 
 # Addition de molécule
