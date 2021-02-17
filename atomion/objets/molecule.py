@@ -18,9 +18,6 @@ from ..utile.typing import Union, Any, Optional, List
 ###>>> CAPTURE FICHIER CALC
 
 class Molecule:
-    """
-    ### &doc_id molecule:class
-    """
 
     __slots__ = (
         'atomes', 
@@ -33,9 +30,6 @@ class Molecule:
             *args,
             verif_stable:bool = True
         ) -> None:
-        """
-        ### &doc_id molecule:init
-        """
 
         self.atomes = (
             valeur if isinstance(valeur, list)
@@ -43,7 +37,8 @@ class Molecule:
                 [
                     Atome(ion)
                     for ion in valeur.ions
-                ] if isinstance(valeur, IonPolyAtomique)
+                ]
+                if isinstance(valeur, IonPolyAtomique)
                 else
                     utile.convertie_notation_vers('atomes', valeur) 
         )
@@ -186,9 +181,6 @@ class Molecule:
             yield element
 
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
-        """
-        ### &doc_id molecule:notation_symbole
-        """
 
         atomes = {}
 
@@ -219,8 +211,6 @@ objets.Molecule = Molecule
 
 
 def MAJ_TYPE():
-
     variables = globals()
-
     for name_obj in objets.listes_noms:
         variables[name_obj] = getattr(objets, name_obj)

@@ -31,7 +31,9 @@ class Noyau:
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
 
-    def __add__(self, obj):
+    def __add__(self, 
+            obj:Union[Electron, Proton, Neutron]
+        ) -> Union[Atome, IonMonoAtomique, Noyau]:
 
         if isinstance(obj, Electron):
 

@@ -19,9 +19,6 @@ from ..utile.typing import Union, Any, Optional
 ###>>> CAPTURE FICHIER CALC
 
 class Atome:
-    """
-    ### &doc_id atome:class
-    """
 
     __slots__ = (
         'nom', 'symbole', 'categorie',
@@ -35,28 +32,17 @@ class Atome:
             *args,
             neutron:Optional[int] = None
         ) -> None:
-        """
-        ### &doc_id atome:init
-        """
-
-        self.neutron = neutron
 
         utile.get_info(self, valeur)
 
+        self.neutron = neutron or round(self.masse_atomique_relative) - self.proton
         self.electron = self.proton
-
-        if self.neutron is None:
-            self.neutron = round(self.masse_atomique_relative) - self.proton
-
-        self.masse = utile.get_masse(self)
-
         self.nucleon = self.proton + self.neutron
-
+        self.masse = utile.get_masse(self)
         self.configuration = utile.configuration_electronique(self)
-
         self.noyau = Noyau(Proton(self.proton), Neutron(self.neutron))
 
-    def __add__(self, 
+    def __add__(self,
             obj: Union[Proton, Neutron, Electron, Atome]
         ) -> Union[Atome, Molecule, IonMonoAtomique]:
 
@@ -168,17 +154,11 @@ class Atome:
         return repr(self) == repr(obj)
 
     def notation(self) -> str:
-        """
-        ### &doc_id atome:notation
-        """
         return "%s Z=%s A=%s" % (
             self.symbole, self.proton, self.proton + self.neutron
         )
 
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
-        """
-        ### &doc_id atome:notation_symbole
-        """
 
         return "%s%s%s" % (
             '' if not A or utile.params.calculatrice
@@ -205,11 +185,10 @@ class Atome:
 
 ###<<< CAPTURE FICHIER CALC
 
+
 objets.Atome = Atome
 
 def MAJ_TYPE():
-
     variables = globals()
-
     for name_obj in objets.listes_noms:
         variables[name_obj] = getattr(objets, name_obj)

@@ -18,9 +18,6 @@ from ..utile.typing import Union, Any, Optional
 ###>>> CAPTURE FICHIER CALC
 
 class Neutron:
-    """
-    ### &doc_id particule:neutron
-    """
 
     __slots__ = ('valeur')
 
@@ -86,8 +83,6 @@ objets.Neutron = Neutron
 
 
 def MAJ_TYPE():
-
     variables = globals()
-
     for name_obj in objets.listes_noms:
         variables[name_obj] = getattr(objets, name_obj)

@@ -18,13 +18,10 @@ from ..utile.typing import Union, Any, Optional
 ###>>> CAPTURE FICHIER CALC
 
 class Proton:
-    """
-    ### &doc_id particule:proton
-    """
 
     __slots__ = ('valeur')
 
-    def __init__(self, valeur:Optional[int] = 1) -> None:
+    def __init__(self, valeur:Optional[Union[Atome, IonMonoAtomique, int]] = 1) -> None:
 
         if isinstance(valeur, (Atome, IonMonoAtomique)):
             self.valeur = valeur.proton
@@ -89,8 +86,6 @@ objets.Proton = Proton
 
 
 def MAJ_TYPE():
-
     variables = globals()
-
     for name_obj in objets.listes_noms:
         variables[name_obj] = getattr(objets, name_obj)

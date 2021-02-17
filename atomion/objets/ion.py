@@ -34,23 +34,20 @@ def decode_notation(
 
         if args: # {Ag 2+}
             charge = args.pop(0)
-        else: # {Ag}
-            charge = None
 
-        charge = (
-            None if not charge
-            else
-                int(
-                    # '2+' -> '+'
-                    charge[-1]
-                    # '+' & '-' -> '1'
-                    # '2+' -> '2'
-                    + {
-                        '-': '1',
-                        '+': '1'
-                    }.get(charge, charge[:-1])
-                )
-        )
+            charge = int(
+                # '2+' -> '+'
+                charge[-1]
+                # '+' & '-' -> '1'
+                # '2+' -> '2'
+                + {
+                    '-': '1',
+                    '+': '1'
+                }.get(charge, charge[:-1])
+            )
+
+        else: # {Ag}
+            pass
 
     return notation, charge
 
@@ -75,9 +72,6 @@ if not utile.params.calculatrice:
 
 
 class IonMonoAtomique(Ion):
-    """
-    ### &doc_id ionMonoAtomique:class
-    """
 
     __slots__ = (
         'nom', 'symbole', 'categorie', 
@@ -97,16 +91,11 @@ class IonMonoAtomique(Ion):
             neutron:Optional[int] = None,
             charge:Optional[int] = None
         ) -> None:
-        """
-        ### &doc_id ionMonoAtomique:init
-        """
 
         if isinstance(valeur, str):
             valeur, charge = decode_notation(valeur, charge)
 
         utile.get_info(self, valeur)
-
-        drn_couche = self.couches[-1]
 
         if self.symbole in (
             'He', 'Ne', 'Ar', 'Kr', 'Xe', 'Rn'
@@ -115,34 +104,45 @@ class IonMonoAtomique(Ion):
                 "Un gaz noble ne peut pas devenir un ion monoatomique."
             )
 
-        if 0 < drn_couche < 5:
-            self.electron = self.proton - drn_couche
-            self.charge = '+'
-            del self.couches[-1]
+        if charge:
 
-        elif 4 < drn_couche < 8:
-            self.electron = self.proton + (8 - drn_couche)
-            self.charge = '-'
-            self.couches[-1] = 8
+            if charge < 0:
+                self.charge = '-'
+                self.couches[-1] += abs(charge)
+
+            elif charge > 0:
+                self.charge = '+'
+                self.couches[-1] -= abs(charge)
+
+                if self.couches[-1] < 1:
+                    self.couches[-2] -= abs(self.couches[-1])
+                del self.couches[-1]
+
+            self.electron = self.proton - charge
+
+        else:
+
+            drn_couche = self.couches[-1]
+
+            if 0 < drn_couche < 5:
+                self.electron = self.proton - drn_couche
+                self.charge = '+'
+                del self.couches[-1]
+
+            elif 4 < drn_couche < 8:
+                self.electron = self.proton + (8 - drn_couche)
+                self.charge = '-'
+                self.couches[-1] = 8
 
         self.neutron = (
             neutron if neutron is not None
             else
                 round(self.masse_atomique_relative) - self.proton
         )
-
-        if charge:
-            self.diff = abs(charge)
-            self.electron = self.proton - charge
-        else:
-            self.diff = abs(self.proton - self.electron)
-
-        self.masse = utile.get_masse(self)
-
         self.nucleon = self.proton + self.neutron
-
+        self.diff = abs(self.proton - self.electron)
+        self.masse = utile.get_masse(self)
         self.configuration = utile.configuration_electronique(self)
-
         self.noyau = Noyau(Proton(self.proton), Neutron(self.neutron))
 
     def __add__(self, 
@@ -243,9 +243,6 @@ class IonMonoAtomique(Ion):
         return repr(self) == repr(obj)
 
     def notation(self):
-        """
-        ### &doc_id ionMonoAtomique:notation
-        """
         return "%s %s%s Z=%s A=%s" % (
             self.symbole, 
             self.diff, 
@@ -258,9 +255,7 @@ class IonMonoAtomique(Ion):
             *args,
             A:bool = True, Z:bool = True, charge:bool = True
         ):
-        """
-        ### &doc_id ionMonoAtomique:notation_symbole
-        """
+
         return "%s%s%s%s%s%s%s" % (
             '{' if utile.params.calculatrice and charge else ''
             ,
@@ -311,9 +306,6 @@ objets.IonMonoAtomique = IonMonoAtomique
 
 
 class IonPolyAtomique(Ion):
-    """
-    ### &doc_id ionPolyAtomique:class
-    """
 
     __slots__ = (
         'ions', 
@@ -329,16 +321,12 @@ class IonPolyAtomique(Ion):
     def __init__(self, 
             valeur:Union[str, Molecule, List[IonMonoAtomique]],
             *args,
-            verif_stable:bool = False
+            verif_stable:bool = False,
+            charge:Optional[int] = None
         ) -> None:
-        """
-        ### &doc_id ionPolyAtomique:init
-        """
 
-        diff = None
         if isinstance(valeur, str):
-            valeur, diff = decode_notation(valeur, diff)
-
+            valeur, charge = decode_notation(valeur, charge)
 
         self.ions = (
             valeur if isinstance(valeur, list)
@@ -346,7 +334,8 @@ class IonPolyAtomique(Ion):
                 [
                     IonMonoAtomique(e) 
                     for e in valeur.atomes
-                ] if isinstance(valeur, Molecule)
+                ]
+                if isinstance(valeur, Molecule)
                 else
                     utile.convertie_notation_vers('ions', valeur) 
         )
@@ -371,15 +360,17 @@ class IonPolyAtomique(Ion):
             for ion in self.ions
         )
 
-        if not diff:
-            diff = self.proton - self.electron
+        if not charge:
+            charge = self.proton - self.electron
+        else:
+            self.electron -= charge
 
-        if diff < 0:
+        if charge < 0:
             self.charge = '-'
         else:
             self.charge = '+'
 
-        self.diff = abs(diff)
+        self.diff = abs(charge)
 
     def __str__(self) -> str:
 
@@ -488,9 +479,6 @@ class IonPolyAtomique(Ion):
             self, *args, 
             A:bool = True, Z:bool = True, charge:bool = True
         ) -> str:
-        """
-        ### &doc_id ionPolyAtomique:notation_symbole
-        """
 
         ions = {}
 
