@@ -10,6 +10,24 @@ from atomion import *
 
 class TestObjet(unittest.TestCase):
 
+    def test_molecule_organique(self):
+        atomes = MoleculeOrganique('4-méthylpentan-1-ol').atomes
+        carbone = Atome('C')
+        hydrogene = Atome('H')
+        oxygene = Atome('O')
+        self.assertEqual(
+            (
+                len([atome for atome in atomes if atome == carbone]),
+                len([atome for atome in atomes if atome == hydrogene]),
+                len([atome for atome in atomes if atome == oxygene])
+            ),
+            (
+                6,
+                14,
+                1
+            )
+        )
+
     def test_ionmonoatomique(self):
         self.assertEqual(
             Ion('O'),
