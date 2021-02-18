@@ -5,7 +5,7 @@
 ###>>> CAPTURE FICHIER CALC
 
 Neutron = Proton = Electron                \
-= Atome = Molecule                         \
+= Atome = Molecule = MoleculeOrganique     \
 = Ion = IonMonoAtomique = IonPolyAtomique  \
 = Noyau                                    \
 = Quark = QUp = QDown                      \
@@ -19,6 +19,7 @@ listes_noms = (
     'Electron',
     'Atome',
     'Molecule',
+    'MoleculeOrganique',
     'Ion',
     'IonMonoAtomique',
     'IonPolyAtomique',

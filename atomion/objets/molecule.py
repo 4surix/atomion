@@ -205,9 +205,192 @@ class Molecule:
             for atome, nbr in atomes.items()
         )
 
-###<<< CAPTURE FICHIER CALC
-
 objets.Molecule = Molecule
+
+
+PREFIXS = [
+    'bi',
+    'tri',
+    'qua',
+]
+
+THERMES = [
+    'méth',
+    'éth',
+    'prop',
+    'but',
+    'pent',
+    'hex',
+    'hept',
+    'oct',
+    'non',
+    'déc'
+]
+
+CHIFFRES = tuple('0123456789')
+
+
+class MoleculeOrganique(Molecule):
+
+    def __init__(self, data:str):
+
+        chemin = []
+
+        data += '-'
+
+        ramifications = {}
+
+        indexs = []
+        index_atome_carbone = 0
+
+        nbr_carbone = nbr_hydrogene = 0
+
+        value = ''
+
+        famille = None
+
+        for carac in data:
+
+            if carac in CHIFFRES:
+                cat = 'INT'
+                value += carac
+
+            elif carac == ',':
+                indexs.append(int(value))
+                cat = ''
+                value = ''
+
+            elif carac == '-':
+
+                if cat == 'INT':
+
+                    if famille == 'AN-':
+                        index_atome_carbone = int(value) - 1
+                    else:
+                        indexs.append(int(value))
+
+                    cat = ''
+                    value = ''
+
+                if value == 'an':
+                    value = ''
+
+            else:
+                value += carac
+
+                if value in PREFIXS:
+
+                    if PREFIXS.index(value) + 2 != len(indexs):
+                        raise ValueError()
+
+                    value = ''
+
+                elif value in THERMES:
+                    nbr_carbone = THERMES.index(value) + 1
+                    value = ''
+
+                elif value == 'yl':
+                    for index in indexs:
+                        ramifications[index] = nbr_carbone
+                    value = ''
+                    indexs = []
+
+                elif value == 'anal':
+                    famille = 'Aldéhyde'
+                    value = ''
+
+                elif value == 'ol':
+                    famille = 'Alcool'
+                    value = ''
+
+                elif value == 'one':
+                    famille = 'Cétone'
+                    value = ''
+
+                elif value == 'acide ':
+                    famille = 'Acide carboxylique'
+                    value = ''
+
+                elif value == 'anoïque':
+
+                    if famille != 'Acide carboxylique':
+                        raise ValueError()
+
+                    value = ''
+
+
+        if famille == 'Alcool':
+            nbr_hydrogene += ((nbr_carbone * 2) + 2) - len(ramifications) - 1
+
+            partie = 'OH'
+
+        if famille == 'Aldéhyde':
+            nbr_carbone -= 1
+            nbr_hydrogene += ((nbr_carbone * 2) + 1) - len(ramifications)
+
+            partie = 'COH'
+
+        if famille == 'Cétone':
+            nbr_carbone -= 1
+            nbr_hydrogene += ((nbr_carbone * 2) + 2) - len(ramifications)
+
+            partie = 'CO'
+
+        if famille == 'Acide carboxylique':
+            nbr_carbone -= 1
+            nbr_hydrogene += ((nbr_carbone * 2) + 1) - len(ramifications)
+
+            partie = 'CO2H'
+
+
+        for index, nbr_carbone_ram in ramifications.items():
+            nbr_carbone += nbr_carbone_ram
+            nbr_hydrogene += (nbr_carbone_ram * 2) + 1
+
+
+        super().__init__(f'{partie}(C{nbr_carbone})(H{nbr_hydrogene})', verif_stable=False)
+
+        self.famille = famille
+
+    def __str__(self) -> str:
+
+        str__ = (
+            "Molécule Organique %s" % self.notation_symbole()
+            + (
+                "\n Famille: %s" % self.famille
+            )
+            + (
+                "\n Proton(s): %s" % self.proton
+                if utile.params.proton else ''
+            )
+            + (
+                "\n Neutron(s): %s" % self.neutron
+                if utile.params.neutron else ''
+            )
+            + (
+                "\n Electron(s): %s" % self.electron
+                if utile.params.electron else ''
+            )
+            + (
+                "\n Masse: %s" % self.masse
+                if utile.params.masse else ''
+            )
+            + (
+                "\n Masse moléculaire relative: %s"
+                % (self.masse_moleculaire_relative)
+                if utile.params.masse_relative else ''
+            )
+        )
+
+        return (
+            str__ if not utile.params.calculatrice
+            else
+                str__.replace('è', 'e').replace('é', 'e')
+        )
+
+objets.MoleculeOrganique = MoleculeOrganique
+
+###<<< CAPTURE FICHIER CALC
 
 
 def MAJ_TYPE():
