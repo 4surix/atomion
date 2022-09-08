@@ -25,8 +25,11 @@ Module servant à manipuler facilement :
 - Réaction chimique
 - Demi-équation
 - Oxydo-réduction
-- _Fusion nucléaire (Non-fini)_
+##### Nouveauté : 
+- Électronégativité
+- Molécule organique 
 ##### Prévues :
+- _Fusion nucléaire (Non-fini)_
 - Fission nucléaire
 - Reaction acido-basique
 - Gluons

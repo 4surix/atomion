@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
@@ -25,7 +25,8 @@ elements = [
             1
         ],
         "atomic_mass": 1.008,
-        "density": 0.08988
+        "density": 0.08988,
+        "electronegativity_pauling": 2.2
     },
     {
         "name": {
@@ -43,7 +44,8 @@ elements = [
             2
         ],
         "atomic_mass": 4.0026022,
-        "density": 0.1786
+        "density": 0.1786,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -62,7 +64,8 @@ elements = [
             1
         ],
         "atomic_mass": 6.94,
-        "density": 0.534
+        "density": 0.534,
+        "electronegativity_pauling": 0.98
     },
     {
         "name": {
@@ -81,7 +84,8 @@ elements = [
             2
         ],
         "atomic_mass": 9.01218315,
-        "density": 1.85
+        "density": 1.85,
+        "electronegativity_pauling": 1.57
     },
     {
         "name": {
@@ -100,7 +104,8 @@ elements = [
             3
         ],
         "atomic_mass": 10.81,
-        "density": 2.08
+        "density": 2.08,
+        "electronegativity_pauling": 2.04
     },
     {
         "name": {
@@ -119,7 +124,8 @@ elements = [
             4
         ],
         "atomic_mass": 12.011,
-        "density": 1.821
+        "density": 1.821,
+        "electronegativity_pauling": 2.55
     },
     {
         "name": {
@@ -138,7 +144,8 @@ elements = [
             5
         ],
         "atomic_mass": 14.007,
-        "density": 1.251
+        "density": 1.251,
+        "electronegativity_pauling": 3.04
     },
     {
         "name": {
@@ -157,7 +164,8 @@ elements = [
             6
         ],
         "atomic_mass": 15.999,
-        "density": 1.429
+        "density": 1.429,
+        "electronegativity_pauling": 3.44
     },
     {
         "name": {
@@ -176,7 +184,8 @@ elements = [
             7
         ],
         "atomic_mass": 18.9984031636,
-        "density": 1.696
+        "density": 1.696,
+        "electronegativity_pauling": 3.98
     },
     {
         "name": {
@@ -195,7 +204,8 @@ elements = [
             8
         ],
         "atomic_mass": 20.17976,
-        "density": 0.9002
+        "density": 0.9002,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -215,7 +225,8 @@ elements = [
             1
         ],
         "atomic_mass": 22.989769282,
-        "density": 0.968
+        "density": 0.968,
+        "electronegativity_pauling": 0.93
     },
     {
         "name": {
@@ -235,7 +246,8 @@ elements = [
             2
         ],
         "atomic_mass": 24.305,
-        "density": 1.738
+        "density": 1.738,
+        "electronegativity_pauling": 1.31
     },
     {
         "name": {
@@ -255,7 +267,8 @@ elements = [
             3
         ],
         "atomic_mass": 26.98153857,
-        "density": 2.7
+        "density": 2.7,
+        "electronegativity_pauling": 1.61
     },
     {
         "name": {
@@ -275,7 +288,8 @@ elements = [
             4
         ],
         "atomic_mass": 28.085,
-        "density": 2.329
+        "density": 2.329,
+        "electronegativity_pauling": 1.9
     },
     {
         "name": {
@@ -295,7 +309,8 @@ elements = [
             5
         ],
         "atomic_mass": 30.9737619985,
-        "density": 1.823
+        "density": 1.823,
+        "electronegativity_pauling": 2.19
     },
     {
         "name": {
@@ -315,7 +330,8 @@ elements = [
             6
         ],
         "atomic_mass": 32.06,
-        "density": 2.07
+        "density": 2.07,
+        "electronegativity_pauling": 2.58
     },
     {
         "name": {
@@ -335,7 +351,8 @@ elements = [
             7
         ],
         "atomic_mass": 35.45,
-        "density": 3.2
+        "density": 3.2,
+        "electronegativity_pauling": 3.16
     },
     {
         "name": {
@@ -355,7 +372,8 @@ elements = [
             8
         ],
         "atomic_mass": 39.9481,
-        "density": 1.784
+        "density": 1.784,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -376,7 +394,8 @@ elements = [
             1
         ],
         "atomic_mass": 39.09831,
-        "density": 0.862
+        "density": 0.862,
+        "electronegativity_pauling": 0.82
     },
     {
         "name": {
@@ -397,7 +416,8 @@ elements = [
             2
         ],
         "atomic_mass": 40.0784,
-        "density": 1.55
+        "density": 1.55,
+        "electronegativity_pauling": 1
     },
     {
         "name": {
@@ -418,7 +438,8 @@ elements = [
             2
         ],
         "atomic_mass": 44.9559085,
-        "density": 2.985
+        "density": 2.985,
+        "electronegativity_pauling": 1.36
     },
     {
         "name": {
@@ -439,7 +460,8 @@ elements = [
             2
         ],
         "atomic_mass": 47.8671,
-        "density": 4.506
+        "density": 4.506,
+        "electronegativity_pauling": 1.54
     },
     {
         "name": {
@@ -460,7 +482,8 @@ elements = [
             2
         ],
         "atomic_mass": 50.94151,
-        "density": 6.0
+        "density": 6.0,
+        "electronegativity_pauling": 1.63
     },
     {
         "name": {
@@ -481,7 +504,8 @@ elements = [
             1
         ],
         "atomic_mass": 51.99616,
-        "density": 7.19
+        "density": 7.19,
+        "electronegativity_pauling": 1.66
     },
     {
         "name": {
@@ -502,7 +526,8 @@ elements = [
             2
         ],
         "atomic_mass": 54.9380443,
-        "density": 7.21
+        "density": 7.21,
+        "electronegativity_pauling": 1.55
     },
     {
         "name": {
@@ -523,7 +548,8 @@ elements = [
             2
         ],
         "atomic_mass": 55.8452,
-        "density": 7.874
+        "density": 7.874,
+        "electronegativity_pauling": 1.83
     },
     {
         "name": {
@@ -544,7 +570,8 @@ elements = [
             2
         ],
         "atomic_mass": 58.9331944,
-        "density": 8.9
+        "density": 8.9,
+        "electronegativity_pauling": 1.88
     },
     {
         "name": {
@@ -565,7 +592,8 @@ elements = [
             2
         ],
         "atomic_mass": 58.69344,
-        "density": 8.908
+        "density": 8.908,
+        "electronegativity_pauling": 1.91
     },
     {
         "name": {
@@ -586,7 +614,8 @@ elements = [
             1
         ],
         "atomic_mass": 63.5463,
-        "density": 8.96
+        "density": 8.96,
+        "electronegativity_pauling": 1.9
     },
     {
         "name": {
@@ -607,7 +636,8 @@ elements = [
             2
         ],
         "atomic_mass": 65.382,
-        "density": 7.14
+        "density": 7.14,
+        "electronegativity_pauling": 1.65
     },
     {
         "name": {
@@ -628,7 +658,8 @@ elements = [
             3
         ],
         "atomic_mass": 69.7231,
-        "density": 5.91
+        "density": 5.91,
+        "electronegativity_pauling": 1.81
     },
     {
         "name": {
@@ -649,7 +680,8 @@ elements = [
             4
         ],
         "atomic_mass": 72.6308,
-        "density": 5.323
+        "density": 5.323,
+        "electronegativity_pauling": 2.01
     },
     {
         "name": {
@@ -670,7 +702,8 @@ elements = [
             5
         ],
         "atomic_mass": 74.9215956,
-        "density": 5.727
+        "density": 5.727,
+        "electronegativity_pauling": 2.18
     },
     {
         "name": {
@@ -691,7 +724,8 @@ elements = [
             6
         ],
         "atomic_mass": 78.9718,
-        "density": 4.81
+        "density": 4.81,
+        "electronegativity_pauling": 2.55
     },
     {
         "name": {
@@ -712,7 +746,8 @@ elements = [
             7
         ],
         "atomic_mass": 79.904,
-        "density": 3.1028
+        "density": 3.1028,
+        "electronegativity_pauling": 2.96
     },
     {
         "name": {
@@ -733,7 +768,8 @@ elements = [
             8
         ],
         "atomic_mass": 83.7982,
-        "density": 3.749
+        "density": 3.749,
+        "electronegativity_pauling": 3
     },
     {
         "name": {
@@ -755,7 +791,8 @@ elements = [
             1
         ],
         "atomic_mass": 85.46783,
-        "density": 1.532
+        "density": 1.532,
+        "electronegativity_pauling": 0.82
     },
     {
         "name": {
@@ -777,7 +814,8 @@ elements = [
             2
         ],
         "atomic_mass": 87.621,
-        "density": 2.64
+        "density": 2.64,
+        "electronegativity_pauling": 0.95
     },
     {
         "name": {
@@ -799,7 +837,8 @@ elements = [
             2
         ],
         "atomic_mass": 88.905842,
-        "density": 4.472
+        "density": 4.472,
+        "electronegativity_pauling": 1.22
     },
     {
         "name": {
@@ -821,7 +860,8 @@ elements = [
             2
         ],
         "atomic_mass": 91.2242,
-        "density": 6.52
+        "density": 6.52,
+        "electronegativity_pauling": 1.33
     },
     {
         "name": {
@@ -843,7 +883,8 @@ elements = [
             1
         ],
         "atomic_mass": 92.906372,
-        "density": 8.57
+        "density": 8.57,
+        "electronegativity_pauling": 1.6
     },
     {
         "name": {
@@ -865,7 +906,8 @@ elements = [
             1
         ],
         "atomic_mass": 95.951,
-        "density": 10.28
+        "density": 10.28,
+        "electronegativity_pauling": 2.16
     },
     {
         "name": {
@@ -887,7 +929,8 @@ elements = [
             2
         ],
         "atomic_mass": 98,
-        "density": 11
+        "density": 11,
+        "electronegativity_pauling": 1.9
     },
     {
         "name": {
@@ -909,7 +952,8 @@ elements = [
             1
         ],
         "atomic_mass": 101.072,
-        "density": 12.45
+        "density": 12.45,
+        "electronegativity_pauling": 2.2
     },
     {
         "name": {
@@ -931,7 +975,8 @@ elements = [
             1
         ],
         "atomic_mass": 102.905502,
-        "density": 12.41
+        "density": 12.41,
+        "electronegativity_pauling": 2.28
     },
     {
         "name": {
@@ -952,7 +997,8 @@ elements = [
             18
         ],
         "atomic_mass": 106.421,
-        "density": 12.023
+        "density": 12.023,
+        "electronegativity_pauling": 2.2
     },
     {
         "name": {
@@ -974,7 +1020,8 @@ elements = [
             1
         ],
         "atomic_mass": 107.86822,
-        "density": 10.49
+        "density": 10.49,
+        "electronegativity_pauling": 1.93
     },
     {
         "name": {
@@ -996,7 +1043,8 @@ elements = [
             2
         ],
         "atomic_mass": 112.4144,
-        "density": 8.65
+        "density": 8.65,
+        "electronegativity_pauling": 1.69
     },
     {
         "name": {
@@ -1018,7 +1066,8 @@ elements = [
             3
         ],
         "atomic_mass": 114.8181,
-        "density": 7.31
+        "density": 7.31,
+        "electronegativity_pauling": 1.78
     },
     {
         "name": {
@@ -1040,7 +1089,8 @@ elements = [
             4
         ],
         "atomic_mass": 118.7107,
-        "density": 7.365
+        "density": 7.365,
+        "electronegativity_pauling": 1.96
     },
     {
         "name": {
@@ -1062,7 +1112,8 @@ elements = [
             5
         ],
         "atomic_mass": 121.7601,
-        "density": 6.697
+        "density": 6.697,
+        "electronegativity_pauling": 2.05
     },
     {
         "name": {
@@ -1084,7 +1135,8 @@ elements = [
             6
         ],
         "atomic_mass": 127.603,
-        "density": 6.24
+        "density": 6.24,
+        "electronegativity_pauling": 2.1
     },
     {
         "name": {
@@ -1106,7 +1158,8 @@ elements = [
             7
         ],
         "atomic_mass": 126.904473,
-        "density": 4.933
+        "density": 4.933,
+        "electronegativity_pauling": 2.66
     },
     {
         "name": {
@@ -1128,7 +1181,8 @@ elements = [
             8
         ],
         "atomic_mass": 131.2936,
-        "density": 5.894
+        "density": 5.894,
+        "electronegativity_pauling": 2.6
     },
     {
         "name": {
@@ -1151,7 +1205,8 @@ elements = [
             1
         ],
         "atomic_mass": 132.905451966,
-        "density": 1.93
+        "density": 1.93,
+        "electronegativity_pauling": 0.79
     },
     {
         "name": {
@@ -1174,7 +1229,8 @@ elements = [
             2
         ],
         "atomic_mass": 137.3277,
-        "density": 3.51
+        "density": 3.51,
+        "electronegativity_pauling": 0.89
     },
     {
         "name": {
@@ -1197,7 +1253,8 @@ elements = [
             2
         ],
         "atomic_mass": 138.905477,
-        "density": 6.162
+        "density": 6.162,
+        "electronegativity_pauling": 1.1
     },
     {
         "name": {
@@ -1220,7 +1277,8 @@ elements = [
             2
         ],
         "atomic_mass": 140.1161,
-        "density": 6.77
+        "density": 6.77,
+        "electronegativity_pauling": 1.12
     },
     {
         "name": {
@@ -1243,7 +1301,8 @@ elements = [
             2
         ],
         "atomic_mass": 140.907662,
-        "density": 6.77
+        "density": 6.77,
+        "electronegativity_pauling": 1.13
     },
     {
         "name": {
@@ -1266,7 +1325,8 @@ elements = [
             2
         ],
         "atomic_mass": 144.2423,
-        "density": 7.01
+        "density": 7.01,
+        "electronegativity_pauling": 1.14
     },
     {
         "name": {
@@ -1289,7 +1349,8 @@ elements = [
             2
         ],
         "atomic_mass": 145,
-        "density": 7.26
+        "density": 7.26,
+        "electronegativity_pauling": 1.13
     },
     {
         "name": {
@@ -1312,7 +1373,8 @@ elements = [
             2
         ],
         "atomic_mass": 150.362,
-        "density": 7.52
+        "density": 7.52,
+        "electronegativity_pauling": 1.17
     },
     {
         "name": {
@@ -1335,7 +1397,8 @@ elements = [
             2
         ],
         "atomic_mass": 151.9641,
-        "density": 5.264
+        "density": 5.264,
+        "electronegativity_pauling": 1.2
     },
     {
         "name": {
@@ -1358,7 +1421,8 @@ elements = [
             2
         ],
         "atomic_mass": 157.253,
-        "density": 7.9
+        "density": 7.9,
+        "electronegativity_pauling": 1.2
     },
     {
         "name": {
@@ -1381,7 +1445,8 @@ elements = [
             2
         ],
         "atomic_mass": 158.925352,
-        "density": 8.23
+        "density": 8.23,
+        "electronegativity_pauling": 1.1
     },
     {
         "name": {
@@ -1404,7 +1469,8 @@ elements = [
             2
         ],
         "atomic_mass": 162.5001,
-        "density": 8.54
+        "density": 8.54,
+        "electronegativity_pauling": 1.22
     },
     {
         "name": {
@@ -1427,7 +1493,8 @@ elements = [
             2
         ],
         "atomic_mass": 164.930332,
-        "density": 8.79
+        "density": 8.79,
+        "electronegativity_pauling": 1.23
     },
     {
         "name": {
@@ -1450,7 +1517,8 @@ elements = [
             2
         ],
         "atomic_mass": 167.2593,
-        "density": 9.066
+        "density": 9.066,
+        "electronegativity_pauling": 1.24
     },
     {
         "name": {
@@ -1473,7 +1541,8 @@ elements = [
             2
         ],
         "atomic_mass": 168.934222,
-        "density": 9.32
+        "density": 9.32,
+        "electronegativity_pauling": 1.25
     },
     {
         "name": {
@@ -1496,7 +1565,8 @@ elements = [
             2
         ],
         "atomic_mass": 173.0451,
-        "density": 6.9
+        "density": 6.9,
+        "electronegativity_pauling": 1.1
     },
     {
         "name": {
@@ -1519,7 +1589,8 @@ elements = [
             2
         ],
         "atomic_mass": 174.96681,
-        "density": 9.841
+        "density": 9.841,
+        "electronegativity_pauling": 1.27
     },
     {
         "name": {
@@ -1542,7 +1613,8 @@ elements = [
             2
         ],
         "atomic_mass": 178.492,
-        "density": 13.31
+        "density": 13.31,
+        "electronegativity_pauling": 1.3
     },
     {
         "name": {
@@ -1565,7 +1637,8 @@ elements = [
             2
         ],
         "atomic_mass": 180.947882,
-        "density": 16.69
+        "density": 16.69,
+        "electronegativity_pauling": 1.5
     },
     {
         "name": {
@@ -1588,7 +1661,8 @@ elements = [
             2
         ],
         "atomic_mass": 183.841,
-        "density": 19.25
+        "density": 19.25,
+        "electronegativity_pauling": 2.36
     },
     {
         "name": {
@@ -1611,7 +1685,8 @@ elements = [
             2
         ],
         "atomic_mass": 186.2071,
-        "density": 21.02
+        "density": 21.02,
+        "electronegativity_pauling": 1.9
     },
     {
         "name": {
@@ -1634,7 +1709,8 @@ elements = [
             2
         ],
         "atomic_mass": 190.233,
-        "density": 22.59
+        "density": 22.59,
+        "electronegativity_pauling": 2.2
     },
     {
         "name": {
@@ -1657,7 +1733,8 @@ elements = [
             2
         ],
         "atomic_mass": 192.2173,
-        "density": 22.56
+        "density": 22.56,
+        "electronegativity_pauling": 2.2
     },
     {
         "name": {
@@ -1680,7 +1757,8 @@ elements = [
             1
         ],
         "atomic_mass": 195.0849,
-        "density": 21.45
+        "density": 21.45,
+        "electronegativity_pauling": 2.28
     },
     {
         "name": {
@@ -1703,7 +1781,8 @@ elements = [
             1
         ],
         "atomic_mass": 196.9665695,
-        "density": 19.3
+        "density": 19.3,
+        "electronegativity_pauling": 2.54
     },
     {
         "name": {
@@ -1726,7 +1805,8 @@ elements = [
             2
         ],
         "atomic_mass": 200.5923,
-        "density": 13.534
+        "density": 13.534,
+        "electronegativity_pauling": 2
     },
     {
         "name": {
@@ -1749,7 +1829,8 @@ elements = [
             3
         ],
         "atomic_mass": 204.38,
-        "density": 11.85
+        "density": 11.85,
+        "electronegativity_pauling": 1.62
     },
     {
         "name": {
@@ -1772,7 +1853,8 @@ elements = [
             4
         ],
         "atomic_mass": 207.21,
-        "density": 11.34
+        "density": 11.34,
+        "electronegativity_pauling": 1.87
     },
     {
         "name": {
@@ -1795,7 +1877,8 @@ elements = [
             5
         ],
         "atomic_mass": 208.980401,
-        "density": 9.78
+        "density": 9.78,
+        "electronegativity_pauling": 2.02
     },
     {
         "name": {
@@ -1818,7 +1901,8 @@ elements = [
             6
         ],
         "atomic_mass": 209,
-        "density": 9.196
+        "density": 9.196,
+        "electronegativity_pauling": 2
     },
     {
         "name": {
@@ -1841,7 +1925,8 @@ elements = [
             7
         ],
         "atomic_mass": 210,
-        "density": 6.35
+        "density": 6.35,
+        "electronegativity_pauling": 2.2
     },
     {
         "name": {
@@ -1864,7 +1949,8 @@ elements = [
             8
         ],
         "atomic_mass": 222,
-        "density": 9.73
+        "density": 9.73,
+        "electronegativity_pauling": 2.2
     },
     {
         "name": {
@@ -1888,7 +1974,8 @@ elements = [
             1
         ],
         "atomic_mass": 223,
-        "density": 1.87
+        "density": 1.87,
+        "electronegativity_pauling": 0.79
     },
     {
         "name": {
@@ -1912,7 +1999,8 @@ elements = [
             2
         ],
         "atomic_mass": 226,
-        "density": 5.5
+        "density": 5.5,
+        "electronegativity_pauling": 0.9
     },
     {
         "name": {
@@ -1936,7 +2024,8 @@ elements = [
             2
         ],
         "atomic_mass": 227,
-        "density": 10
+        "density": 10,
+        "electronegativity_pauling": 1.1
     },
     {
         "name": {
@@ -1960,7 +2049,8 @@ elements = [
             2
         ],
         "atomic_mass": 232.03774,
-        "density": 11.724
+        "density": 11.724,
+        "electronegativity_pauling": 1.3
     },
     {
         "name": {
@@ -1984,7 +2074,8 @@ elements = [
             2
         ],
         "atomic_mass": 231.035882,
-        "density": 15.37
+        "density": 15.37,
+        "electronegativity_pauling": 1.5
     },
     {
         "name": {
@@ -2008,7 +2099,8 @@ elements = [
             2
         ],
         "atomic_mass": 238.028913,
-        "density": 19.1
+        "density": 19.1,
+        "electronegativity_pauling": 1.38
     },
     {
         "name": {
@@ -2032,7 +2124,8 @@ elements = [
             2
         ],
         "atomic_mass": 237,
-        "density": 20.45
+        "density": 20.45,
+        "electronegativity_pauling": 1.36
     },
     {
         "name": {
@@ -2056,7 +2149,8 @@ elements = [
             2
         ],
         "atomic_mass": 244,
-        "density": 19.816
+        "density": 19.816,
+        "electronegativity_pauling": 1.28
     },
     {
         "name": {
@@ -2080,7 +2174,8 @@ elements = [
             2
         ],
         "atomic_mass": 243,
-        "density": 12
+        "density": 12,
+        "electronegativity_pauling": 1.13
     },
     {
         "name": {
@@ -2104,7 +2199,8 @@ elements = [
             2
         ],
         "atomic_mass": 247,
-        "density": 13.51
+        "density": 13.51,
+        "electronegativity_pauling": 1.28
     },
     {
         "name": {
@@ -2128,7 +2224,8 @@ elements = [
             2
         ],
         "atomic_mass": 247,
-        "density": 14.78
+        "density": 14.78,
+        "electronegativity_pauling": 1.3
     },
     {
         "name": {
@@ -2152,7 +2249,8 @@ elements = [
             2
         ],
         "atomic_mass": 251,
-        "density": 15.1
+        "density": 15.1,
+        "electronegativity_pauling": 1.3
     },
     {
         "name": {
@@ -2176,7 +2274,8 @@ elements = [
             2
         ],
         "atomic_mass": 252,
-        "density": 8.84
+        "density": 8.84,
+        "electronegativity_pauling": 1.3
     },
     {
         "name": {
@@ -2200,7 +2299,8 @@ elements = [
             2
         ],
         "atomic_mass": 257,
-        "density": None
+        "density": None,
+        "electronegativity_pauling": 1.3
     },
     {
         "name": {
@@ -2224,7 +2324,8 @@ elements = [
             2
         ],
         "atomic_mass": 258,
-        "density": None
+        "density": None,
+        "electronegativity_pauling": 1.3
     },
     {
         "name": {
@@ -2248,7 +2349,8 @@ elements = [
             2
         ],
         "atomic_mass": 259,
-        "density": None
+        "density": None,
+        "electronegativity_pauling": 1.3
     },
     {
         "name": {
@@ -2272,7 +2374,8 @@ elements = [
             3
         ],
         "atomic_mass": 266,
-        "density": None
+        "density": None,
+        "electronegativity_pauling": 1.3
     },
     {
         "name": {
@@ -2296,7 +2399,8 @@ elements = [
             2
         ],
         "atomic_mass": 267,
-        "density": 23.2
+        "density": 23.2,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2320,7 +2424,8 @@ elements = [
             2
         ],
         "atomic_mass": 268,
-        "density": 29.3
+        "density": 29.3,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2344,7 +2449,8 @@ elements = [
             2
         ],
         "atomic_mass": 269,
-        "density": 35.0
+        "density": 35.0,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2368,7 +2474,8 @@ elements = [
             2
         ],
         "atomic_mass": 270,
-        "density": 37.1
+        "density": 37.1,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2392,7 +2499,8 @@ elements = [
             2
         ],
         "atomic_mass": 269,
-        "density": 40.7
+        "density": 40.7,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2416,7 +2524,8 @@ elements = [
             2
         ],
         "atomic_mass": 278,
-        "density": 37.4
+        "density": 37.4,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2440,7 +2549,8 @@ elements = [
             2
         ],
         "atomic_mass": 281,
-        "density": 34.8
+        "density": 34.8,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2464,7 +2574,8 @@ elements = [
             2
         ],
         "atomic_mass": 282,
-        "density": 28.7
+        "density": 28.7,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2488,7 +2599,8 @@ elements = [
             2
         ],
         "atomic_mass": 285,
-        "density": 23.7
+        "density": 23.7,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2512,7 +2624,8 @@ elements = [
             3
         ],
         "atomic_mass": 286,
-        "density": 16
+        "density": 16,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2536,7 +2649,8 @@ elements = [
             4
         ],
         "atomic_mass": 289,
-        "density": 14
+        "density": 14,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2560,7 +2674,8 @@ elements = [
             5
         ],
         "atomic_mass": 289,
-        "density": 13.5
+        "density": 13.5,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2584,7 +2699,8 @@ elements = [
             6
         ],
         "atomic_mass": 293,
-        "density": 12.9
+        "density": 12.9,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2608,7 +2724,8 @@ elements = [
             7
         ],
         "atomic_mass": 294,
-        "density": 7.17
+        "density": 7.17,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2632,7 +2749,8 @@ elements = [
             8
         ],
         "atomic_mass": 294,
-        "density": 4.95
+        "density": 4.95,
+        "electronegativity_pauling": None
     },
     {
         "name": {
@@ -2657,7 +2775,8 @@ elements = [
             1
         ],
         "atomic_mass": 315,
-        "density": 3
+        "density": 3,
+        "electronegativity_pauling": None
     }
 ]
 

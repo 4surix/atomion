@@ -353,7 +353,8 @@ def get_info(
         obj.symbole, 
         obj.categorie,
         obj.couches, 
-        obj.masse_atomique_relative
+        obj.masse_atomique_relative,
+        obj.electronegativite
 
         ) = (
 
@@ -361,7 +362,8 @@ def get_info(
         element['symbol'],
         element['category'],
         element['shells'][:],
-        element['atomic_mass']
+        element['atomic_mass'],
+        element['electronegativity_pauling']
     )
 
 

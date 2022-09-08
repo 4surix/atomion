@@ -7,6 +7,7 @@
 Neutron = Proton = Electron                \
 = Atome = Molecule = MoleculeOrganique     \
 = Ion = IonMonoAtomique = IonPolyAtomique  \
+= Liaison                                  \
 = Noyau                                    \
 = Quark = QUp = QDown                      \
 = None
@@ -23,6 +24,7 @@ listes_noms = (
     'Ion',
     'IonMonoAtomique',
     'IonPolyAtomique',
+    'Liaison',
     'Noyau',
     'Quark',
     'QUp',
@@ -30,13 +32,13 @@ listes_noms = (
 )
 
 from . import (
-    molecule, atome, ion, noyau, electron, proton, neutron, quark
+    molecule, atome, ion, noyau, electron, proton, neutron, quark, liaison
 )
 
 from .. import utile
 
 for module in [
-        molecule, atome, ion, noyau, electron, proton, neutron, quark,
+        molecule, atome, ion, noyau, electron, proton, neutron, quark, liaison,
         utile, utile.equation, utile.oxydo_reduction
     ]:
     module.MAJ_TYPE()

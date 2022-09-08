@@ -29,6 +29,7 @@ parties = [
     'objets/molecule.py',
     'objets/neutron.py',
     'objets/proton.py',
+    'objets/liaison.py',
     # Peut être retiré si pas besoin
     'objets/noyau.py',
     'utile/equation.py',

@@ -24,7 +24,8 @@ class Atome:
         'nom', 'symbole', 'categorie',
         'proton', 'neutron', 'nucleon', 'electron', 
         'masse', 'masse_atomique_relative', 
-        'configuration', 'couches', 'noyau'
+        'configuration', 'couches', 'noyau',
+        'electronegativite'
     )
 
     def __init__(self, 

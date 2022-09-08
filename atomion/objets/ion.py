@@ -78,7 +78,8 @@ class IonMonoAtomique(Ion):
         'proton', 'neutron', 'electron', 'nucleon',
         'masse', 'masse_atomique_relative',
         'configuration', 'couches', 
-        'diff', 'charge', 'noyau'
+        'diff', 'charge', 'noyau',
+        'electronegativite'
     )
 
     if not utile.params.calculatrice:
@@ -311,7 +312,8 @@ class IonPolyAtomique(Ion):
         'ions', 
         'proton', 'neutron', 'electron', 'nucleon',
         'masse', 'masse_moleculaire_relative',
-        'diff', 'charge'
+        'diff', 'charge',
+        'electronegativite'
     )
 
     if not utile.params.calculatrice:
@@ -365,10 +367,7 @@ class IonPolyAtomique(Ion):
         else:
             self.electron -= charge
 
-        if charge < 0:
-            self.charge = '-'
-        else:
-            self.charge = '+'
+        self.charge = '?' if not charge else '-' if charge < 0 else '+'
 
         self.diff = abs(charge)
 
