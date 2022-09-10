@@ -56,7 +56,7 @@ class Molecule:
                     "Une molécule ne peut pas avoir de gaz noble."
                 )
 
-        if verif_stable:
+        if verif_stable and utile.params.strict:
             if not utile.verif_espece_stable(self.atomes):
                 raise exception.Instable(self)
 

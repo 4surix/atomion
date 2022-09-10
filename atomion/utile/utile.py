@@ -52,9 +52,11 @@ class params:
 
     langue = 'fr'
 
+    strict = True
+
     nom = True
     categorie = True
-    
+
     proton = True
     neutron = True
     electron = True
