@@ -77,8 +77,8 @@ class IonMonoAtomique(Ion):
         'nom', 'symbole', 'categorie', 
         'proton', 'neutron', 'electron', 'nucleon',
         'masse', 'masse_atomique_relative',
-        'configuration', 'couches', 
-        'diff', 'charge', 'noyau',
+        'configuration', 'couches', 'noyau',
+        'diff', 'charge',
         'electronegativite'
     )
 

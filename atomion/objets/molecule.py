@@ -114,6 +114,12 @@ class Molecule:
         elif isinstance(obj, Atome):
             return Molecule(self.atomes + [obj])
 
+        elif isinstance(obj, IonMonoAtomique):
+            return IonPolyAtomique(self.atomes + [obj])
+
+        elif isinstance(obj, IonPolyAtomique):
+            return IonPolyAtomique(self.atomes + obj.ions)
+
         else:
             raise exception.Incompatible(self, obj)
 
