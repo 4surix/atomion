@@ -159,6 +159,12 @@ class IonMonoAtomique(Ion):
         elif isinstance(obj, IonMonoAtomique):
             return IonPolyAtomique([self, obj])
 
+        elif isinstance(obj, Molecule):
+            return IonPolyAtomique([self, *obj.atomes])
+
+        elif isinstance(obj, Atome):
+            return IonPolyAtomique([self, obj])
+
         else:
             raise exception.Incompatible(self, obj)
 
@@ -412,6 +418,12 @@ class IonPolyAtomique(Ion):
             return IonPolyAtomique(self.ions + obj.ions)
 
         elif isinstance(obj, IonMonoAtomique):
+            return IonPolyAtomique(self.ions + [obj])
+
+        elif isinstance(obj, Molecule):
+            return IonPolyAtomique(self.ions + obj.atomes)
+
+        elif isinstance(obj, Atome):
             return IonPolyAtomique(self.ions + [obj])
 
         else:
