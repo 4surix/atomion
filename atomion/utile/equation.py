@@ -241,7 +241,9 @@ class Equation:
                         ):
                             self.reactifs.remove(element__)
 
-        # Equilibrage.
+
+        ### Equilibrage.
+        #
 
         liste_symboles_atomes = symboles_reactifs
 
@@ -251,7 +253,13 @@ class Equation:
 
         total_equilibre = False
 
-        while not total_equilibre:
+        while (
+            not total_equilibre
+            # Une demi-équation d'acide base est forcément déséquilibrée
+            #  au niveau de ses nombres d'atomes, et pas besoin d'équilibrer
+            #  les charges.
+            and self.demi_equation != 'acide/base'
+        ):
 
             total_equilibre = True
 
@@ -386,7 +394,7 @@ class Equation:
                     total_equilibre = False
 
 
-        if self.demi_equation:
+        if self.demi_equation == 'oxydoreduction':
 
             ### Equilibre de l'oxygéne en rajoutant de l'H2O
             #
@@ -414,6 +422,8 @@ class Equation:
                 info_atomes_produits.append({'H': 2, 'O': 1})
                 configuration[1].append(nombre_total_p1 - nombre_total_p2)
 
+
+        if self.demi_equation in ('oxydoreduction', 'acide/base'):
 
             ### Equilibre de l'hydrogéne en rajoutant des ions H+
             #
@@ -444,7 +454,7 @@ class Equation:
                 )
                 configuration[0].append(nombre_total_p2 - nombre_total_p1)
 
-            elif nombre_total_p1 < nombre_total_p2:
+            elif nombre_total_p1 > nombre_total_p2:
                 ion = Ion('H')
                 self.produits.append(ion)
                 info_atomes_produits.append({'H': 1})

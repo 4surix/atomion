@@ -30,4 +30,5 @@ from .objets import *
 from .utile import params, mol
 from .utile.equation import Equation, Reaction, DemiEquation
 from .utile.oxydo_reduction import OxydoReduction
+from .utile.acido_basique import AcidoBasique
 from . import exception

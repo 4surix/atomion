@@ -2,15 +2,14 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
-from .typing import *
-from .utile import *
-from .equation import *
+from .typing import List, Union
+from .equation import Equation
 
 from .. import objets
 from ..objets import (
     Atome, Molecule,
     Ion, IonMonoAtomique, IonPolyAtomique,
-    Electron, Proton, Neutron
+    Electron
 )
 from .. import exception
 from .. import couples
@@ -27,8 +26,12 @@ class OxydoReduction:
             reactif_2:Union[Atome, Ion, Molecule]
         ):
 
-        produit_1 = couples.get_produit(reactif_1)
-        produit_2 = couples.get_produit(reactif_2)
+        reactif_1 = utile.convertie_notation(reactif_1.strip()) if isinstance(reactif_1, str) else reactif_1
+        reactif_2 = utile.convertie_notation(reactif_2.strip()) if isinstance(reactif_2, str) else reactif_2
+
+        List[Union[Atome, Ion]];
+        produit_1 = couples.get_produit(reactif_1, 'oxydoreduction')
+        produit_2 = couples.get_produit(reactif_2, 'oxydoreduction')
 
         if not produit_1 or not produit_2:
             return NotImplemented
@@ -40,13 +43,13 @@ class OxydoReduction:
         demi_equation_1 = Equation(
             reactifs = [reactif_1],
             produits = [produit_1],
-            demi_equation = True
+            demi_equation = 'oxydoreduction'
         ).equilibrer()
 
         demi_equation_2 = Equation(
             reactifs = [reactif_2],
             produits = [produit_2],
-            demi_equation = True
+            demi_equation = 'oxydoreduction'
         ).equilibrer()
 
         if type(demi_equation_1.produits[-1]) == Electron:
@@ -139,7 +142,7 @@ class OxydoReduction:
         )
 
         return (
-            'Don : ' + str(self.demi_equation_don)
+                     'Don : ' + str(self.demi_equation_don)
             + '\n' + 'Gain: ' + str(self.demi_equation_gain)
             + '\n      ' + '─' * longueur
             + '\n      ' + equation
