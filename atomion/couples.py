@@ -2,6 +2,10 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
+import os
+import json
+
+
 from . import utile
 from . import exception
 
@@ -11,6 +15,16 @@ couples = {}
 def __maj():
 
     global couples
+
+
+    if os.path.exists('couples.json'):
+        with open('couples.json') as file:
+            data = file.read()
+
+        data = json.loads(data)
+    else:
+        data = None
+
 
     couples = {
         'oxydoreduction': [
@@ -33,6 +47,8 @@ def __maj():
                 ('MnO2', '{Mn 2+}'),
                 ('Br2', '{Br -}'),
                 ('Fe', '{Fe 2+}'),
+
+                *(data.get('oxydoreduction', []) if data else [])
             ]
         ],
         'acide/base': [
@@ -64,6 +80,8 @@ def __maj():
                 ('CH3COOH', '{CH3COO -}'),
                 ('HCOOH', '{HCOO -}'),
                 ('HF', '{F -}'),
+
+                *(data.get('acide/base', []) if data else [])
             ]
         ]
     }
