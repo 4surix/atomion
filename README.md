@@ -25,15 +25,15 @@ Module servant à manipuler facilement :
 - Réaction chimique
 - Demi-équation
 - Oxydo-réduction
-##### Nouveauté : 
 - Électronégativité
-- Molécule organique 
+- Molécule organique
+- Reaction acido-basique
 ##### Prévues :
 - _Fusion nucléaire (Non-fini)_
 - Fission nucléaire
-- Reaction acido-basique
 - Gluons
 - Antimatière
+- Maintien des liaisons
 
 Vous trouverez un dossier [`exemples`](https://github.com/4surix/atomion/blob/master/exemples) avec les diverses fonctionnalités.
 
@@ -101,6 +101,11 @@ oxydoR = OxydoReduction(
 )
 oxydoR.don == 'Fe -> Fe²⁺ + 2 e⁻'
 oxydoR.gain == 'Cr₂O₇²⁻ + 14 H⁺ + 6 e⁻ -> 2 Cr³⁺ + 7 H₂O'
+
+reaction = AcidoBasique('{C3H5O2 -}', '{H3O +}')
+reaction.gain == 'C₃H₅O₂⁻ + H⁺ -> C₃H₆O₂'
+reaction.don ==  'H₃O⁺ -> H₂O + H⁺'
+reaction.equation == 'H₃O⁺ + C₃H₅O₂⁻ -> H₂O + C₃H₆O₂'
 ```
 
 Pour voir le reste des fonctionnalités, regardez le dossier [`exemples`](https://github.com/4surix/atomion/blob/master/exemples).
