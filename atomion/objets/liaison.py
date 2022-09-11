@@ -5,12 +5,12 @@
 
 from .. import objets
 from ..objets import (
-    Atome
+    Atome, Ion
 )
 from .. import utile
 from .. import exception
 
-from ..utile.typing import List, Any, Optional
+from ..utile.typing import List, Union, Any, Optional
 
 
 ###>>> CAPTURE FICHIER CALC
@@ -19,15 +19,21 @@ class Liaison:
 
     __slots__ = (
         'atomes',
-        'polarisee'
+        'polarisee',
+        'pole_moins', 'pole_plus'
     )
 
     def __init__(self, 
-            *valeurs:List[Atome],
+            *valeurs:List[Union[str, Atome, Ion]],
             neutron:Optional[int] = None
         ) -> None:
 
-        self.atomes = valeurs
+        self.atomes = [
+            utile.convertie_notation(element.strip()) if isinstance(element, str)
+            else
+                element
+            for element in valeurs
+        ]
 
         if len(self.atomes) != 2:
             raise exception.ValeurIncorrecte(
@@ -38,10 +44,37 @@ class Liaison:
             abs(self.atomes[0].electronegativite - self.atomes[1].electronegativite) > 0.4
         )
 
+        if self.atomes[0].electronegativite > self.atomes[1].electronegativite:
+            self.pole_moins = self.atomes[0]
+            self.pole_plus = self.atomes[1]
+        else:
+            self.pole_moins = self.atomes[1]
+            self.pole_plus = self.atomes[0]
+
     def __iter__(self):
 
         for atome in self.atomes:
             yield atome
+
+    def __str__(self):
+
+        return (
+            self.atomes[0].symbole + (
+                '' if not self.polarisee else ('ᵟ' + (
+                    '⁻' if self.atomes[0].electronegativite > self.atomes[1].electronegativite
+                    else
+                        '⁺'
+                ))
+            )
+            + ' ── ' +
+            self.atomes[1].symbole + (
+                '' if not self.polarisee else ('ᵟ' + (
+                    '⁻' if self.atomes[0].electronegativite < self.atomes[1].electronegativite
+                    else
+                        '⁺'
+                ))
+            )
+        )
 
 
 ###<<< CAPTURE FICHIER CALC
