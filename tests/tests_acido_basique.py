@@ -8,7 +8,7 @@ import unittest
 from atomion import *
 
 
-class TestOxydoReduction(unittest.TestCase):
+class TestAcidoBasique(unittest.TestCase):
 
     def setUp(self):
         self.reaction = AcidoBasique('{C3H5O2 -}', '{H3O +}')
