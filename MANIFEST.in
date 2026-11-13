@@ -1,0 +1,13 @@
+include LICENSE
+include README.md
+include CHANGELOG.md
+include TODO.md
+include pyproject.toml
+
+include mk_file_calculatrice.py
+recursive-include exemples *.py
+recursive-include tools *.py
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[cod]
+global-exclude *.py[cod]

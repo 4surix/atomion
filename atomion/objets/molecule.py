@@ -253,6 +253,7 @@ class MoleculeOrganique(Molecule):
 
         value = ''
 
+        cat = ''
         famille = None
 
         for carac in data:
@@ -336,23 +337,29 @@ class MoleculeOrganique(Molecule):
 
             partie = 'OH'
 
-        if famille == 'Aldéhyde':
+        elif famille == 'Aldéhyde':
             nbr_carbone -= 1
             nbr_hydrogene += ((nbr_carbone * 2) + 1) - len(ramifications)
 
             partie = 'COH'
 
-        if famille == 'Cétone':
+        elif famille == 'Cétone':
             nbr_carbone -= 1
             nbr_hydrogene += ((nbr_carbone * 2) + 2) - len(ramifications)
 
             partie = 'CO'
 
-        if famille == 'Acide carboxylique':
+        elif famille == 'Acide carboxylique':
             nbr_carbone -= 1
             nbr_hydrogene += ((nbr_carbone * 2) + 1) - len(ramifications)
 
             partie = 'CO2H'
+
+        else:
+            raise exception.ValeurIncorrecte(
+                "Nomenclature de molécule organique non reconnue :"
+                + " famille chimique indéterminée."
+            )
 
 
         for index, nbr_carbone_ram in ramifications.items():

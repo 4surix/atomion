@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Fichier unique généré pour calculatrice (mk_file_calculatrice.py)
+/atomion.py
+
+# Cache de ruff
+.ruff_cache/

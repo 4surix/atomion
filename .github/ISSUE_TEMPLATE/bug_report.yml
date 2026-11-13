@@ -1,0 +1,32 @@
+name: Rapport de bug
+about: Signaler un comportement incorrect
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description du problème
+      description: Que se passe-t-il ?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Exemple minimal reproductible
+      render: python
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version d'atomion
+      placeholder: "1.6.0"
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Version de Python
+      placeholder: "3.12"
+    validations:
+      required: true

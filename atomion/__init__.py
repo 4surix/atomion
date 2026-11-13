@@ -2,6 +2,14 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
+# Atomion — manipulation d'atomes, ions et molécules.
+# Copyright (C) 2026 Asurix
+#
+# Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le
+# modifier selon les termes de la GNU Affero General Public License, version 3
+# ou ultérieure (AGPL-3.0-or-later), publiée par la Free Software Foundation.
+# Voir le fichier LICENSE pour le texte complet.
+
 ###>>> CAPTURE FICHIER CALC
 
 """
@@ -21,7 +29,7 @@ Lien du github : https://github.com/4surix/atomion
 """
 
 
-__version__ = '1.6.0'
+__version__ = '1.6.1'
 
 ###<<< CAPTURE FICHIER CALC
 

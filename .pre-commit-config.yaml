@@ -1,0 +1,8 @@
+# Hooks pré-commit — vérifie le code avant chaque commit.
+# Installation : `pip install pre-commit` puis `pre-commit install`.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.5
+    hooks:
+      - id: ruff
+        args: [--fix]

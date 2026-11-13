@@ -58,9 +58,7 @@ for symbole in [
     variables[symbole] = molecule
 
 
-# Netoyage variable inutile
-
-del variables['elements']
+# Nettoyage des variables temporaires
 del variables['element']
 del variables['symbole']
 del globals()['variables']

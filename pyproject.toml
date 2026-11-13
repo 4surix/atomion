@@ -1,0 +1,98 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atomion"
+version = "1.6.1"
+description = "Manipulation facile d'atomes, d'ions, de molécules, d'équations et de réactions chimiques."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Asurix", email = "asurix@outlook.fr" },
+]
+keywords = [
+    "chimie", "chemistry", "atome", "atom", "ion", "molecule", "molécule",
+    "equation", "équation", "réaction", "oxydo-reduction", "acido-basique",
+    "micropython", "calculatrice", "education",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: End Users/Desktop",
+    "Natural Language :: French",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: MicroPython",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/4surix/atomion"
+Repository = "https://github.com/4surix/atomion"
+Issues = "https://github.com/4surix/atomion/issues"
+Changelog = "https://github.com/4surix/atomion/blob/master/CHANGELOG.md"
+
+[project.optional-dependencies]
+calc = ["python-minifier>=1.0"]
+dev = [
+    "ruff>=0.6",
+    "coverage[toml]>=7.0",
+    "build>=1.0",
+    "twine>=5.0",
+    "pre-commit>=3.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["atomion*"]
+
+[tool.setuptools.package-data]
+atomion = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+exclude = [
+    "atomion/elements.py",  # fichier de données généré
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = [
+    "E1",    # indentation (tabulations historiques)
+    "E2",    # espaces
+    "E3",    # lignes vides
+    "E4",    # imports
+    "E5",    # longueur de ligne / continuations
+    "E7",    # instructions multiples sur une ligne
+    "W1",    # indentation
+    "W2",    # espaces en fin de ligne
+    "W3",    # lignes vides
+    "W6",    # syntaxe d'échappement dépréciée
+    "F401",  # import non utilisé
+    "F403",  # import * utilisé
+    "F405",  # nom potentiellement indéfini (via import *)
+    "F811",  # redéfinition d'un nom (nécessaire pour le mode calculatrice)
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Parseur de nomenclature organique : variables préparatoires inutilisées.
+"atomion/objets/molecule.py" = ["F841"]
+
+[tool.coverage.run]
+source = ["atomion"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "if __name__ == .__main__.:",
+    "pragma: no cover",
+]

@@ -5,14 +5,13 @@
 
 # Atomion
 
-[![Build Status](https://travis-ci.com/4surix/atomion.svg?branch=master)](https://travis-ci.com/4surix/atomion)
+[![CI](https://github.com/4surix/atomion/actions/workflows/ci.yml/badge.svg)](https://github.com/4surix/atomion/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/atomion)](https://pypi.org/project/atomion/)
 [![GitHub issues](https://img.shields.io/github/issues/4surix/atomion)](https://github.com/4surix/atomion/issues)
 [![Download](https://img.shields.io/pypi/dm/atomion)](https://pypi.org/project/atomion/)
+[![Licence](https://img.shields.io/badge/licence-AGPL--3.0--or--later-blue)](LICENSE)
 ![Version python](https://img.shields.io/pypi/pyversions/atomion)
 ![Version micropython](https://img.shields.io/badge/micropython-1.9.4-blue)
-![Code size](https://img.shields.io/github/languages/code-size/4surix/atomion)
-![Code size file](https://img.shields.io/badge/code%20size%20file%20calc-57%20kB-blue)
 
 Module servant à manipuler facilement :
 - Quark
@@ -121,12 +120,12 @@ Pour voir le reste des fonctionnalités, regardez le dossier [`exemples`](https:
   Sur Windows, appuyez sur la touche `Windows` + la touche `R`, et écrivez `cmd` dans la fenêtre qui s'est ouverte.
   </details>
 
-- Assurez-vous d'avoir `Python >=3.6` d'installé.
+- Assurez-vous d'avoir `Python >=3.9` d'installé.
   <details>
     <summary>Comment savoir ?</summary>
 
-  Ecrivez `python --version` dans l'invite de commande. Si Python est installé cela affichera la version qui doit être supérieur à `3.6`.
-  Si ce n'est pas le cas, [installer Python](https://www.python.org/downloads/) dans une version égal ou supérieur à 3.6 pour éviter les soucis de compatibilité.
+  Ecrivez `python --version` dans l'invite de commande. Si Python est installé cela affichera la version qui doit être supérieur à `3.9`.
+  Si ce n'est pas le cas, [installer Python](https://www.python.org/downloads/) dans une version égal ou supérieur à 3.9 pour éviter les soucis de compatibilité.
   </details>
 
 - Vérifiez que `pip` est installé.
@@ -169,5 +168,11 @@ Si vous avez un problème, n'hésitez pas à regarder les [issues](https://githu
 
 # Licence
 
-Je ne sais pas quelle licence mettre.  
-Tout ce que je veux c'est que tout le monde puisse l'utiliser gratuitement et librement que cela soit pour le privé, dans leur projet publique, à but éducatif ; mais je ne veux pas qu'une personne : puisse se faire de l'argent avec le projet atomion, prétend que le code du projet atomion soit le sien et pas le mien, ne cite pas le projet atomion dans leur projet.
+Ce projet est distribué sous **GNU Affero General Public License v3.0 ou ultérieure** (`AGPL-3.0-or-later`).
+
+- Texte complet : [`LICENSE`](LICENSE) - [gnu.org](https://www.gnu.org/licenses/agpl-3.0.html)
+- Vous pouvez utiliser, étudier, modifier et redistribuer atomion, y compris à des fins commerciales.
+- En contrepartie : tout dérivé distribué ou exposé via un réseau (site web, API, SaaS) doit rester sous AGPL et fournir son code source à ses utilisateurs.
+- La mention de copyright et la licence doivent être conservées (pas de réappropriation).
+
+Copyright (C) 2026 Asurix.

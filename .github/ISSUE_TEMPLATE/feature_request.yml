@@ -1,0 +1,16 @@
+name: Demande de fonctionnalité
+about: Proposer une nouvelle fonctionnalité ou une amélioration
+labels: [enhancement]
+body:
+  - type: textarea
+    id: besoin
+    attributes:
+      label: Besoin / problème à résoudre
+    validations:
+      required: true
+  - type: textarea
+    id: proposition
+    attributes:
+      label: Proposition
+    validations:
+      required: false

@@ -2,12 +2,14 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
-import os
-import json
-
-
 from . import utile
 from . import exception
+
+
+###>>> CAPTURE FICHIER CALC
+
+import json
+import os
 
 
 # Chemin du fichier de couples personnalisés, relatif au module
@@ -27,11 +29,12 @@ def __maj():
 
     global couples
 
+    data = None
 
-    if os.path.exists(FICHIER_COUPLES):
+    try:
         with open(FICHIER_COUPLES) as fichier:
             data = json.loads(fichier.read())
-    else:
+    except OSError:
         data = None
 
 
@@ -129,3 +132,5 @@ def get_produit(element, categorie):
         )
 
     return produits
+
+###<<< CAPTURE FICHIER CALC

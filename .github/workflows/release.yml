@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-publish:
+    name: Build et publication sur PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/atomion
+    permissions:
+      id-token: write   # requis pour le Trusted Publishing (OIDC)
+      contents: write   # requis pour créer la GitHub Release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Installer build
+        run: python -m pip install --upgrade build
+      - name: Construire le sdist et la wheel
+        run: python -m build
+      - name: Publier sur PyPI (Trusted Publishing)
+        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Créer la GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true

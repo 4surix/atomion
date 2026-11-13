@@ -610,7 +610,6 @@ class Reaction:
 
     def final(self) -> Dict[ Union[Atome, Ion, Molecule], int ]:
 
-        reactif_limitant = None
         quantité_reactif_limitant = None
 
         for coefficient, espece in zip(
@@ -623,7 +622,6 @@ class Reaction:
                 quantité_reactif_limitant is None
                 or quantité < quantité_reactif_limitant
             ):
-                reactif_limitant = espece
                 quantité_reactif_limitant = quantité
 
         return self.intermediaire(quantité_reactif_limitant)

@@ -113,6 +113,12 @@ class TestMoleculeOrganique(unittest.TestCase):
             lambda: MoleculeOrganique('4-méthylpentan-1-anoïque')
         )
 
+    def test_famille_indeterminee(self):
+        self.assertRaises(
+            exception.ValeurIncorrecte,
+            lambda: MoleculeOrganique('pentane')
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
