@@ -19,7 +19,7 @@ from ..utile.typing import Union, Any, Optional
 
 class Neutron:
 
-    __slots__ = ('valeur')
+    __slots__ = ('valeur',)
 
     def __init__(self, valeur:Optional[int] = 1) -> None:
 

@@ -41,12 +41,24 @@ class AcidoBasique:
         i1 = 0
         i2 = 0
 
-        while produits_1[i1][0] == produits_2[i2][0]:
+        while (
+            produits_1[i1][0] == produits_2[i2][0]
+            and (i1 < len(produits_1) - 1 or i2 < len(produits_2) - 1)
+        ):
 
             if i1 < len(produits_1) - 1:
                 i1 += 1
             elif i2 < len(produits_2) - 1:
                 i2 += 1
+
+        # Si les deux réactifs jouent le même rôle
+        #  (acide/acide ou base/base), aucune réaction acido-basique
+        #  n'est possible.
+        if produits_1[i1][0] == produits_2[i2][0]:
+            raise exception.ValeurIncorrecte(
+                "Les deux réactifs de la réaction acido-basique"
+                + " jouent le même rôle, un acide et une base sont nécessaires."
+            )
 
         produit_1 = produits_1[i1][1]
         produit_2 = produits_2[i2][1]

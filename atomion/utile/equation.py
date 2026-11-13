@@ -38,6 +38,11 @@ def analyse(
                         [element]
             ):
 
+            # Les électrons n'ont pas de symbole atomique
+            #  et n'entrent pas dans le décompte des atomes.
+            if isinstance(espece, Electron):
+                continue
+
             symbole = espece.symbole
 
             if symbole not in nombre_atomes:
@@ -86,8 +91,12 @@ def DemiEquation(
 
     return Equation(
         reactifs = [reactif],
-        produits = [produit if produit else couples.get_produit(reactif)],
-        demi_equation = True
+        produits = [
+            produit if produit
+            else
+                couples.get_produit(reactif, 'oxydoreduction')
+        ],
+        demi_equation = 'oxydoreduction'
     )
 
 

@@ -2,6 +2,7 @@
 # Python 3.6.2
 # ----------------------------------------------------------------------------
 
+from . import utile
 from .typing import List, Union
 from .equation import Equation
 

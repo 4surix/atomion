@@ -36,7 +36,11 @@ class Atome:
 
         utile.get_info(self, valeur)
 
-        self.neutron = neutron or round(self.masse_atomique_relative) - self.proton
+        self.neutron = (
+            neutron if neutron is not None
+            else
+                round(self.masse_atomique_relative) - self.proton
+        )
         self.electron = self.proton
         self.nucleon = self.proton + self.neutron
         self.masse = utile.get_masse(self)
