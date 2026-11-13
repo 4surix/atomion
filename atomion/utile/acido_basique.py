@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------
 
 from . import utile
-from .typing import List, Tuple, Union
+from .typing import Union
 from .equation import Equation
 
 from .. import objets
@@ -29,14 +29,11 @@ class AcidoBasique:
         reactif_1 = utile.convertie_notation(reactif_1.strip()) if isinstance(reactif_1, str) else reactif_1
         reactif_2 = utile.convertie_notation(reactif_2.strip()) if isinstance(reactif_2, str) else reactif_2
 
-        List[Tuple[str, Union[Atome, Ion]]];
         produits_1 = couples.get_produit(reactif_1, 'acide/base')
         produits_2 = couples.get_produit(reactif_2, 'acide/base')
 
         # TODO: Dans le futur, essayer de deviner le couple, et donc le produit,
         #        avec des calculs si le couple n'est pas dans la liste.
-        if not produits_1 or not produits_2:
-            return NotImplemented
 
         i1 = 0
         i2 = 0
@@ -78,8 +75,6 @@ class AcidoBasique:
             produits = [produit_2],
             demi_equation = 'acide/base'
         ).equilibrer()
-
-        H = Atome('H')
 
         if (
             len([e for e in reactif_1 if e.symbole == 'H'])

@@ -33,7 +33,7 @@ print(Ion('CO2'))
 params.config(
     calculatrice = False,
     langue = 'fr',
-    element = True,
+    nom = True,
     categorie = True,
     proton = True,
     neutron = True,

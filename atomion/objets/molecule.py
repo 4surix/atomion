@@ -287,7 +287,10 @@ class MoleculeOrganique(Molecule):
                 if value in PREFIXS:
 
                     if PREFIXS.index(value) + 2 != len(indexs):
-                        raise ValueError()
+                        raise exception.ValeurIncorrecte(
+                            "Nomenclature de molécule organique invalide :"
+                            + " préfixe incohérent avec les indices."
+                        )
 
                     value = ''
 
@@ -320,7 +323,10 @@ class MoleculeOrganique(Molecule):
                 elif value == 'anoïque':
 
                     if famille != 'Acide carboxylique':
-                        raise ValueError()
+                        raise exception.ValeurIncorrecte(
+                            "Nomenclature de molécule organique invalide :"
+                            + " 'anoïque' requiert la famille 'Acide carboxylique'."
+                        )
 
                     value = ''
 

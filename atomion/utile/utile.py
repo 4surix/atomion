@@ -69,8 +69,11 @@ class params:
 
     def config(**params_):
         for key, valeur in params_.items():
-            if getattr(params, key, None) is not None:
-                setattr(params, key, valeur)
+            if not hasattr(params, key):
+                raise exception.ValeurIncorrecte(
+                    "Le paramètre '%s' n'existe pas." % key
+                )
+            setattr(params, key, valeur)
 
 
 ### Valeur de base pour les calculs
@@ -81,7 +84,12 @@ masse_electron = 9.109*(10**-31)
 masse_proton = 1.672649*(10**-27)
 masse_neutron = 1.67493*(10**-27)
 
-mol = 6.02*10**23
+# Alias des masses, utilisés par `raccourcis` (source unique de vérité).
+# `Mn` n'est pas défini ici : ce symbole est réservé au Manganèse.
+Me = masse_electron
+Mp = masse_proton
+
+mol = 6.02214076*(10**23)
 
 
 ### Fonctions
@@ -261,10 +269,10 @@ def configuration_electronique(element:Union[Atome, Ion]) -> List[int]:
             break
 
 
-    exception = irregularites.configuration.get(protons)
+    irregularite = irregularites.configuration.get(protons)
 
-    if exception:
-        couches[-len(exception):] = exception
+    if irregularite:
+        couches[-len(irregularite):] = irregularite
 
     return couches
 
@@ -545,8 +553,34 @@ def convertie_notation_vers(
 
 
 def verif_espece_stable(elements:List[Union[Atome, Ion]]) -> bool:
-    """
-    Vérifie si des éléments sont stable en vérifiant leurs nombre de liaison.
+    """Vérifie approximativement si une espèce (molécule) est stable.
+
+    Principe (heuristique) :
+    1. Chaque atome est converti en ion (`IonMonoAtomique`) afin de
+       déterminer son nombre de liaisons disponibles (`diff`).
+    2. Ces nombres sont triés par ordre décroissant puis « consommés »
+       par paires : chaque liaison retire une unité aux deux partenaires.
+    3. L'espèce est considérée stable si toutes les charges de liaison
+       disponibles sont ramenées à zéro.
+
+    ---------
+    Arguments
+
+    elements
+        :list
+        Liste d'atomes/ions constituant l'espèce.
+
+    -------
+    Retours
+
+    :bool
+        `True` si l'espèce est jugée stable, `False` sinon.
+
+    -------
+    Limites
+
+    Il s'agit d'une approximation : certaines espèces réelles peuvent être
+    rejetées, et inversement (voir `tests/tests_objets.py`).
     """
 
     charges = sorted(

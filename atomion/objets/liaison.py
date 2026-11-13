@@ -10,7 +10,7 @@ from ..objets import (
 from .. import utile
 from .. import exception
 
-from ..utile.typing import List, Union, Any, Optional
+from ..utile.typing import List, Union
 
 
 ###>>> CAPTURE FICHIER CALC
@@ -24,8 +24,7 @@ class Liaison:
     )
 
     def __init__(self, 
-            *valeurs:List[Union[str, Atome, Ion]],
-            neutron:Optional[int] = None
+            *valeurs:List[Union[str, Atome, Ion]]
         ) -> None:
 
         self.atomes = [
@@ -38,6 +37,15 @@ class Liaison:
         if len(self.atomes) != 2:
             raise exception.ValeurIncorrecte(
                 "Une liaison doit être composée de deux atomes."
+            )
+
+        if (
+            self.atomes[0].electronegativite is None
+            or self.atomes[1].electronegativite is None
+        ):
+            raise exception.ValeurIncorrecte(
+                "L'électronégativité est inconnue pour au moins un des atomes"
+                + " (gaz noble ou élément non renseigné)."
             )
 
         self.polarisee = (

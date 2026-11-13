@@ -47,7 +47,7 @@ class Quark:
         )
         if charge_couleur not in CHARGES_COULEURS.values():
             raise exception.ValeurIncorrecte(
-                'La charge electrique doit être R, V ou B.'
+                'La charge de couleur doit être R, V ou B.'
             )
 
         self.charge_electrique = charge_electrique
@@ -75,6 +75,10 @@ class Quark:
         if self.charge_electrique == - 1/3:
             return 'd'
 
+        raise exception.ValeurIncorrecte(
+            "La charge électrique d'un quark doit être + 2/3 ou - 1/3."
+        )
+
 objets.Quark = Quark
 
 
@@ -87,7 +91,7 @@ class QUp(Quark):
             + 2/3, 
             charge_couleur if charge_couleur
             else
-                random.choice(CHARGES_COULEURS.values())
+                random.choice(list(CHARGES_COULEURS))
         )
 
 objets.QUp = QUp
@@ -102,7 +106,7 @@ class QDown(Quark):
             - 1/3, 
             charge_couleur if charge_couleur
             else
-                random.choice(CHARGES_COULEURS.values())
+                random.choice(list(CHARGES_COULEURS))
         )
 
 objets.QDown = QDown

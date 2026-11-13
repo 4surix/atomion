@@ -10,6 +10,17 @@ from . import utile
 from . import exception
 
 
+# Chemin du fichier de couples personnalisés, relatif au module
+#  (et non au répertoire courant) pour être indépendant du CWD.
+try:
+    FICHIER_COUPLES = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), 'couples.json'
+    )
+except Exception:
+    # MicroPython : `os.path` peut être indisponible.
+    FICHIER_COUPLES = 'couples.json'
+
+
 couples = {}
 
 def __maj():
@@ -17,11 +28,9 @@ def __maj():
     global couples
 
 
-    if os.path.exists('couples.json'):
-        with open('couples.json') as file:
-            data = file.read()
-
-        data = json.loads(data)
+    if os.path.exists(FICHIER_COUPLES):
+        with open(FICHIER_COUPLES) as fichier:
+            data = json.loads(fichier.read())
     else:
         data = None
 
@@ -46,7 +55,7 @@ def __maj():
                 ('O2', 'H2O'),
                 ('MnO2', '{Mn 2+}'),
                 ('Br2', '{Br -}'),
-                ('Fe', '{Fe 2+}'),
+                ('{Fe 2+}', 'Fe'),
 
                 *(data.get('oxydoreduction', []) if data else [])
             ]
@@ -88,31 +97,35 @@ def __maj():
 
 
 def get_produit(element, categorie):
+    """Retourne la liste des couples associés à un élément.
+
+    Chaque couple est un tuple `(role, partenaire)` :
+    - pour `'acide/base'`, le rôle est `'acide'` ou `'base'` ;
+    - pour les autres catégories (dont `'oxydoreduction'`),
+       le rôle est `'oxydant'` ou `'reducteur'`.
+
+    Lève `ValeurIncorrecte` si aucun couple ne comporte cet élément.
+    """
 
     if not couples:
         __maj()
 
     if categorie == 'acide/base':
-        return [
-            ('acide', e2) if e1 == element
-            else 
-                ('base', e1) if e2 == element
-                else
-                    None
-            for e1, e2 in couples[categorie]
-            if e1 == element or e2 == element
-        ]
-
+        role_1, role_2 = 'acide', 'base'
     else:
-        for e1, e2 in couples[categorie]:
+        role_1, role_2 = 'oxydant', 'reducteur'
 
-            if e1 == element:
-                return e2
+    produits = [
+        (role_1, e2) if e1 == element else (role_2, e1)
+        for e1, e2 in couples[categorie]
+        if e1 == element or e2 == element
+    ]
 
-            if e2 == element:
-                return e1
+    if not produits:
+        raise exception.ValeurIncorrecte(
+            "Le couple comportant l'élément %s n'est pas connu du module."
+            % repr(element)
+            + " N'hésitez pas à l'ajouter."
+        )
 
-    raise exception.ValeurIncorrecte(
-        f"Le couple comportant l'élément {repr(element)} n'est pas connu du module."
-        + " N'hésitez pas à l'ajouter."
-    )
+    return produits

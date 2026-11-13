@@ -5,6 +5,7 @@
 
 from .objets import Atome, Molecule, Electron, Neutron, Proton
 from .elements import elements
+from .utile import u, mol, Me, Mp
 
 
 ###>>> CAPTURE FICHIER CALC
@@ -12,14 +13,6 @@ from .elements import elements
 e = Electron()
 n = Neutron()
 p = Proton()
-
-
-u = 1.660538921*(10**-27)
-mol = 6.02214076*(10**23)
-
-Me = 9.109*(10**-31)
-Mp = 1.672649*(10**-27)
-Mn = 1.67493*(10**-27)
 
 
 variables = globals()
@@ -43,8 +36,6 @@ for symbole in [
     'CO2',
     'NH3',
     'C60',
-    'CH4',
-    'NH3',
     'C2H6',
     'C2H4',
     'C3H4',

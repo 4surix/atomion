@@ -63,10 +63,10 @@ if not utile.params.calculatrice:
         def __new__(cls, *args, **kwargs):
 
             try: return IonMonoAtomique(*args, **kwargs)
-            except Exception as exception_IMA:
+            except (exception.ValeurIncorrecte, exception.Instable) as exc_IMA:
                 try: return IonPolyAtomique(*args, **kwargs)
-                except Exception as exception_IPA:
-                    raise exception_IMA
+                except (exception.ValeurIncorrecte, exception.Instable):
+                    raise exc_IMA
 
     objets.Ion = Ion
 
@@ -549,10 +549,10 @@ if utile.params.calculatrice:
     def Ion(*args, **kwargs):
 
         try: return IonMonoAtomique(*args, **kwargs)
-        except Exception as exception_IMA:
+        except (exception.ValeurIncorrecte, exception.Instable) as exc_IMA:
             try: return IonPolyAtomique(*args, **kwargs)
-            except Exception as exception_IPA:
-                raise exception_IMA
+            except (exception.ValeurIncorrecte, exception.Instable):
+                raise exc_IMA
 
     objets.Ion = Ion
 

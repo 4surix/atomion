@@ -89,13 +89,12 @@ def DemiEquation(
     if isinstance(produit, str):
         produit = utile.convertie_notation(produit)
 
+    if produit is None:
+        produit = couples.get_produit(reactif, 'oxydoreduction')[0][1]
+
     return Equation(
         reactifs = [reactif],
-        produits = [
-            produit if produit
-            else
-                couples.get_produit(reactif, 'oxydoreduction')
-        ],
+        produits = [produit],
         demi_equation = 'oxydoreduction'
     )
 
@@ -190,13 +189,11 @@ class Equation:
 
         # Info atomes.
 
-        List[Dict[str, int]];
         info_atomes_reactifs = analyse(self.reactifs)
         info_atomes_produits = analyse(self.produits)
 
         # Info charges.
 
-        List[Tuple[int, Ion, int]];
         info_charges_reactifs = analyse_charges(self.reactifs)
         info_charges_produits = analyse_charges(self.produits)
 
@@ -229,7 +226,6 @@ class Equation:
 
                 if symbole not in symboles_produits:
 
-                    Union[Atome, IonMonoAtomique]; 
                     element = utile.convertie_notation(symbole)
 
                     self.spectatrices.append(element)

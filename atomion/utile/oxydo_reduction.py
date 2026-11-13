@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------
 
 from . import utile
-from .typing import List, Union
+from .typing import Union
 from .equation import Equation
 
 from .. import objets
@@ -30,12 +30,8 @@ class OxydoReduction:
         reactif_1 = utile.convertie_notation(reactif_1.strip()) if isinstance(reactif_1, str) else reactif_1
         reactif_2 = utile.convertie_notation(reactif_2.strip()) if isinstance(reactif_2, str) else reactif_2
 
-        List[Union[Atome, Ion]];
-        produit_1 = couples.get_produit(reactif_1, 'oxydoreduction')
-        produit_2 = couples.get_produit(reactif_2, 'oxydoreduction')
-
-        if not produit_1 or not produit_2:
-            return NotImplemented
+        produit_1 = couples.get_produit(reactif_1, 'oxydoreduction')[0][1]
+        produit_2 = couples.get_produit(reactif_2, 'oxydoreduction')[0][1]
 
 
         ### Définition des demi-équations

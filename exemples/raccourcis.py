@@ -33,4 +33,5 @@ mol # Une mole
 
 Me # Masse d'un électron
 Mp # Masse d'un proton
-Mn # Masse d'un neutron
+# 'Mn' est le raccourci du Manganèse, pas la masse du neutron,
+#   à réféchir comment rendre disponible la masse du neutron.

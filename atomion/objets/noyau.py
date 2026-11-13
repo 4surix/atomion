@@ -66,8 +66,8 @@ class Noyau:
 
         if isinstance(obj, Noyau):
 
-            int; protons = self.proton.valeur + obj.proton.valeur
-            int; neutrons = self.neutron.valeur + obj.neutron.valeur
+            protons = self.proton.valeur + obj.proton.valeur
+            neutrons = self.neutron.valeur + obj.neutron.valeur
 
             nouvelles_especes = [] 
 
