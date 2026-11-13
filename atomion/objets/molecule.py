@@ -238,6 +238,23 @@ CHIFFRES = tuple('0123456789')
 
 class MoleculeOrganique(Molecule):
 
+    """Molécule organique construite à partir de sa nomenclature.
+
+    Familles actuellement gérées :
+
+    - alcool             : suffixe `-ol`       (ex. `butan-1-ol`) ;
+    - aldéhyde           : suffixe `-anal`     (ex. `butanal`) ;
+    - cétone             : suffixe `-one`      (ex. `butan-2-one`) ;
+    - acide carboxylique : `acide … -anoïque`  (ex. `acide éthanoïque`).
+
+    Limites connues :
+
+    - les alcanes (`pentane`), alcènes, alcynes, etc. ne sont pas gérés ;
+    - seuls les préfixes `bi`, `tri`, `qua` sont reconnus.
+
+    Une nomenclature non reconnue lève `ValeurIncorrecte`.
+    """
+
     def __init__(self, data:str):
 
         chemin = []
@@ -357,8 +374,9 @@ class MoleculeOrganique(Molecule):
 
         else:
             raise exception.ValeurIncorrecte(
-                "Nomenclature de molécule organique non reconnue :"
-                + " famille chimique indéterminée."
+                "Nomenclature de molécule organique non reconnue."
+                + " Familles gérées : alcool (-ol), aldéhyde (-anal),"
+                + " cétone (-one), acide carboxylique (acide … -anoïque)."
             )
 
 

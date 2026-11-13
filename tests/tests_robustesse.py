@@ -8,6 +8,7 @@ import unittest
 from atomion import *
 from atomion import couples, raccourcis
 from atomion.utile import params
+from atomion.utile.equation import analyse_charges
 from atomion.utile.utile import u, mol, masse_electron, masse_proton
 
 
@@ -118,6 +119,37 @@ class TestMoleculeOrganique(unittest.TestCase):
             exception.ValeurIncorrecte,
             lambda: MoleculeOrganique('pentane')
         )
+
+
+class TestComportements(unittest.TestCase):
+
+    def test_get_produit_categorie_inconnue(self):
+        self.assertRaises(
+            exception.ValeurIncorrecte,
+            lambda: couples.get_produit(Atome('Fe'), 'nawak')
+        )
+
+    def test_analyse_charges(self):
+        self.assertEqual(analyse_charges([Ion('{Cu 2+}')])[0][2], 2)
+        self.assertEqual(analyse_charges([Ion('{Cl -}')])[0][2], -1)
+        self.assertEqual(analyse_charges([Ion('CO2')])[0][2], 0)
+
+    def test_hash_des_objets(self):
+        objets = [
+            Electron(),
+            Proton(),
+            Neutron(),
+            Quark(+ 2/3, 'R'),
+            Noyau(Proton(1), Neutron(1)),
+            Quark(+ 2/3, 'R') + Quark(- 1/3, 'V'),  # BiQuark
+        ]
+        for objet in objets:
+            self.assertIsInstance(hash(objet), int)
+
+    def test_ion_polyatomique_charge_documentee(self):
+        carbonate = Ion('CO3')
+        self.assertEqual(carbonate.charge, '-')
+        self.assertEqual(carbonate.diff, 2)
 
 
 if __name__ == '__main__':

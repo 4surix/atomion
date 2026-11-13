@@ -67,13 +67,16 @@ def analyse_charges(
     for index, element in enumerate(partie):
 
         if isinstance(element, (IonPolyAtomique, IonMonoAtomique)):
-            info.append(
-                (
-                    index, 
-                    element, 
-                    int('%s%s' % (element.charge, element.diff)) # charge
-                )
-            )
+
+            if element.charge == '+':
+                charge = element.diff
+            elif element.charge == '-':
+                charge = - element.diff
+            else:
+                # Charge nulle (notée '?').
+                charge = 0
+
+            info.append((index, element, charge))
 
     return info
 

@@ -314,6 +314,14 @@ objets.IonMonoAtomique = IonMonoAtomique
 
 class IonPolyAtomique(Ion):
 
+    """Ion composé de plusieurs atomes.
+
+    Si aucune charge n'est fournie, elle est déduite de la somme des charges
+    de ses atomes ionisés : par exemple `Ion('O2')` donne `O₂⁴⁻` (2 × O²⁻).
+    Pour un résultat exact, indiquer la charge explicitement, par exemple
+    `Ion('{CO3 2-}')` ou `charge = -2`.
+    """
+
     __slots__ = (
         'ions', 
         'proton', 'neutron', 'electron', 'nucleon',

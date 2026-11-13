@@ -113,6 +113,11 @@ def get_produit(element, categorie):
     if not couples:
         __maj()
 
+    if categorie not in couples:
+        raise exception.ValeurIncorrecte(
+            "La catégorie de couple '%s' n'existe pas." % categorie
+        )
+
     if categorie == 'acide/base':
         role_1, role_2 = 'acide', 'base'
     else:

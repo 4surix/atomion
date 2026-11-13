@@ -38,6 +38,9 @@ class Neutron:
     def __repr__(self) -> str:
         return self.notation_symbole()
 
+    def __hash__(self) -> int:
+        return hash(repr(self))
+
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
 
