@@ -316,7 +316,7 @@ def get_info(
 
     elif isinstance(valeur, int):
 
-        if valeur >= len(elements):
+        if valeur > len(elements):
             raise exception.ValeurIncorrecte(
                 "Le nombre de proton doit exister !"
             )

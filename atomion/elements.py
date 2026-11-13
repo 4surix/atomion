@@ -2751,32 +2751,6 @@ elements = [
         "atomic_mass": 294,
         "density": 4.95,
         "electronegativity_pauling": None
-    },
-    {
-        "name": {
-            "en": "Ununennium",
-            "fr": "Ununennium"
-        },
-        "category": {
-            "en": "unknown, but predicted to be an alkali metal",
-            "fr": "inconnu"
-        },
-        "number": 119,
-        "period": 8,
-        "symbol": "Uue",
-        "shells": [
-            2,
-            8,
-            18,
-            32,
-            32,
-            18,
-            8,
-            1
-        ],
-        "atomic_mass": 315,
-        "density": 3,
-        "electronegativity_pauling": None
     }
 ]
 

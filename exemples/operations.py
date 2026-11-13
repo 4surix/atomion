@@ -73,4 +73,4 @@ Helium = (
     Electron(2)
 )
 # Qui reviens à écrire :
-Helium = Atome('H')
+Helium = Atome('He')

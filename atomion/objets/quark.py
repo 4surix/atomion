@@ -61,7 +61,7 @@ class Quark:
 
     def __add__(self, obj):
 
-        if isinstance(obj, (QUp, QDown)):
+        if isinstance(obj, Quark):
             return BiQuark([self, obj])
 
         else:
@@ -123,10 +123,10 @@ class BiQuark:
         return repr(self) == repr(obj)
 
     def __add__(self, 
-            obj:Union[QUp, QDown]
+            obj:Quark
         ) -> Union[Neutron, Proton]:
 
-        if isinstance(obj, (QUp, QDown)):
+        if isinstance(obj, Quark):
 
             value = sum(
                 (quark.charge_electrique for quark in self.quarks),

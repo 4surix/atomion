@@ -27,7 +27,7 @@ class TestFusion(unittest.TestCase):
             ]
         )
 
-    def test_noyau_noyau_2(self):
+    def test_noyau_noyau_3(self):
         self.assertEqual(
             Noyau(Proton(2), Neutron(2)) << Noyau(Proton(2), Neutron(1)),
             [
