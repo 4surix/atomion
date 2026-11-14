@@ -61,3 +61,50 @@ jobs:
         run: python -m build
       - name: Vérifier les métadonnées
         run: python -m twine check dist/*
+
+  calculatrice:
+    name: Calculatrice (MicroPython 1.9.4)
+    runs-on: ubuntu-22.04
+    env:
+      MP_VERSION: v1.9.4
+      MP_DIR: mp-1.9.4
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer les dépendances de compilation
+        run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libffi-dev
+
+      - name: Mettre MicroPython en cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.MP_DIR }}
+          key: micropython-${{ env.MP_VERSION }}-unix-${{ runner.os }}
+
+      - name: Compiler MicroPython 1.9.4 (mpy-cross + port unix)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth 1 --branch "$MP_VERSION" https://github.com/micropython/micropython "$MP_DIR"
+          make -C "$MP_DIR/mpy-cross" CFLAGS_EXTRA="-Wno-error -Wno-implicit-function-declaration"
+          make -C "$MP_DIR/ports/unix" -j"$(nproc)" \
+            CFLAGS_EXTRA="-Wno-error -Wno-implicit-function-declaration" \
+            MICROPY_PY_FFI=0 MICROPY_PY_USSL=0 MICROPY_PY_BTREE=0
+
+      - name: Localiser les binaires
+        run: |
+          echo "MPY_CROSS=$(find $MP_DIR/mpy-cross -type f -name mpy-cross | head -1)" >> "$GITHUB_ENV"
+          echo "MICROPYTHON=$(find $MP_DIR/ports/unix -type f -name micropython | head -1)" >> "$GITHUB_ENV"
+
+      - name: Générer atomion.py (fichier unique)
+        run: python3 mk_file_calculatrice.py
+
+      - name: Vérifier la compilation avec mpy-cross 1.9.4
+        run: "$MPY_CROSS -o /tmp/atomion.mpy atomion.py"
+
+      - name: Test de fumée sur MicroPython 1.9.4
+        run: |
+          mkdir -p /tmp/calculatrice
+          cp atomion.py tests/smoke_calculatrice.py /tmp/calculatrice/
+          cd /tmp/calculatrice
+          "$GITHUB_WORKSPACE/$MICROPYTHON" smoke_calculatrice.py | tee resultat.txt
+          grep -q '^OK$' resultat.txt

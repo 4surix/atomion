@@ -9,9 +9,15 @@
 
 ###>>> CAPTURE FICHIER CALC
 
-import random
+try:
+    import random
+except ImportError:
+    # MicroPython 1.9.4 : le module s'appelle `urandom`
+    #  (et n'expose que `getrandbits()` / `seed()`).
+    import urandom as random
 
 ###<<< CAPTURE FICHIER CALC
+
 from .. import exception, objets
 from ..objets import Neutron, Proton
 from ..utile.typing import Any, List, Union
@@ -27,6 +33,17 @@ CHARGES_COULEURS = {
     'V': 2,
     'B': 3
 }
+COULEURS = ('R', 'V', 'B')
+
+
+def couleur_aleatoire():
+    """Retourne une couleur aleatoire ('R', 'V' ou 'B').
+
+    `getrandbits()` est la seule primitive disponible a la fois sur CPython
+     et sur MicroPython 1.9.4.
+    """
+
+    return COULEURS[random.getrandbits(8) % len(COULEURS)]
 
 
 class Quark:
@@ -92,7 +109,7 @@ class QUp(Quark):
             + 2/3,
             charge_couleur if charge_couleur
             else
-                random.choice(list(CHARGES_COULEURS))
+                couleur_aleatoire()
         )
 
 objets.QUp = QUp
@@ -107,7 +124,7 @@ class QDown(Quark):
             - 1/3,
             charge_couleur if charge_couleur
             else
-                random.choice(list(CHARGES_COULEURS))
+                couleur_aleatoire()
         )
 
 objets.QDown = QDown

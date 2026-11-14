@@ -153,7 +153,7 @@ class IonMonoAtomique(Ion):
             return IonPolyAtomique([self, obj])
 
         elif isinstance(obj, Molecule):
-            return IonPolyAtomique([self, *obj.atomes])
+            return IonPolyAtomique([self] + obj.atomes)
 
         elif isinstance(obj, Atome):
             return IonPolyAtomique([self, obj])
@@ -492,11 +492,15 @@ class IonPolyAtomique(Ion):
             A:bool = True, Z:bool = True, charge:bool = True
         ) -> str:
 
+        ordre = []
         ions = {}
 
         for ion in self.ions:
             ion = ion.notation_symbole(A=False, Z=False, charge=False)
             if ion not in ions:
+                # L'ordre d'affichage ne doit pas dependre de l'ordre
+                #  d'iteration du dictionnaire (different sur MicroPython).
+                ordre.append(ion)
                 ions[ion] = 0
             ions[ion] += 1
 
@@ -507,16 +511,16 @@ class IonPolyAtomique(Ion):
                 '%s%s' % (
                     ion
                     ,
-                    '' if nbr == 1
+                    '' if ions[ion] == 1
                     else
-                        nbr if utile.params.calculatrice
+                        ions[ion] if utile.params.calculatrice
                         else
                             ''.join(
                                 utile.sous_exposants[int(num)]
-                                for num in str(nbr)
+                                for num in str(ions[ion])
                             )
                 )
-                for ion, nbr in ions.items()
+                for ion in ordre
             )
             ,
             ' ' if utile.params.calculatrice and charge else ''

@@ -7,16 +7,18 @@
 #
 # ----------------------------------------------------------------------------
 
-"""Génère `atomion.py`, la version « fichier unique » pour calculatrices.
+"""Génère `atomion.py`, la version fichier unique pour calculatrices.
 
-Le fichier est construit en concaténant les blocs délimités par
-`###>>> CAPTURE FICHIER CALC` et `###<<< CAPTURE FICHIER CALC` des modules du
-paquet, puis (si `python_minifier` est installé) minifié.
+Le fichier est construit en concaténant les blocs délimités par :
+ `###>>> CAPTURE FICHIER CALC` 
+ et `###<<< CAPTURE FICHIER CALC` 
+des modules du paquet, puis (si `python_minifier` est installé) minifié.
 
 Usage :
     python mk_file_calculatrice.py
 """
 
+import ast
 import os
 
 try: import python_minifier
@@ -66,8 +68,66 @@ parties = [
 ]
 
 
+def verifier_portabilite():
+    """Echoue si une source utilise une construction absente de MicroPython 1.9.4.
+
+    Verifie les modules listes dans `parties` et signale le fichier et la ligne.
+    Ces constructions ne lèvent aucune erreur sur CPython : sans ce garde-fou,
+    elles ne seraient detectees qu'au moment où la calculatrice plante.
+    """
+
+    problemes = []
+
+    for partie in parties:
+
+        chemin = os.path.join(RACINE, 'atomion', partie)
+
+        with open(chemin, encoding='utf-8') as fichier:
+            arbre = ast.parse(fichier.read(), chemin)
+
+        for parent in ast.walk(arbre):
+
+            for enfant in ast.iter_child_nodes(parent):
+
+                if isinstance(enfant, ast.JoinedStr):
+                    problemes.append(
+                        (chemin, enfant.lineno,
+                         'f-string (MicroPython < 1.17)')
+                    )
+
+                elif (
+                    isinstance(enfant, ast.Starred)
+                    and isinstance(parent, (ast.List, ast.Tuple, ast.Set))
+                ):
+                    problemes.append(
+                        (chemin, enfant.lineno,
+                         'depaquetage `*x` dans un litteral (PEP 448)')
+                    )
+
+                elif isinstance(enfant, ast.Dict) and any(
+                        cle is None for cle in enfant.keys
+                ):
+                    problemes.append(
+                        (chemin, enfant.lineno,
+                         'depaquetage `{**x}` (PEP 448)')
+                    )
+
+    if problemes:
+
+        details = '\n'.join(
+            '  %s:%d : %s' % (chemin, ligne, cause)
+            for chemin, ligne, cause in problemes
+        )
+
+        raise ValueError(
+            "Code incompatible avec MicroPython 1.9.4 :\n" + details
+        )
+
+
 def generer():
     """Retourne le contenu du fichier `atomion.py` (sans l'écrire)."""
+
+    verifier_portabilite()
 
     texte = TEXTE_DEPART
 

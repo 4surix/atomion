@@ -13,34 +13,11 @@ from . import exception
 
 ###>>> CAPTURE FICHIER CALC
 
-import json
-import os
-
-# Chemin du fichier de couples personnalisés, relatif au module
-#  (et non au répertoire courant) pour être indépendant du CWD.
-try:
-    FICHIER_COUPLES = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), 'couples.json'
-    )
-except Exception:
-    # MicroPython : `os.path` peut être indisponible.
-    FICHIER_COUPLES = 'couples.json'
-
-
 couples = {}
 
 def __maj():
 
     global couples
-
-    data = None
-
-    try:
-        with open(FICHIER_COUPLES) as fichier:
-            data = json.loads(fichier.read())
-    except OSError:
-        data = None
-
 
     couples = {
         'oxydoreduction': [
@@ -63,8 +40,6 @@ def __maj():
                 ('MnO2', '{Mn 2+}'),
                 ('Br2', '{Br -}'),
                 ('{Fe 2+}', 'Fe'),
-
-                *(data.get('oxydoreduction', []) if data else [])
             ]
         ],
         'acide/base': [
@@ -96,8 +71,6 @@ def __maj():
                 ('CH3COOH', '{CH3COO -}'),
                 ('HCOOH', '{HCOO -}'),
                 ('HF', '{F -}'),
-
-                *(data.get('acide/base', []) if data else [])
             ]
         ]
     }

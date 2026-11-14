@@ -16,29 +16,22 @@ from .typing import *
 
 ### Verif si calculatrice
 
+# MicroPython fournit le module `micropython` sur tous ses ports 
+#  (y compris `unix`) : c'est un signal fiable et documenté.
 try:
-    enumerate = enumerate
-    type(
-        'EssaieMul',
-        (),
-        {'__mul__': lambda self, objet: 1 * objet}
-    )() * 2
-except:
-
+    import micropython
+except ImportError:
+    is_calculatrice = False
+else:
     is_calculatrice = True
 
-    def enumerate(iterable, index=0):
-        for valeur in iterable:
-            yield index, valeur
-            index += 1
+
+if is_calculatrice:
 
     def mul(inicial, *elements):
         for element in elements:
             inicial = inicial.__mul__(element)
         return inicial
-
-else:
-    is_calculatrice = False
 
 
 ### Paramètres

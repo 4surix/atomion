@@ -184,27 +184,31 @@ class Molecule:
 
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
+        ordre = []
         atomes = {}
 
         for atome in self.atomes:
             atome = atome.notation_symbole(A=False, Z=False)
             if atome not in atomes:
+                # L'ordre d'affichage ne doit pas dependre de l'ordre
+                #  d'iteration du dictionnaire (different sur MicroPython).
+                ordre.append(atome)
                 atomes[atome] = 0
             atomes[atome] += 1
 
         return ''.join(
             '%s%s' % (
                 atome,
-                '' if nbr == 1
+                '' if atomes[atome] == 1
                 else
-                    nbr if utile.params.calculatrice
+                    atomes[atome] if utile.params.calculatrice
                     else
                         ''.join(
                             utile.sous_exposants[int(num)]
-                            for num in str(nbr)
+                            for num in str(atomes[atome])
                         )
             )
-            for atome, nbr in atomes.items()
+            for atome in ordre
         )
 
 objets.Molecule = Molecule
@@ -381,7 +385,10 @@ class MoleculeOrganique(Molecule):
             nbr_hydrogene += (nbr_carbone_ram * 2) + 1
 
 
-        super().__init__(f'{partie}(C{nbr_carbone})(H{nbr_hydrogene})', verif_stable=False)
+        super().__init__(
+            '%s(C%s)(H%s)' % (partie, nbr_carbone, nbr_hydrogene),
+            verif_stable=False
+        )
 
         self.famille = famille
 
