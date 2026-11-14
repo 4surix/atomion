@@ -7,11 +7,12 @@
 #
 # ----------------------------------------------------------------------------
 
-from .. import exception, objets, utile
-from ..objets import Atome, Electron, IonMonoAtomique, Neutron, Noyau, Proton
-from ..utile.typing import Any, List, Union
+from __future__ import annotations
 
-###>>> CAPTURE FICHIER CALC
+from typing import Any, List, Union
+
+from .. import exception, objets, utile
+
 
 class Noyau:
 
@@ -32,36 +33,36 @@ class Noyau:
         return repr(self) == repr(obj)
 
     def __add__(self,
-            obj:Union[Electron, Proton, Neutron]
-        ) -> Union[Atome, IonMonoAtomique, Noyau]:
+            obj:Union[objets.Electron, objets.Proton, objets.Neutron]
+        ) -> Union[objets.Atome, objets.IonMonoAtomique, Noyau]:
 
-        if isinstance(obj, Electron):
+        if isinstance(obj, objets.Electron):
 
             if obj.valeur != self.proton.valeur:
-                return IonMonoAtomique(
+                return objets.IonMonoAtomique(
                     self.proton.valeur,
                     neutron = self.neutron.valeur,
                     charge = self.proton.valeur - obj.valeur
                 )
 
             else:
-                return Atome(
+                return objets.Atome(
                     self.proton.valeur,
                     neutron = self.neutron.valeur
                 )
 
-        elif isinstance(obj, Proton):
+        elif isinstance(obj, objets.Proton):
             self.proton.valeur += obj.valeur
             return self
 
-        elif isinstance(obj, Neutron):
+        elif isinstance(obj, objets.Neutron):
             self.neutron.valeur += obj.valeur
             return self
 
         else:
             raise exception.Incompatible(self, obj)
 
-    def __lshift__(self, obj:Noyau) -> List[ Union[Noyau, Neutron] ]:
+    def __lshift__(self, obj:Noyau) -> List[ Union[Noyau, objets.Neutron] ]:
         # Fusion
 
         if isinstance(obj, Noyau):
@@ -71,7 +72,7 @@ class Noyau:
 
             nouvelles_especes = []
 
-            atome = Atome(protons)
+            atome = objets.Atome(protons)
             neutrons -= atome.neutron
 
             nouvelles_especes.append(atome.noyau)
@@ -85,7 +86,7 @@ class Noyau:
                 # On rajoute les neutrons qui ne sont pas
                 #  dans le nouveau noyau mais qui étaient là de base.
                 # Noyau(2, 3) << Noyau(2, 2) == [Neutron(), Noyau(4, 4)]
-                nouvelles_especes.append(Neutron(neutrons))
+                nouvelles_especes.append(objets.Neutron(neutrons))
 
             return nouvelles_especes
 
@@ -107,13 +108,3 @@ class Noyau:
             ,
             '' if not Z else utile.affichage.numero_atomique(self.proton.valeur)
         )
-
-###<<< CAPTURE FICHIER CALC
-
-objets.Noyau = Noyau
-
-
-def MAJ_TYPE():
-    variables = globals()
-    for objet_nom in objets.listes_noms:
-        variables[objet_nom] = getattr(objets, objet_nom)

@@ -7,19 +7,20 @@
 #
 # ----------------------------------------------------------------------------
 
-from .. import exception, objets, utile
-from ..objets import Atome, Electron, Ion, IonMonoAtomique, IonPolyAtomique
-from ..utile.typing import Any, Optional, Union
+from __future__ import annotations
 
-###>>> CAPTURE FICHIER CALC
+from typing import Any, Optional, Union
+
+from .. import exception, objets, utile
+
 
 class Electron:
 
     __slots__ = ('valeur',)
 
-    def __init__(self, valeur:Optional[Union[Atome, Ion, int]] = 1) -> None:
+    def __init__(self, valeur:Optional[Union[objets.Atome, objets.Ion, int]] = 1) -> None:
 
-        if isinstance(valeur, (Atome, IonMonoAtomique, IonPolyAtomique)):
+        if isinstance(valeur, (objets.Atome, objets.IonMonoAtomique, objets.IonPolyAtomique)):
             self.valeur = valeur.electron
 
         elif isinstance(valeur, int):
@@ -53,13 +54,3 @@ class Electron:
             ,
             utile.affichage.signe('-')
         )
-
-###<<< CAPTURE FICHIER CALC
-
-objets.Electron = Electron
-
-
-def MAJ_TYPE():
-    variables = globals()
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

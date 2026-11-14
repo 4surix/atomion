@@ -7,21 +7,21 @@
 #
 # ----------------------------------------------------------------------------
 
+from __future__ import annotations
+
+from typing import Union
+
 from .. import couples, exception, objets
-from ..objets import Atome, Ion, Molecule
 from . import utile
 from .equation import Equation
-from .typing import Union
-
-###>>> CAPTURE FICHIER CALC
 
 
 class AcidoBasique:
 
     def __init__(
             self,
-            reactif_1:Union[Atome, Ion, Molecule],
-            reactif_2:Union[Atome, Ion, Molecule]
+            reactif_1:Union[objets.Atome, objets.Ion, objets.Molecule],
+            reactif_2:Union[objets.Atome, objets.Ion, objets.Molecule]
         ):
 
         reactif_1 = utile.convertie_notation(reactif_1.strip()) if isinstance(reactif_1, str) else reactif_1
@@ -119,14 +119,3 @@ class AcidoBasique:
             + '\n      ' + '─' * longueur
             + '\n      ' + equation
         )
-
-
-###<<< CAPTURE FICHIER CALC
-
-
-def MAJ_TYPE():
-
-    variables = globals()
-
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

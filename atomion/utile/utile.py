@@ -7,24 +7,20 @@
 #
 # ----------------------------------------------------------------------------
 
+from __future__ import annotations
+
+from typing import *
+
 from .. import exception, irregularites, objets
+from ..affichage import (
+    Affichage, Profil, ProfilAscii, ProfilUnicode,
+    affichage, definir_affichage, exposants, is_calculatrice, params,
+    sous_exposants
+)
 from ..elements import elements
-from ..objets import Atome, Ion, IonMonoAtomique, Molecule
-from .typing import *
 
-###>>> CAPTURE FICHIER CALC
 
-### Verif si calculatrice
-
-# MicroPython fournit le module `micropython` sur tous ses ports 
-#  (y compris `unix`) : c'est un signal fiable et documenté.
-try:
-    import micropython
-except ImportError:
-    is_calculatrice = False
-else:
-    is_calculatrice = True
-
+### Multiplication (calculatrice)
 
 if is_calculatrice:
 
@@ -32,47 +28,6 @@ if is_calculatrice:
         for element in elements:
             inicial = inicial.__mul__(element)
         return inicial
-
-
-### Paramètres
-
-class params:
-    calculatrice = is_calculatrice
-
-    langue = 'fr'
-
-    strict = True
-
-    nom = True
-    categorie = True
-
-    proton = True
-    neutron = True
-    electron = True
-
-    masse = True
-    masse_relative = True
-
-    couches = True
-    configuration = True
-
-    def config(**params_):
-        if 'affichage' in params_:
-            mode = params_.pop('affichage')
-            if mode not in ('unicode', 'ascii'):
-                raise exception.ValeurIncorrecte(
-                    "L'affichage doit valoir 'unicode' ou 'ascii'."
-                )
-            params_['calculatrice'] = (mode == 'ascii')
-
-        for key, valeur in params_.items():
-            if not hasattr(params, key):
-                raise exception.ValeurIncorrecte(
-                    "Le paramètre '%s' n'existe pas." % key
-                )
-            setattr(params, key, valeur)
-
-        definir_affichage(params.calculatrice)
 
 
 ### Valeur de base pour les calculs
@@ -224,157 +179,11 @@ notations_couche = (
     'K','L','M','N','O','P'
 )
 
-exposants = tuple('⁰¹²³⁴⁵⁶⁷⁸⁹')
-sous_exposants = tuple('₀₁₂₃₄₅₆₇₈₉')
-
-
-### Profil d'affichage
-#
-# Toute la mise en forme des notations (exposants, indices, charges, accents)
-#  passe par ici. Deux profils :
-#  - ProfilUnicode : notation scientifique (¹²₆C, H₂O, Cl⁻)
-#  - ProfilAscii   : notation compatible calculatrices ({Cl 1-}, H2O)
-#
-#  Le profil est choisi automatiquement (MicroPython -> ASCII) et peut etre
-#  force : `params.config(affichage='unicode')` ou `affichage='ascii'`.
-
-
-class Profil:
-    """Mise en forme des notations (classe de base, a specialiser)."""
-
-    def nombre_de_masse(self, valeur):
-        """Rendu du nombre de masse (A), au-dessus du symbole : `12` dans `¹²₆C`."""
-        raise NotImplementedError
-
-    def numero_atomique(self, valeur):
-        """Rendu du numero atomique (Z), sous le symbole : `6` dans `¹²₆C`."""
-        raise NotImplementedError
-
-    def indice(self, valeur):
-        """Indice de formule (nombre d'atomes dans une molecule)."""
-        raise NotImplementedError
-
-    def exposant(self, valeur):
-        """Exposant (electrons d'une couche, configuration electronique)."""
-        raise NotImplementedError
-
-    def nombre_indice(self, nombre):
-        """Indice de formule, omis lorsque le nombre vaut 1."""
-        raise NotImplementedError
-
-    def facteur(self, nombre):
-        """Multiplicite d'une charge (1 -> omise en Unicode)."""
-        raise NotImplementedError
-
-    def signe(self, symbole):
-        """Symbole d'une charge : '-' , '+' ou '0' (neutre)."""
-        raise NotImplementedError
-
-    def encadrement(self, actif):
-        """Retourne `(ouvrant, separateur, fermant)` autour de la charge."""
-        raise NotImplementedError
-
-    def sans_accents(self, texte):
-        """Texte des descriptions (accents retires si necessaire)."""
-        raise NotImplementedError
-
-
-class ProfilUnicode(Profil):
-
-    def exposant(self, valeur):
-        return ''.join(exposants[int(num)] for num in str(valeur))
-
-    def indice(self, valeur):
-        return ''.join(sous_exposants[int(num)] for num in str(valeur))
-
-    nombre_de_masse = exposant
-    numero_atomique = indice
-
-    def nombre_indice(self, nombre):
-        return '' if nombre == 1 else self.indice(nombre)
-
-    def facteur(self, nombre):
-        return '' if nombre == 1 else self.exposant(nombre)
-
-    def signe(self, symbole):
-        return {'-': '⁻', '+': '⁺', '0': '⁰'}[symbole]
-
-    def encadrement(self, actif):
-        return ('', '', '')
-
-    def sans_accents(self, texte):
-        return texte
-
-
-class ProfilAscii(Profil):
-
-    def nombre_de_masse(self, valeur):
-        # Les caractères spéciaux de sont pas disponible sur la calculatrice,
-        #  la notation du nucleide (`¹²₆C`) est omise,
-        #  le symbole seul suffit (`C`).
-        return ''
-
-    def numero_atomique(self, valeur):
-        return ''
-
-    def indice(self, valeur):
-        return str(valeur)
-
-    def exposant(self, valeur):
-        return str(valeur)
-
-    def nombre_indice(self, nombre):
-        return '' if nombre == 1 else str(nombre)
-
-    def facteur(self, nombre):
-        return str(nombre)
-
-    def signe(self, symbole):
-        return {'-': '-', '+': '+', '0': ''}[symbole]
-
-    def encadrement(self, actif):
-        return ('{', ' ', '}') if actif else ('', '', '')
-
-    def sans_accents(self, texte):
-        return texte.replace('è', 'e').replace('é', 'e')
-
-
-class Affichage:
-    """Profil d'affichage actif.
-
-    Les objets conservent une reference vers cette instance.
-    Changer de profil remplace simplement son `profil` interne, 
-     sans casser les references deja prises.
-    """
-
-    def __init__(self, profil):
-        self.profil = profil
-
-    def definir(self, profil):
-        self.profil = profil
-
-    def __getattr__(self, nom):
-        if nom == 'profil':
-            raise AttributeError(nom)
-        return getattr(self.profil, nom)
-
-
-affichage = Affichage(ProfilAscii() if is_calculatrice else ProfilUnicode())
-
-
-def definir_affichage(calculatrice):
-    """Selectionne le profil d'affichage et synchronise `params.calculatrice`."""
-
-    params.calculatrice = bool(calculatrice)
-
-    affichage.definir(
-        ProfilAscii() if params.calculatrice else ProfilUnicode()
-    )
 
 
 ### Utilitaire
 
-def configuration_electronique(element:Union[Atome, Ion]) -> List[int]:
+def configuration_electronique(element:Union[objets.Atome, objets.Ion]) -> List[int]:
     """
 
     Génére la configuration électronique d'un atome/ion.
@@ -398,9 +207,9 @@ def configuration_electronique(element:Union[Atome, Ion]) -> List[int]:
     electrons = element.electron
     protons = element.proton
 
-    if isinstance(element, Atome):
+    if isinstance(element, objets.Atome):
         fonctions = fonctions_configuration_atome
-    elif isinstance(element, IonMonoAtomique):
+    elif isinstance(element, objets.IonMonoAtomique):
         fonctions = fonctions_configuration_ion
 
 
@@ -421,8 +230,8 @@ def configuration_electronique(element:Union[Atome, Ion]) -> List[int]:
 
 
 def get_info(
-        obj:Union[Atome, Ion],
-        valeur:Union[str, int, Ion, Atome]
+        obj:Union[objets.Atome, objets.Ion],
+        valeur:Union[str, int, objets.Ion, objets.Atome]
     ) -> None:
     """
 
@@ -460,7 +269,7 @@ def get_info(
             "Cette objet est déjà un '%s' !" % type(obj)
         )
 
-    elif isinstance(valeur, (IonMonoAtomique, Atome)):
+    elif isinstance(valeur, (objets.IonMonoAtomique, objets.Atome)):
 
         obj.proton = valeur.proton
         obj.neutron = valeur.neutron
@@ -520,7 +329,7 @@ def get_info(
     )
 
 
-def get_value(item:str, obj:Union[Atome, Ion]) -> int:
+def get_value(item:str, obj:Union[objets.Atome, objets.Ion]) -> int:
     """
 
     Recupere une valeur d'un item.
@@ -549,7 +358,7 @@ def get_value(item:str, obj:Union[Atome, Ion]) -> int:
     return fonctions_get.get(item, lambda x:None)(obj)
 
 
-def get_masse(obj:Union[Atome, Ion]) -> float:
+def get_masse(obj:Union[objets.Atome, objets.Ion]) -> float:
     """
 
     Récupére la masse de l'objet.
@@ -574,20 +383,20 @@ def get_masse(obj:Union[Atome, Ion]) -> float:
     )
 
 
-def convertie_notation(notation:str) -> Union[Ion, Molecule, Atome]:
+def convertie_notation(notation:str) -> Union[objets.Ion, objets.Molecule, objets.Atome]:
 
     if '{' == notation[0] and notation[-1] == '}':
-        return Ion(notation)
+        return objets.Ion(notation)
 
     else:
-        try: return Molecule(notation, verif_stable=False)
+        try: return objets.Molecule(notation, verif_stable=False)
         except exception.ValeurIncorrecte:
-            return Atome(notation)
+            return objets.Atome(notation)
 
 
 def convertie_notation_vers(
         type_obj:str, data:str
-    ) -> List[Union[Ion, Atome]]:
+    ) -> List[Union[objets.Ion, objets.Atome]]:
     """
     Transforme un str en list d'atomes
     """
@@ -601,9 +410,9 @@ def convertie_notation_vers(
     chiffres = list('0123456789')
 
     if type_obj == 'atomes':
-        type_obj = Atome
+        type_obj = objets.Atome
     elif type_obj == 'ions':
-        type_obj = IonMonoAtomique
+        type_obj = objets.IonMonoAtomique
 
 
     for carac in data.strip():
@@ -695,7 +504,7 @@ def convertie_notation_vers(
     return elements
 
 
-def verif_espece_stable(elements:List[Union[Atome, Ion]]) -> bool:
+def verif_espece_stable(elements:List[Union[objets.Atome, objets.Ion]]) -> bool:
     """Vérifie approximativement si une espèce (molécule) est stable.
 
     Principe (heuristique) :
@@ -730,9 +539,9 @@ def verif_espece_stable(elements:List[Union[Atome, Ion]]) -> bool:
         (
             ion.diff
             for ion in [
-                element if isinstance(element, IonMonoAtomique)
+                element if isinstance(element, objets.IonMonoAtomique)
                 else
-                    IonMonoAtomique(element)
+                    objets.IonMonoAtomique(element)
                 for element in elements
             ]
         ),
@@ -839,7 +648,7 @@ def verif_espece_stable(elements:List[Union[Atome, Ion]]) -> bool:
 
 # Méthodes Atome/Ion
 
-def notation_couche(self:Union[Atome, IonMonoAtomique]):
+def notation_couche(self:Union[objets.Atome, objets.IonMonoAtomique]):
 
     return ' '.join(
         '(%s)%s' % infos
@@ -849,7 +658,7 @@ def notation_couche(self:Union[Atome, IonMonoAtomique]):
         )
     )
 
-def notation_configuration(self:Union[Atome, IonMonoAtomique]):
+def notation_configuration(self:Union[objets.Atome, objets.IonMonoAtomique]):
 
     return ' '.join(
         '%s%s' % (notation, affichage.exposant(electron))
@@ -859,13 +668,3 @@ def notation_configuration(self:Union[Atome, IonMonoAtomique]):
         )
         if electron
     )
-
-###<<< CAPTURE FICHIER CALC
-
-
-def MAJ_TYPE():
-
-    variables = globals()
-
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

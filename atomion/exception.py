@@ -7,7 +7,6 @@
 #
 # ----------------------------------------------------------------------------
 
-###>>> CAPTURE FICHIER CALC
 
 class Incompatible(Exception):
 
@@ -45,5 +44,3 @@ class ValeurIncorrecte(Exception):
 	def __str__(self):
 
 		return self.description
-
-###<<< CAPTURE FICHIER CALC

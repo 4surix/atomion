@@ -7,17 +7,17 @@
 #
 # ----------------------------------------------------------------------------
 
-from .. import couples, exception, objets
-from ..objets import Atome, Electron, Ion, IonMonoAtomique, IonPolyAtomique, Molecule
-from . import utile
-from .typing import *
-from .utile import *
+from __future__ import annotations
 
-###>>> CAPTURE FICHIER CALC
+from typing import *
+
+from .. import couples, exception, objets
+from . import utile
+from .utile import *
 
 
 def analyse(
-        partie:List[ Union[Molecule, Atome, Ion] ]
+        partie:List[ Union[objets.Molecule, objets.Atome, objets.Ion] ]
     ) -> List[ Dict[str, int] ]:
     # Retourne le nombre de chaque élément.
 
@@ -28,16 +28,16 @@ def analyse(
         nombre_atomes = {}
 
         for espece in (
-                element.atomes if isinstance(element, Molecule)
+                element.atomes if isinstance(element, objets.Molecule)
                 else
-                    element.ions if isinstance(element, IonPolyAtomique)
+                    element.ions if isinstance(element, objets.IonPolyAtomique)
                     else
                         [element]
             ):
 
             # Les électrons n'ont pas de symbole atomique
             #  et n'entrent pas dans le décompte des atomes.
-            if isinstance(espece, Electron):
+            if isinstance(espece, objets.Electron):
                 continue
 
             symbole = espece.symbole
@@ -53,8 +53,8 @@ def analyse(
 
 
 def analyse_charges(
-        partie:List[ Union[Molecule, Atome, Ion] ]
-    ) -> List[ Tuple[int, Ion, int] ]:
+        partie:List[ Union[objets.Molecule, objets.Atome, objets.Ion] ]
+    ) -> List[ Tuple[int, objets.Ion, int] ]:
     # Retourne la charge de chaque espèce.
     # Si l'espèce n'est pas un ion il est ignoré
     #   vu que ça charge est égal à zéro.
@@ -63,7 +63,7 @@ def analyse_charges(
 
     for index, element in enumerate(partie):
 
-        if isinstance(element, (IonPolyAtomique, IonMonoAtomique)):
+        if isinstance(element, (objets.IonPolyAtomique, objets.IonMonoAtomique)):
 
             if element.charge == '+':
                 charge = element.diff
@@ -79,8 +79,8 @@ def analyse_charges(
 
 
 def DemiEquation(
-        reactif:Union[str, Atome, Molecule, Ion],
-        produit:Union[str, Atome, Molecule, Ion] = None
+        reactif:Union[str, objets.Atome, objets.Molecule, objets.Ion],
+        produit:Union[str, objets.Atome, objets.Molecule, objets.Ion] = None
     ):
 
     if isinstance(reactif, str):
@@ -235,12 +235,12 @@ class Equation:
                     for element__ in self.reactifs:
                         if not (
                             (
-                                isinstance(element__, (IonPolyAtomique, Molecule))
+                                isinstance(element__, (objets.IonPolyAtomique, objets.Molecule))
                                 and element in element__
                             )
                             or
                             (
-                                isinstance(element__, (IonMonoAtomique, Atome))
+                                isinstance(element__, (objets.IonMonoAtomique, objets.Atome))
                                 and element == element__
                             )
                         ):
@@ -418,12 +418,12 @@ class Equation:
                 pass
 
             elif nombre_total_p1 < nombre_total_p2:
-                self.reactifs.append(Molecule('H2O'))
+                self.reactifs.append(objets.Molecule('H2O'))
                 info_atomes_reactifs.append({'H': 2, 'O': 1})
                 configuration[0].append(nombre_total_p2 - nombre_total_p1)
 
             elif nombre_total_p1 > nombre_total_p2:
-                self.produits.append(Molecule('H2O'))
+                self.produits.append(objets.Molecule('H2O'))
                 info_atomes_produits.append({'H': 2, 'O': 1})
                 configuration[1].append(nombre_total_p1 - nombre_total_p2)
 
@@ -447,7 +447,7 @@ class Equation:
                 pass
 
             elif nombre_total_p1 < nombre_total_p2:
-                ion = Ion('H')
+                ion = objets.Ion('H')
                 self.reactifs.append(ion)
                 info_atomes_reactifs.append({'H': 1})
                 info_charges_reactifs.append(
@@ -460,7 +460,7 @@ class Equation:
                 configuration[0].append(nombre_total_p2 - nombre_total_p1)
 
             elif nombre_total_p1 > nombre_total_p2:
-                ion = Ion('H')
+                ion = objets.Ion('H')
                 self.produits.append(ion)
                 info_atomes_produits.append({'H': 1})
                 info_charges_produits.append(
@@ -490,7 +490,7 @@ class Equation:
                 pass
 
             elif charge_total_p1 > charge_total_p2:
-                electron = Electron()
+                electron = objets.Electron()
                 self.reactifs.append(electron)
                 info_charges_reactifs.append(
                     (
@@ -502,7 +502,7 @@ class Equation:
                 configuration[0].append(charge_total_p1 - charge_total_p2)
 
             elif charge_total_p1 < charge_total_p2:
-                electron = Electron()
+                electron = objets.Electron()
                 self.produits.append(electron)
                 info_charges_produits.append(
                     (
@@ -528,9 +528,9 @@ class Reaction:
 
     def __init__(self,
             equation:Equation,
-            quantites_reactifs:Dict[Union[Atome, Ion, Molecule], int] = None,
+            quantites_reactifs:Dict[Union[objets.Atome, objets.Ion, objets.Molecule], int] = None,
             *,
-            quantites_produits:Dict[Union[Atome, Ion, Molecule], int] = None
+            quantites_produits:Dict[Union[objets.Atome, objets.Ion, objets.Molecule], int] = None
         ):
 
         if isinstance(equation, str):
@@ -565,12 +565,12 @@ class Reaction:
 
         self.quantites_reactifs = quantites_reactifs
 
-    def initial(self) -> Dict[ Union[Atome, Ion, Molecule], int ]:
+    def initial(self) -> Dict[ Union[objets.Atome, objets.Ion, objets.Molecule], int ]:
         return self.intermediaire(0)
 
     def intermediaire(self,
             nbr_transformation:Union[int, str] = 'x'
-        ) -> Dict[ Union[Atome, Ion, Molecule], Union[int, str] ]:
+        ) -> Dict[ Union[objets.Atome, objets.Ion, objets.Molecule], Union[int, str] ]:
 
         info = {}
 
@@ -608,7 +608,7 @@ class Reaction:
 
         return info
 
-    def final(self) -> Dict[ Union[Atome, Ion, Molecule], int ]:
+    def final(self) -> Dict[ Union[objets.Atome, objets.Ion, objets.Molecule], int ]:
 
         quantité_reactif_limitant = None
 
@@ -626,20 +626,10 @@ class Reaction:
 
         return self.intermediaire(quantité_reactif_limitant)
 
-    def reactifs_limitants(self) -> List[ Union[Atome, Ion, Molecule] ]:
+    def reactifs_limitants(self) -> List[ Union[objets.Atome, objets.Ion, objets.Molecule] ]:
 
         return [
             espece
             for espece, quantité in self.final().items()
             if not quantité
         ]
-
-###<<< CAPTURE FICHIER CALC
-
-
-def MAJ_TYPE():
-
-    variables = globals()
-
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

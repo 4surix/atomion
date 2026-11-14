@@ -7,11 +7,12 @@
 #
 # ----------------------------------------------------------------------------
 
-from .. import exception, objets, utile
-from ..objets import Atome, IonMonoAtomique, IonPolyAtomique, Molecule
-from ..utile.typing import Any, List, Union
+from __future__ import annotations
 
-###>>> CAPTURE FICHIER CALC
+from typing import Any, List, Union
+
+from .. import exception, objets, utile
+
 
 class Molecule:
 
@@ -22,7 +23,7 @@ class Molecule:
     )
 
     def __init__(self,
-            valeur:Union[str, IonPolyAtomique, List[Atome]],
+            valeur:Union[str, objets.IonPolyAtomique, List[objets.Atome]],
             *args,
             verif_stable:bool = True
         ) -> None:
@@ -31,10 +32,10 @@ class Molecule:
             valeur if isinstance(valeur, list)
             else
                 [
-                    Atome(ion)
+                    objets.Atome(ion)
                     for ion in valeur.ions
                 ]
-                if isinstance(valeur, IonPolyAtomique)
+                if isinstance(valeur, objets.IonPolyAtomique)
                 else
                     utile.convertie_notation_vers('atomes', valeur)
         )
@@ -97,32 +98,32 @@ class Molecule:
         return utile.affichage.sans_accents(str__)
 
     def __add__(self,
-            obj: Union[Molecule, Atome]
+            obj: Union[Molecule, objets.Atome]
         ) -> Molecule:
 
         if isinstance(obj, Molecule):
             return Molecule(self.atomes + obj.atomes)
 
-        elif isinstance(obj, Atome):
+        elif isinstance(obj, objets.Atome):
             return Molecule(self.atomes + [obj])
 
-        elif isinstance(obj, IonMonoAtomique):
-            return IonPolyAtomique(self.atomes + [obj])
+        elif isinstance(obj, objets.IonMonoAtomique):
+            return objets.IonPolyAtomique(self.atomes + [obj])
 
-        elif isinstance(obj, IonPolyAtomique):
-            return IonPolyAtomique(self.atomes + obj.ions)
+        elif isinstance(obj, objets.IonPolyAtomique):
+            return objets.IonPolyAtomique(self.atomes + obj.ions)
 
         else:
             raise exception.Incompatible(self, obj)
 
     def __iadd__(self,
-            obj: Union[Molecule, Atome]
+            obj: Union[Molecule, objets.Atome]
         ) -> Molecule:
         return self + obj
 
     def __sub__(self,
-            obj: Union[Molecule, Atome]
-        ) -> Union[None, Atome, Molecule]:
+            obj: Union[Molecule, objets.Atome]
+        ) -> Union[None, objets.Atome, Molecule]:
 
         if isinstance(obj, Molecule):
 
@@ -138,7 +139,7 @@ class Molecule:
                         Molecule(atomes)
             )
 
-        elif isinstance(obj, Atome):
+        elif isinstance(obj, objets.Atome):
 
             atomes = self.atomes[:]
             atomes.remove(obj)
@@ -155,8 +156,8 @@ class Molecule:
             raise exception.Incompatible(self, obj)
 
     def __isub__(self,
-            obj: Union[Molecule, Atome]
-        ) -> Union[None, Atome, Molecule]:
+            obj: Union[Molecule, objets.Atome]
+        ) -> Union[None, objets.Atome, Molecule]:
         return self - obj
 
     def __mul__(self, obj: int) -> Molecule:
@@ -197,7 +198,6 @@ class Molecule:
             for atome in ordre
         )
 
-objets.Molecule = Molecule
 
 
 PREFIXS = [
@@ -409,13 +409,3 @@ class MoleculeOrganique(Molecule):
         )
 
         return utile.affichage.sans_accents(str__)
-
-objets.MoleculeOrganique = MoleculeOrganique
-
-###<<< CAPTURE FICHIER CALC
-
-
-def MAJ_TYPE():
-    variables = globals()
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

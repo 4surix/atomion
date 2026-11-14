@@ -7,7 +7,7 @@
 #
 # ----------------------------------------------------------------------------
 
-###>>> CAPTURE FICHIER CALC
+from __future__ import annotations
 
 try:
     import random
@@ -16,13 +16,11 @@ except ImportError:
     #  (et n'expose que `getrandbits()` / `seed()`).
     import urandom as random
 
-###<<< CAPTURE FICHIER CALC
+
+from typing import Any, List, Union
 
 from .. import exception, objets
-from ..objets import Neutron, Proton
-from ..utile.typing import Any, List, Union
 
-###>>> CAPTURE FICHIER CALC
 
 CHARGES_ELECTRIQUES = [
     - 1/3,
@@ -97,7 +95,6 @@ class Quark:
             "La charge électrique d'un quark doit être + 2/3 ou - 1/3."
         )
 
-objets.Quark = Quark
 
 
 class QUp(Quark):
@@ -112,7 +109,6 @@ class QUp(Quark):
                 couleur_aleatoire()
         )
 
-objets.QUp = QUp
 
 
 class QDown(Quark):
@@ -127,7 +123,6 @@ class QDown(Quark):
                 couleur_aleatoire()
         )
 
-objets.QDown = QDown
 
 
 class BiQuark:
@@ -149,7 +144,7 @@ class BiQuark:
 
     def __add__(self,
             obj:Quark
-        ) -> Union[Neutron, Proton]:
+        ) -> Union[objets.Neutron, objets.Proton]:
 
         if isinstance(obj, Quark):
 
@@ -159,10 +154,10 @@ class BiQuark:
             )
 
             if value == 0:
-                hadron = Neutron()
+                hadron = objets.Neutron()
 
             elif value == 1:
-                hadron = Proton()
+                hadron = objets.Proton()
 
             else:
                 raise exception.Instable(self)
@@ -177,11 +172,3 @@ class BiQuark:
 
         else:
             raise exception.Incompatible(self, obj)
-
-###<<< CAPTURE FICHIER CALC
-
-
-def MAJ_TYPE():
-    variables = globals()
-    for objet_nom in objets.listes_noms:
-        variables[objet_nom] = getattr(objets, objet_nom)

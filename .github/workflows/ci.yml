@@ -95,7 +95,10 @@ jobs:
           echo "MPY_CROSS=$(find $MP_DIR/mpy-cross -type f -name mpy-cross | head -1)" >> "$GITHUB_ENV"
           echo "MICROPYTHON=$(find $MP_DIR/ports/unix -type f -name micropython | head -1)" >> "$GITHUB_ENV"
 
-      - name: Générer atomion.py (fichier unique)
+      - name: Installer python_minifier (minification du fichier unique)
+        run: python3 -m pip install --user "python-minifier>=3.4,<4"
+
+      - name: Générer atomion.py (fichier unique minifié)
         run: python3 mk_file_calculatrice.py
 
       - name: Vérifier la compilation avec mpy-cross 1.9.4

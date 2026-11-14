@@ -7,7 +7,6 @@
 #
 # ----------------------------------------------------------------------------
 
-###>>> CAPTURE FICHIER CALC
 
 """
 
@@ -26,9 +25,7 @@ Lien du github : https://github.com/4surix/atomion
 """
 
 
-__version__ = '1.6.1'
-
-###<<< CAPTURE FICHIER CALC
+__version__ = '1.7.0'
 
 
 from . import exception

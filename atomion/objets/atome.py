@@ -7,11 +7,12 @@
 #
 # ----------------------------------------------------------------------------
 
-from .. import exception, objets, utile
-from ..objets import Atome, Electron, IonMonoAtomique, Molecule, Neutron, Noyau, Proton
-from ..utile.typing import Any, Optional, Union
+from __future__ import annotations
 
-###>>> CAPTURE FICHIER CALC
+from typing import Any, Optional, Union
+
+from .. import exception, objets, utile
+
 
 class Atome:
 
@@ -24,7 +25,7 @@ class Atome:
     )
 
     def __init__(self,
-            valeur:Union[int, str, IonMonoAtomique],
+            valeur:Union[int, str, objets.IonMonoAtomique],
             *args,
             neutron:Optional[int] = None
         ) -> None:
@@ -40,59 +41,59 @@ class Atome:
         self.nucleon = self.proton + self.neutron
         self.masse = utile.get_masse(self)
         self.configuration = utile.configuration_electronique(self)
-        self.noyau = Noyau(Proton(self.proton), Neutron(self.neutron))
+        self.noyau = objets.Noyau(objets.Proton(self.proton), objets.Neutron(self.neutron))
 
     def __add__(self,
-            obj: Union[Proton, Neutron, Electron, Atome]
-        ) -> Union[Atome, Molecule, IonMonoAtomique]:
+            obj: Union[objets.Proton, objets.Neutron, objets.Electron, Atome]
+        ) -> Union[Atome, objets.Molecule, objets.IonMonoAtomique]:
 
-        if isinstance(obj, Proton):
+        if isinstance(obj, objets.Proton):
             return Atome(self.proton + obj.valeur)
 
-        elif isinstance(obj, Neutron):
+        elif isinstance(obj, objets.Neutron):
             return Atome(self.proton, neutron = self.neutron + obj.valeur)
 
-        elif isinstance(obj, Electron):
+        elif isinstance(obj, objets.Electron):
             # Si on ajoute des electrons la charge est négatif.
-            return IonMonoAtomique(self.proton, charge = -obj.valeur)
+            return objets.IonMonoAtomique(self.proton, charge = -obj.valeur)
 
         elif isinstance(obj, Atome):
-            return Molecule([self, obj])
+            return objets.Molecule([self, obj])
 
         else:
             raise exception.Incompatible(self, obj)
 
     def __iadd__(self,
-            obj: Union[Proton, Neutron, Electron, Atome]
-        ) -> Union[Atome, Molecule, IonMonoAtomique]:
+            obj: Union[objets.Proton, objets.Neutron, objets.Electron, Atome]
+        ) -> Union[Atome, objets.Molecule, objets.IonMonoAtomique]:
         return self + obj
 
     def __sub__(self,
-            obj: Union[Proton, Neutron, Electron]
-        ) -> Union[Atome, IonMonoAtomique]:
+            obj: Union[objets.Proton, objets.Neutron, objets.Electron]
+        ) -> Union[Atome, objets.IonMonoAtomique]:
 
-        if isinstance(obj, Proton):
+        if isinstance(obj, objets.Proton):
             return Atome(self.proton - obj.valeur)
 
-        elif isinstance(obj, Neutron):
+        elif isinstance(obj, objets.Neutron):
             return Atome(self.proton, neutron = self.neutron - obj.valeur)
 
-        elif isinstance(obj, Electron):
+        elif isinstance(obj, objets.Electron):
             # Si on enlève des electrons la charge est positif.
-            return IonMonoAtomique(self.proton, charge = +obj.valeur)
+            return objets.IonMonoAtomique(self.proton, charge = +obj.valeur)
 
         else:
             raise exception.Incompatible(self, obj)
 
     def __isub__(self,
-            obj: Union[Proton, Neutron, Electron]
-        ) -> Union[Atome, IonMonoAtomique]:
+            obj: Union[objets.Proton, objets.Neutron, objets.Electron]
+        ) -> Union[Atome, objets.IonMonoAtomique]:
         return self - obj
 
-    def __mul__(self, obj: int) -> Molecule:
-        return Molecule([self] * obj)
+    def __mul__(self, obj: int) -> objets.Molecule:
+        return objets.Molecule([self] * obj)
 
-    def __rmul__(self, obj: int) -> Molecule:
+    def __rmul__(self, obj: int) -> objets.Molecule:
         return self * obj
 
     def __str__(self) -> str:
@@ -168,13 +169,3 @@ class Atome:
     notation_couche = utile.notation_couche
 
     notation_configuration = utile.notation_configuration
-
-###<<< CAPTURE FICHIER CALC
-
-
-objets.Atome = Atome
-
-def MAJ_TYPE():
-    variables = globals()
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

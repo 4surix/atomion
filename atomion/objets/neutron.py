@@ -7,11 +7,12 @@
 #
 # ----------------------------------------------------------------------------
 
-from .. import exception, objets, utile
-from ..objets import Atome, IonMonoAtomique, Neutron, Noyau, Proton
-from ..utile.typing import Any, Optional, Union
+from __future__ import annotations
 
-###>>> CAPTURE FICHIER CALC
+from typing import Any, Optional, Union
+
+from .. import exception, objets, utile
+
 
 class Neutron:
 
@@ -19,7 +20,7 @@ class Neutron:
 
     def __init__(self, valeur:Optional[int] = 1) -> None:
 
-        if isinstance(valeur, (Atome, IonMonoAtomique)):
+        if isinstance(valeur, (objets.Atome, objets.IonMonoAtomique)):
             self.valeur = valeur.neutron
 
         elif isinstance(valeur, int):
@@ -41,14 +42,14 @@ class Neutron:
         return repr(self) == repr(obj)
 
     def __add__(self,
-            obj: Union[Neutron, Proton]
-        ) -> Union[Neutron, Noyau]:
+            obj: Union[Neutron, objets.Proton]
+        ) -> Union[Neutron, objets.Noyau]:
 
         if isinstance(obj, Neutron):
             return Neutron(self.valeur + obj.valeur)
 
-        elif isinstance(obj, Proton):
-            return Noyau(obj, self)
+        elif isinstance(obj, objets.Proton):
+            return objets.Noyau(obj, self)
 
         else:
             raise exception.Incompatible(self, obj)
@@ -68,13 +69,3 @@ class Neutron:
             ,
             utile.affichage.signe('0')
         )
-
-###<<< CAPTURE FICHIER CALC
-
-objets.Neutron = Neutron
-
-
-def MAJ_TYPE():
-    variables = globals()
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

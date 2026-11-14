@@ -7,11 +7,12 @@
 #
 # ----------------------------------------------------------------------------
 
-from .. import exception, objets, utile
-from ..objets import Atome, Ion, IonMonoAtomique, IonPolyAtomique, Molecule, Neutron, Noyau, Proton
-from ..utile.typing import Any, List, Optional, Tuple, Union
+from __future__ import annotations
 
-###>>> CAPTURE FICHIER CALC
+from typing import Any, List, Optional, Tuple, Union
+
+from .. import exception, objets, utile
+
 
 def decode_notation(
         notation:str,
@@ -61,7 +62,6 @@ if not utile.params.calculatrice:
                 except (exception.ValeurIncorrecte, exception.Instable):
                     raise exc_IMA
 
-    objets.Ion = Ion
 
 
 class IonMonoAtomique(Ion):
@@ -80,7 +80,7 @@ class IonMonoAtomique(Ion):
             return object.__new__(cls)
 
     def __init__(self,
-            valeur:Union[int, str, Atome],
+            valeur:Union[int, str, objets.Atome],
             *,
             neutron:Optional[int] = None,
             charge:Optional[int] = None
@@ -137,50 +137,50 @@ class IonMonoAtomique(Ion):
         self.diff = abs(self.proton - self.electron)
         self.masse = utile.get_masse(self)
         self.configuration = utile.configuration_electronique(self)
-        self.noyau = Noyau(Proton(self.proton), Neutron(self.neutron))
+        self.noyau = objets.Noyau(objets.Proton(self.proton), objets.Neutron(self.neutron))
 
     def __add__(self,
-            obj: Union[Proton, Neutron, IonMonoAtomique]
+            obj: Union[objets.Proton, objets.Neutron, IonMonoAtomique]
         ) -> Union[Ion, IonPolyAtomique]:
 
-        if isinstance(obj, Proton):
+        if isinstance(obj, objets.Proton):
             return Ion(self.proton + obj.valeur)
 
-        elif isinstance(obj, Neutron):
+        elif isinstance(obj, objets.Neutron):
             return Ion(self.proton, neutron = self.neutron + obj.valeur)
 
         elif isinstance(obj, IonMonoAtomique):
             return IonPolyAtomique([self, obj])
 
-        elif isinstance(obj, Molecule):
+        elif isinstance(obj, objets.Molecule):
             return IonPolyAtomique([self] + obj.atomes)
 
-        elif isinstance(obj, Atome):
+        elif isinstance(obj, objets.Atome):
             return IonPolyAtomique([self, obj])
 
         else:
             raise exception.Incompatible(self, obj)
 
     def __iadd__(self,
-            obj: Union[Proton, Neutron, IonMonoAtomique]
+            obj: Union[objets.Proton, objets.Neutron, IonMonoAtomique]
         ) -> Union[Ion, IonPolyAtomique]:
         return self + obj
 
     def __sub__(self,
-            obj: Union[Proton, Neutron]
+            obj: Union[objets.Proton, objets.Neutron]
         ) -> Ion:
 
-        if isinstance(obj, Proton):
+        if isinstance(obj, objets.Proton):
             return Ion(self.proton - obj.valeur)
 
-        elif isinstance(obj, Neutron):
+        elif isinstance(obj, objets.Neutron):
             return Ion(self.proton, neutron = self.neutron - obj.valeur)
 
         else:
             raise exception.Incompatible(self, obj)
 
     def __isub__(self,
-            obj: Union[Proton, Neutron]
+            obj: Union[objets.Proton, objets.Neutron]
         ) -> Ion:
         return self - obj
 
@@ -281,7 +281,6 @@ class IonMonoAtomique(Ion):
 
     notation_configuration = utile.notation_configuration
 
-objets.IonMonoAtomique = IonMonoAtomique
 
 
 class IonPolyAtomique(Ion):
@@ -307,7 +306,7 @@ class IonPolyAtomique(Ion):
             return object.__new__(cls)
 
     def __init__(self,
-            valeur:Union[str, Molecule, List[IonMonoAtomique]],
+            valeur:Union[str, objets.Molecule, List[IonMonoAtomique]],
             *args,
             verif_stable:bool = False,
             charge:Optional[int] = None
@@ -323,7 +322,7 @@ class IonPolyAtomique(Ion):
                     IonMonoAtomique(e)
                     for e in valeur.atomes
                 ]
-                if isinstance(valeur, Molecule)
+                if isinstance(valeur, objets.Molecule)
                 else
                     utile.convertie_notation_vers('ions', valeur)
         )
@@ -396,10 +395,10 @@ class IonPolyAtomique(Ion):
         elif isinstance(obj, IonMonoAtomique):
             return IonPolyAtomique(self.ions + [obj])
 
-        elif isinstance(obj, Molecule):
+        elif isinstance(obj, objets.Molecule):
             return IonPolyAtomique(self.ions + obj.atomes)
 
-        elif isinstance(obj, Atome):
+        elif isinstance(obj, objets.Atome):
             return IonPolyAtomique(self.ions + [obj])
 
         else:
@@ -501,7 +500,6 @@ class IonPolyAtomique(Ion):
             fermant
         )
 
-objets.IonPolyAtomique = IonPolyAtomique
 
 
 if utile.params.calculatrice:
@@ -513,13 +511,3 @@ if utile.params.calculatrice:
             try: return IonPolyAtomique(*args, **kwargs)
             except (exception.ValeurIncorrecte, exception.Instable):
                 raise exc_IMA
-
-    objets.Ion = Ion
-
-###<<< CAPTURE FICHIER CALC
-
-
-def MAJ_TYPE():
-    variables = globals()
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

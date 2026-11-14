@@ -11,7 +11,6 @@
 #   https://github.com/Bowserinator/Periodic-Table-JSON
 # J'ai rajoutée moi-même la partie fr.
 
-###>>> CAPTURE FICHIER CALC
 
 elements = [
     {
@@ -2758,5 +2757,3 @@ elements = [
         "electronegativity_pauling": None
     }
 ]
-
-###<<< CAPTURE FICHIER CALC

@@ -11,8 +11,6 @@ from . import utile
 from . import exception
 
 
-###>>> CAPTURE FICHIER CALC
-
 couples = {}
 
 def __maj():
@@ -114,5 +112,3 @@ def get_produit(element, categorie):
         )
 
     return produits
-
-###<<< CAPTURE FICHIER CALC

@@ -7,40 +7,20 @@
 #
 # ----------------------------------------------------------------------------
 
-###>>> CAPTURE FICHIER CALC
+# Les modules se référencent entre eux par `objets.X`, résolu à l'appel :
+#  l'ordre des imports ci-dessous est donc indifférent.
 
-Neutron = Proton = Electron                \
-= Atome = Molecule = MoleculeOrganique     \
-= Ion = IonMonoAtomique = IonPolyAtomique  \
-= Liaison                                  \
-= Noyau                                    \
-= Quark = QUp = QDown                      \
-= None
-
-###<<< CAPTURE FICHIER CALC
-
-listes_noms = (
-    'Neutron',
-    'Proton',
-    'Electron',
-    'Atome',
-    'Molecule',
-    'MoleculeOrganique',
-    'Ion',
-    'IonMonoAtomique',
-    'IonPolyAtomique',
-    'Liaison',
-    'Noyau',
-    'Quark',
-    'QUp',
-    'QDown'
-)
-
-from .. import utile
-from . import atome, electron, ion, liaison, molecule, neutron, noyau, proton, quark
-
-for module in [
-        molecule, atome, ion, noyau, electron, proton, neutron, quark, liaison,
-        utile, utile.equation, utile.oxydo_reduction, utile.acido_basique
-    ]:
-    module.MAJ_TYPE()
+from .atome import Atome as Atome
+from .electron import Electron as Electron
+from .ion import Ion as Ion
+from .ion import IonMonoAtomique as IonMonoAtomique
+from .ion import IonPolyAtomique as IonPolyAtomique
+from .liaison import Liaison as Liaison
+from .molecule import Molecule as Molecule
+from .molecule import MoleculeOrganique as MoleculeOrganique
+from .neutron import Neutron as Neutron
+from .noyau import Noyau as Noyau
+from .proton import Proton as Proton
+from .quark import QDown as QDown
+from .quark import QUp as QUp
+from .quark import Quark as Quark

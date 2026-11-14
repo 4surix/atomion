@@ -173,11 +173,15 @@ Pour voir le reste des fonctionnalités, regardez le dossier [`exemples`](https:
 
 - [Téléchargez le code.](https://github.com/4surix/atomion/archive/master.zip)
 - Ouvrez le `.zip` et glissez le dossier qui se trouve à l'intérieur autre part (dans un endroit accessible).
+- Installez [`python_minifier`](https://pypi.org/project/python-minifier/), requis pour produire le fichier à sa taille minimale :
+
+  ```sh
+  pip install "atomion[calc]"
+  ```
+
 - Ouvrez le dossier que vous avez déplacé et executer le fichier `mk_file_calculatrice.py`.
-- Un fichier `atomion.py` va se créer, mettez le dans votre calculatrice _(que vous aurez branchée à votre ordi via câble USB ou autre)_.
+- Un fichier `atomion.py` (~63 ko) va se créer, mettez le dans votre calculatrice _(que vous aurez branchée à votre ordi)_.
 - Si vous n'avez plus rien d'autre à faire, débranchez votre calculatrice et amusez-vous !
-  
-Si le fichier est trop grand, installer [`python_minifier`](https://pypi.org/project/python-minifier/) (`pip install python-minifier`), et recréer le fichier.  
   
 Si vous avez un problème, n'hésitez pas à regarder les [issues](https://github.com/4surix/atomion/issues) déjà exitantes ou à en ouvrir une.  
 

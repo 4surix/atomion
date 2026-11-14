@@ -7,19 +7,20 @@
 #
 # ----------------------------------------------------------------------------
 
-from .. import exception, objets, utile
-from ..objets import Atome, IonMonoAtomique, Neutron, Noyau, Proton
-from ..utile.typing import Any, Optional, Union
+from __future__ import annotations
 
-###>>> CAPTURE FICHIER CALC
+from typing import Any, Optional, Union
+
+from .. import exception, objets, utile
+
 
 class Proton:
 
     __slots__ = ('valeur',)
 
-    def __init__(self, valeur:Optional[Union[Atome, IonMonoAtomique, int]] = 1) -> None:
+    def __init__(self, valeur:Optional[Union[objets.Atome, objets.IonMonoAtomique, int]] = 1) -> None:
 
-        if isinstance(valeur, (Atome, IonMonoAtomique)):
+        if isinstance(valeur, (objets.Atome, objets.IonMonoAtomique)):
             self.valeur = valeur.proton
 
         elif isinstance(valeur, int):
@@ -41,14 +42,14 @@ class Proton:
         return repr(self) == repr(obj)
 
     def __add__(self,
-            obj: Union[Proton, Neutron]
-        ) -> Union[Proton, Noyau]:
+            obj: Union[Proton, objets.Neutron]
+        ) -> Union[Proton, objets.Noyau]:
 
         if isinstance(obj, Proton):
             return Proton(self.valeur + obj.valeur)
 
-        elif isinstance(obj, Neutron):
-            return Noyau(self, obj)
+        elif isinstance(obj, objets.Neutron):
+            return objets.Noyau(self, obj)
 
         else:
             raise exception.Incompatible(self, obj)
@@ -68,13 +69,3 @@ class Proton:
             ,
             utile.affichage.signe('+')
         )
-
-###<<< CAPTURE FICHIER CALC
-
-objets.Proton = Proton
-
-
-def MAJ_TYPE():
-    variables = globals()
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

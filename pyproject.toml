@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "atomion"
-version = "1.6.1"
+version = "1.7.0"
 description = "Manipulation facile d'atomes, d'ions, de molécules, d'équations et de réactions chimiques."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -42,8 +42,10 @@ Issues = "https://github.com/4surix/atomion/issues"
 Changelog = "https://github.com/4surix/atomion/blob/master/CHANGELOG.md"
 
 [project.optional-dependencies]
-calc = ["python-minifier>=1.0"]
+# `calc` : génération du fichier unique pour calculatrices. `python_minifier`
+calc = ["python-minifier>=3.4,<4"]
 dev = [
+    "python-minifier>=3.4,<4",
     "ruff>=0.6",
     "coverage[toml]>=7.0",
     "build>=1.0",
@@ -88,12 +90,6 @@ ignore = [
 "atomion/objets/molecule.py" = ["F841"]
 # `Equation.__eq__` compare à une chaîne : pas de `__hash__` cohérent possible.
 "atomion/utile/equation.py" = ["PLW1641"]
-# Imports volontairement placés DANS les blocs `CAPTURE FICHIER CALC`
-#  (nécessaires au fichier unique MicroPython) : isort ne doit pas les en sortir.
-"atomion/couples.py" = ["I001"]
-"atomion/objets/quark.py" = ["I001"]
-"atomion/utile/typing.py" = ["I001"]
-"mk_file_calculatrice.py" = ["I001"]
 
 [tool.coverage.run]
 source = ["atomion"]

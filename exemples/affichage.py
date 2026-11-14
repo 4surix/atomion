@@ -36,6 +36,14 @@ print(Ion('K'))
 print('\n\n> Ions polyatomique: \n')
 print(Ion('CO2'))
 
+# Choisir le rendu des notations (indépendamment du mode calculatrice)
+
+params.config(affichage = 'ascii')
+print(Atome('C').notation_symbole())    # 'C'
+
+params.config(affichage = 'unicode')
+print(Atome('C').notation_symbole())    # '¹²₆C'
+
 # Paramètrer affichage
 
 params.config(

@@ -7,11 +7,12 @@
 #
 # ----------------------------------------------------------------------------
 
-from .. import exception, objets, utile
-from ..objets import Atome, Ion
-from ..utile.typing import List, Union
+from __future__ import annotations
 
-###>>> CAPTURE FICHIER CALC
+from typing import List, Union
+
+from .. import exception, objets, utile
+
 
 class Liaison:
 
@@ -22,7 +23,7 @@ class Liaison:
     )
 
     def __init__(self,
-            *valeurs:List[Union[str, Atome, Ion]]
+            *valeurs:List[Union[str, objets.Atome, objets.Ion]]
         ) -> None:
 
         self.atomes = [
@@ -81,14 +82,3 @@ class Liaison:
                 ))
             )
         )
-
-
-###<<< CAPTURE FICHIER CALC
-
-
-objets.Liaison = Liaison
-
-def MAJ_TYPE():
-    variables = globals()
-    for name_obj in objets.listes_noms:
-        variables[name_obj] = getattr(objets, name_obj)

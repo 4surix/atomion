@@ -14,7 +14,42 @@ import unittest
 # `mk_file_calculatrice` est à la racine du dépôt (ce n'est pas un paquet installé).
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import atomion
 import mk_file_calculatrice
+
+
+def notations(espace):
+    """Notations d'objets construits dans un espace de noms donne."""
+
+    objets = [
+        espace['Atome']('C'),
+        espace['Atome']('H'),
+        espace['Atome']('U'),
+        espace['Ion']('CO3'),
+        espace['Ion']('Cl'),
+        espace['Ion']('Na'),
+        espace['Ion']('Fe'),
+        espace['Molecule']('H2O'),
+        espace['Molecule']('CO2'),
+        espace['Molecule']('C6H12O6'),
+        espace['Proton'](1),
+        espace['Neutron'](1),
+        espace['Noyau'](espace['Proton'](6), espace['Neutron'](6))
+    ]
+
+    lignes = []
+
+    for obj in objets:
+
+        lignes.append(str(obj))
+        lignes.append(obj.notation_symbole())
+
+        couche = getattr(obj, 'notation_couche', None)
+
+        if couche is not None:
+            lignes.append(couche())
+
+    return lignes
 
 
 class TestCalculatrice(unittest.TestCase):
@@ -23,10 +58,20 @@ class TestCalculatrice(unittest.TestCase):
 
         texte = mk_file_calculatrice.generer()
 
+        # Plus de marqueurs `CAPTURE` : le fichier est recomposé par AST.
+        self.assertNotIn('CAPTURE FICHIER CALC', texte)
+
+        # Aucun `typing` : MicroPython 1.9.4 n'en a pas, et les annotations
+        # sont retirées à la génération.
+        self.assertNotIn('typing', texte)
+
         espace = {}
         exec(compile(texte, 'atomion.py', 'exec'), espace)
 
         for nom in ('Atome', 'Molecule', 'Ion', 'Equation'):
+            self.assertIn(nom, espace)
+
+        for nom in ('params', 'mol', 'u', '__version__'):
             self.assertIn(nom, espace)
 
         self.assertEqual(espace['Atome']('C').symbole, 'C')
@@ -42,6 +87,22 @@ class TestCalculatrice(unittest.TestCase):
             )[0][0],
             'reducteur'
         )
+
+    def test_notations_identiques_au_paquet(self):
+        """Le fichier unique doit afficher comme le paquet, au caractère près."""
+
+        espace = {}
+        exec(
+            compile(mk_file_calculatrice.generer(), 'atomion.py', 'exec'),
+            espace
+        )
+
+        # Le fichier unique démarre en mode calculatrice (ASCII) : on force le
+        #  même profil des deux côtés avant de comparer.
+        for parametres in (espace['params'], atomion.params):
+            parametres.config(affichage = 'unicode')
+
+        self.assertEqual(notations(espace), notations(vars(atomion)))
 
 
 if __name__ == '__main__':

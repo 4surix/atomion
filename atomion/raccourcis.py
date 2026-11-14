@@ -14,7 +14,6 @@ from .utile import Mp as Mp
 from .utile import mol as mol
 from .utile import u as u
 
-###>>> CAPTURE FICHIER CALC
 
 e = Electron()
 n = Neutron()
@@ -79,5 +78,3 @@ __all__ = [
         'elements', 'Atome', 'Molecule', 'Electron', 'Neutron', 'Proton'
     )
 ]
-
-###<<< CAPTURE FICHIER CALC
