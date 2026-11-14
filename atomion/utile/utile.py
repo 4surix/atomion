@@ -7,9 +7,11 @@
 #
 # ----------------------------------------------------------------------------
 
+"""Fonctions utilitaires pour la manipulation d'atomes, ions et molécules."""
+
 from __future__ import annotations
 
-from typing import *
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from .. import exception, irregularites, objets
 from ..affichage import (
@@ -24,7 +26,18 @@ from ..elements import elements
 
 if is_calculatrice:
 
-    def mul(inicial, *elements):
+    def mul(
+        inicial: Any, *elements: Any  # noqa: ANN401
+    ) -> Any:  # noqa: ANN401
+        """Multiplie plusieurs éléments entre eux (calculatrice uniquement).
+
+        Args:
+            inicial: Objet initial.
+            *elements: Éléments à multiplier.
+
+        Returns:
+            Résultat de la multiplication.
+        """
         for element in elements:
             inicial = inicial.__mul__(element)
         return inicial

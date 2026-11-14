@@ -7,6 +7,8 @@
 #
 # ----------------------------------------------------------------------------
 
+"""Raccourcis : constantes d'atomes, molécules et masses physiques."""
+
 from .elements import elements
 from .objets import Atome, Electron, Molecule, Neutron, Proton
 from .utile import Me as Me

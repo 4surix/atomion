@@ -7,9 +7,11 @@
 #
 # ----------------------------------------------------------------------------
 
+"""Gestion des équations et réactions chimiques."""
+
 from __future__ import annotations
 
-from typing import *
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from .. import couples, exception, objets
 from . import utile
@@ -18,7 +20,15 @@ from .utile import *
 
 def analyse(
         partie:List[ Union[objets.Molecule, objets.Atome, objets.Ion] ]
-    ) -> List[ Dict[str, int] ]:
+    ) -> List[Dict[str, int]]:
+    """Retourne le nombre de chaque élément dans une liste d'espèces.
+
+    Args:
+        partie: Liste d'espèces chimiques (Molecule, Atome ou Ion).
+
+    Returns:
+        Liste de dictionnaires {symbole: nombre} pour chaque espèce.
+    """
     # Retourne le nombre de chaque élément.
 
     info = []
@@ -100,6 +110,7 @@ def DemiEquation(
 
 
 class Equation:
+    """Représentation d'une équation chimique."""
 
     __slots__ = (
         'is_equilibre',

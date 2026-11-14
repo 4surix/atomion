@@ -5,7 +5,9 @@
 # Copyright (C) 2026 Asurix
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# ----------------------------------------------------------------------------
+# --------------------------------------------------------------------------
+
+"""Objets Ion, IonMonoAtomique, IonPolyAtomique."""
 
 from __future__ import annotations
 
@@ -47,6 +49,7 @@ def decode_notation(
 
 
 class Ion:
+    """Classe de base pour les ions (dispatche vers IonMonoAtomique ou IonPolyAtomique)."""
     pass
 
 

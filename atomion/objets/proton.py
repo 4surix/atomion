@@ -7,6 +7,8 @@
 #
 # ----------------------------------------------------------------------------
 
+"""Objet Proton : particule subatomique à charge positive."""
+
 from __future__ import annotations
 
 from typing import Any, Optional, Union
@@ -15,11 +17,19 @@ from .. import exception, objets, utile
 
 
 class Proton:
+    """Un proton, particule subatomique à charge positive."""
 
     __slots__ = ('valeur',)
 
-    def __init__(self, valeur:Optional[Union[objets.Atome, objets.IonMonoAtomique, int]] = 1) -> None:
+    def __init__(
+        self,
+        valeur: Optional[Union[objets.Atome, objets.IonMonoAtomique, int]] = 1,
+    ) -> None:
+        """Initialise un proton à partir d'une valeur.
 
+        Args:
+            valeur: Atome, IonMonoAtomique ou entier représentant le nombre de protons.
+        """
         if isinstance(valeur, (objets.Atome, objets.IonMonoAtomique)):
             self.valeur = valeur.proton
 
@@ -33,18 +43,21 @@ class Proton:
             )
 
     def __repr__(self) -> str:
+        """Représentation symbolique du proton."""
         return self.notation_symbole()
 
     def __hash__(self) -> int:
+        """Hash basé sur la représentation symbolique."""
         return hash(repr(self))
 
-    def __eq__(self, obj: Any) -> bool:
+    def __eq__(self, obj: Any) -> bool:  # noqa: ANN401
+        """Compare deux protons par leur représentation symbolique."""
         return repr(self) == repr(obj)
 
-    def __add__(self,
-            obj: Union[Proton, objets.Neutron]
-        ) -> Union[Proton, objets.Noyau]:
-
+    def __add__(
+        self, obj: Union[Proton, objets.Neutron]
+    ) -> Union[Proton, objets.Noyau]:
+        """Additionne un proton ou un neutron."""
         if isinstance(obj, Proton):
             return Proton(self.valeur + obj.valeur)
 
@@ -55,13 +68,18 @@ class Proton:
             raise exception.Incompatible(self, obj)
 
     def __mul__(self, obj: int) -> Proton:
+        """Multiplie le nombre de protons par un entier."""
         return Proton(self.valeur * obj)
 
     def __rmul__(self, obj: int) -> Proton:
+        """Multiplication à gauche par un entier."""
         return self * obj
 
-    def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
-
+    def notation_symbole(
+        self, *args: Any,  # noqa: ANN401
+        A: bool = True, Z: bool = True
+    ) -> str:
+        """Notation symbolique du proton (ex: '1p+')."""
         return "%s%sp%s" % (
             '' if not A else utile.affichage.nombre_de_masse(self.valeur)
             ,

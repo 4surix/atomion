@@ -7,13 +7,20 @@
 #
 # ----------------------------------------------------------------------------
 
+"""Dictionnaire des couples acide/base et oxydo-reduction."""
+
+from __future__ import annotations
+
+from typing import Any
+
 from . import utile
 from . import exception
 
 
-couples = {}
+couples: dict[str, list[tuple[Any, Any]]] = {}
 
-def __maj():
+def __maj() -> None:
+    """Initialise le dictionnaire des couples acide/base et oxydo-reduction."""
 
     global couples
 
@@ -74,7 +81,8 @@ def __maj():
     }
 
 
-def get_produit(element, categorie):
+def get_produit(element: Any,  # noqa: ANN401
+                categorie: str) -> list[tuple[str, Any]]:
     """Retourne la liste des couples associés à un élément.
 
     Chaque couple est un tuple `(role, partenaire)` :

@@ -7,6 +7,8 @@
 #
 # ----------------------------------------------------------------------------
 
+"""Objet Molecule : molécule chimique composée de plusieurs atomes."""
+
 from __future__ import annotations
 
 from typing import Any, List, Union
@@ -15,6 +17,7 @@ from .. import exception, objets, utile
 
 
 class Molecule:
+    """Une molécule chimique composée de plusieurs atomes."""
 
     __slots__ = (
         'atomes',
@@ -22,11 +25,19 @@ class Molecule:
         'masse', 'masse_moleculaire_relative'
     )
 
-    def __init__(self,
-            valeur:Union[str, objets.IonPolyAtomique, List[objets.Atome]],
-            *args,
-            verif_stable:bool = True
-        ) -> None:
+    def __init__(
+        self,
+        valeur: Union[str, objets.IonPolyAtomique, List[objets.Atome]],
+        *args: Any,  # noqa: ANN401
+        verif_stable: bool = True,
+    ) -> None:
+        """Initialise une molécule.
+
+        Args:
+            valeur: Symbole, IonPolyAtomique ou liste d'atomes.
+            *args: Arguments supplémentaires (ignorés).
+            verif_stable: Vérifier la stabilité de la molécule.
+        """
 
         self.atomes = (
             valeur if isinstance(valeur, list)
@@ -69,7 +80,7 @@ class Molecule:
         )
 
     def __str__(self) -> str:
-
+        """Représentation textuelle de la molécule."""
         str__ = (
             "Molécule %s" % self.notation_symbole()
             + (
@@ -97,10 +108,17 @@ class Molecule:
 
         return utile.affichage.sans_accents(str__)
 
-    def __add__(self,
-            obj: Union[Molecule, objets.Atome]
-        ) -> Molecule:
+    def __add__(
+        self, obj: Union[Molecule, objets.Atome]
+    ) -> Molecule:
+        """Additionne deux molécules ou ajoute un atome.
 
+        Args:
+            obj: Molécule ou atome à additionner.
+
+        Returns:
+            Nouvelle molécule résultante.
+        """
         if isinstance(obj, Molecule):
             return Molecule(self.atomes + obj.atomes)
 

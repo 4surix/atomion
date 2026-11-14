@@ -7,29 +7,36 @@
 #
 # ----------------------------------------------------------------------------
 
+"""Objet Liaison : liaison chimique entre deux atomes."""
+
 from __future__ import annotations
 
-from typing import List, Union
+from typing import Iterator, List, Union
 
 from .. import exception, objets, utile
 
 
 class Liaison:
+    """Une liaison chimique entre deux atomes."""
 
     __slots__ = (
         'atomes',
         'polarisee',
-        'pole_moins', 'pole_plus'
+        'pole_moins', 'pole_plus',
     )
 
-    def __init__(self,
-            *valeurs:List[Union[str, objets.Atome, objets.Ion]]
-        ) -> None:
+    def __init__(
+        self,
+        *valeurs: Union[str, objets.Atome, objets.Ion],
+    ) -> None:
+        """Initialise une liaison avec deux atomes.
 
+        Args:
+            *valeurs: Deux atomes (ou symboles) à lier.
+        """
         self.atomes = [
             utile.convertie_notation(element.strip()) if isinstance(element, str)
-            else
-                element
+            else element
             for element in valeurs
         ]
 
@@ -58,13 +65,13 @@ class Liaison:
             self.pole_moins = self.atomes[1]
             self.pole_plus = self.atomes[0]
 
-    def __iter__(self):
-
+    def __iter__(self) -> Iterator[objets.Atome]:
+        """Itère sur les atomes de la liaison."""
         for atome in self.atomes:
             yield atome
 
-    def __str__(self):
-
+    def __str__(self) -> str:
+        """Représentation textuelle de la liaison."""
         return (
             self.atomes[0].symbole + (
                 '' if not self.polarisee else ('ᵟ' + (

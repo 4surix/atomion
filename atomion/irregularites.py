@@ -7,6 +7,7 @@
 #
 # ----------------------------------------------------------------------------
 
+"""Configurations électroniques irrégulières pour certains éléments."""
 
 configuration = {
     24: [1, 5],

@@ -7,6 +7,8 @@
 #
 # ----------------------------------------------------------------------------
 
+"""Gestion des réactions acido-basiques."""
+
 from __future__ import annotations
 
 from typing import Union
@@ -17,6 +19,7 @@ from .equation import Equation
 
 
 class AcidoBasique:
+    """Gestion d'une réaction acido-basique entre deux réactifs."""
 
     def __init__(
             self,
