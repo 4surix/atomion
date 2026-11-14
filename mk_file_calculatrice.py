@@ -32,7 +32,9 @@ Usage:
 """
 
 import ast
+import importlib
 import os
+import sys
 
 try:
     import python_minifier
@@ -168,6 +170,10 @@ class BundleError(ValueError):
     """The single file cannot be produced."""
 
 
+class _DynamicAllError(Exception):
+    """Raised internally when `__all__` requires runtime evaluation."""
+
+
 def list_modules():
     """Package modules to compose, in the order of `MODULES`."""
     found = {}
@@ -206,6 +212,26 @@ def list_modules():
         )
 
     return tuple((part, found[part]) for part in MODULES)
+
+
+def _submodule_names():
+    """Package submodule and subpackage names absent from the single file.
+
+    These names (derived from `MODULES`, without extension or path)
+     refer to modules, not objects: they must not appear in `public_globals`
+     or in the `__all__` of the single file.
+    """
+    names = set()
+
+    for part in MODULES:
+        segments = part.split('/')
+        names.update(segments[:-1])
+        stem = os.path.splitext(segments[-1])[0]
+
+        if stem and stem != '__init__':
+            names.add(stem)
+
+    return names
 
 
 def _base_name(node):
@@ -663,8 +689,8 @@ def _is_type_checking_guard(node):
     )
 
 
-def _eval_string_sequence(node, path):
-    """Evaluate a literal sequence of export names from `__all__`."""
+def _eval_string_sequence(node, path, local_seqs=None):
+    """Evaluate a static sequence of export names from `__all__`."""
     if isinstance(node, (ast.List, ast.Tuple, ast.Set)):
         names = []
 
@@ -684,14 +710,27 @@ def _eval_string_sequence(node, path):
 
     if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
         return (
-            _eval_string_sequence(node.left, path)
-            + _eval_string_sequence(node.right, path)
+            _eval_string_sequence(node.left, path, local_seqs)
+            + _eval_string_sequence(node.right, path, local_seqs)
         )
 
-    raise BundleError(
-        '%s:%d: `__all__` must be a static list or tuple of strings'
-        % (path, getattr(node, 'lineno', 0))
-    )
+    if (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id in ('list', 'tuple', 'set')
+        and len(node.args) == 1
+        and not node.keywords
+    ):
+        return _eval_string_sequence(node.args[0], path, local_seqs)
+
+    if (
+        local_seqs
+        and isinstance(node, ast.Name)
+        and node.id in local_seqs
+    ):
+        return list(local_seqs[node.id])
+
+    raise _DynamicAllError()
 
 
 def _targets_dunder_all(node):
@@ -716,22 +755,133 @@ def _targets_dunder_all(node):
     return is_all, is_aug
 
 
+def _dunder_all_method_call(node):
+    """Return `('append' | 'extend', arg)` for `__all__.append/extend(...)`."""
+    if (
+        isinstance(node, ast.Expr)
+        and isinstance(node.value, ast.Call)
+        and isinstance(node.value.func, ast.Attribute)
+        and isinstance(node.value.func.value, ast.Name)
+        and node.value.func.value.id == '__all__'
+        and node.value.func.attr in ('append', 'extend')
+        and len(node.value.args) == 1
+        and not node.value.keywords
+    ):
+        return node.value.func.attr, node.value.args[0]
+
+    return None
+
+
+def _is_dunder_all_statement(node):
+    """True if a top-level statement defines or mutates `__all__`."""
+    return (
+        _targets_dunder_all(node)[0]
+        or _dunder_all_method_call(node) is not None
+    )
+
+
+def _load_runtime_all(path):
+    """Import a package module to evaluate a dynamically computed `__all__`."""
+    rel_path = os.path.relpath(os.path.abspath(path), ROOT)
+    module_name = os.path.splitext(rel_path)[0].replace(os.sep, '.')
+
+    if module_name.endswith('.__init__'):
+        module_name = module_name[:-len('.__init__')]
+
+    added_root = ROOT not in sys.path
+
+    if added_root:
+        sys.path.insert(0, ROOT)
+
+    try:
+        module = importlib.import_module(module_name)
+    except Exception as error:
+        raise BundleError(
+            '%s: unable to evaluate `__all__` (%s: %s)'
+            % (path, type(error).__name__, error)
+        )
+    finally:
+        if added_root and ROOT in sys.path:
+            sys.path.remove(ROOT)
+
+    raw_all = getattr(module, '__all__', None)
+
+    if raw_all is None:
+        return []
+
+    if not isinstance(raw_all, (list, tuple)) or not all(
+        isinstance(item, str) for item in raw_all
+    ):
+        raise BundleError(
+            '%s: `__all__` must evaluate to a list or tuple of strings' % path
+        )
+
+    return list(raw_all)
+
+
 def _extract_all(tree, path):
     """Extract public symbol names declared in `__all__` of a module."""
     exported = []
+    local_seqs = {}
 
-    for node in tree.body:
-        is_all, is_aug = _targets_dunder_all(node)
+    try:
+        for node in tree.body:
+            is_all, is_aug = _targets_dunder_all(node)
 
-        if not is_all:
-            continue
+            if is_all:
+                names = _eval_string_sequence(node.value, path, local_seqs)
 
-        names = _eval_string_sequence(node.value, path)
+                if is_aug:
+                    exported.extend(names)
+                else:
+                    exported = names
 
-        if is_aug:
-            exported.extend(names)
-        else:
-            exported = names
+                continue
+
+            call_info = _dunder_all_method_call(node)
+
+            if call_info is not None:
+                method, arg = call_info
+
+                if method == 'append':
+                    if (
+                        not isinstance(arg, ast.Constant)
+                        or not isinstance(arg.value, str)
+                    ):
+                        raise _DynamicAllError()
+
+                    exported.append(arg.value)
+                else:
+                    exported.extend(
+                        _eval_string_sequence(arg, path, local_seqs)
+                    )
+
+                continue
+
+            # Track simple top-level string sequences referenced by `__all__`.
+            if (
+                isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+            ):
+                try:
+                    local_seqs[node.targets[0].id] = _eval_string_sequence(
+                        node.value, path, local_seqs
+                    )
+                except (BundleError, _DynamicAllError):
+                    local_seqs.pop(node.targets[0].id, None)
+
+        # Handle dynamic mutations inside loops/ifs by falling back to runtime.
+        for node in tree.body:
+            if _is_dunder_all_statement(node):
+                continue
+
+            for child in ast.walk(node):
+                if isinstance(child, ast.Name) and child.id == '__all__':
+                    raise _DynamicAllError()
+
+    except _DynamicAllError:
+        return _load_runtime_all(path)
 
     return exported
 
@@ -750,7 +900,7 @@ def _module_body(tree, path):
             body.extend(node.orelse)
             continue
 
-        if _targets_dunder_all(node)[0]:
+        if _is_dunder_all_statement(node):
             continue
 
         if isinstance(node, (ast.Import, ast.ImportFrom)):
@@ -845,7 +995,7 @@ def _deduplicate_imports(imports):
     return list(forms.values())
 
 
-def _verify(text):
+def _verify(text, public_globals=None):
     """Verify the single file: syntax, portability, execution."""
     try:
         tree = ast.parse(text, 'atomion.py')
@@ -858,14 +1008,23 @@ def _verify(text):
 
     _verify_no_annotations(tree)
 
+    namespace = {}
     try:
-        exec(compile(tree, 'atomion.py', 'exec'), {})
+        exec(compile(tree, 'atomion.py', 'exec'), namespace)
     except Exception as error:
         raise BundleError(
             'generated single file fails to execute '
             '(fix order in `MODULES`?): %s: %s'
             % (type(error).__name__, error)
         )
+
+    if public_globals:
+        missing = [name for name in public_globals if name not in namespace]
+        if missing:
+            raise BundleError(
+                'symbols listed in `__all__` but undefined after execution: %s'
+                % ', '.join(missing)
+            )
 
 
 def _verify_no_annotations(tree):
@@ -893,19 +1052,19 @@ def _discover_public_globals():
 
     try:
         modules = list_modules()
+        seen = set()
+        public_globals = []
+
+        for _, path in modules:
+            for name in _extract_all(_read(path), path):
+                if name not in seen:
+                    seen.add(name)
+                    public_globals.append(name)
+
+        submodule_names = _submodule_names()
+        return [name for name in public_globals if name not in submodule_names]
     except BundleError:
         return []
-
-    seen = set()
-    public_globals = []
-
-    for _, path in modules:
-        for name in _extract_all(_read(path), path):
-            if name not in seen:
-                seen.add(name)
-                public_globals.append(name)
-
-    return public_globals
 
 
 def _build_bundle():
@@ -933,6 +1092,14 @@ def _build_bundle():
 
         chunks.append((part, body))
 
+    # Submodule names (exception, atom, molecule, ...)
+    #  do not exist as such in the single file: 
+    #  exclude them from public_globals and the final __all__.
+    submodule_names = _submodule_names()
+    public_globals = [
+        name for name in public_globals if name not in submodule_names
+    ]
+
     _check_collisions(chunks)
 
     statements = _deduplicate_imports(imports)
@@ -941,15 +1108,6 @@ def _build_bundle():
         statements.extend(body)
 
     if public_globals:
-        defined = _bound_names(statements)
-        undefined = [name for name in public_globals if name not in defined]
-
-        if undefined:
-            raise BundleError(
-                'symbols listed in `__all__` but undefined in bundle: %s'
-                % ', '.join(undefined)
-            )
-
         statements.append(
             ast.Assign(
                 targets=[ast.Name(id='__all__', ctx=ast.Store())],
@@ -966,7 +1124,7 @@ def _build_bundle():
         )
     ).strip() + '\n'
 
-    _verify(text)
+    _verify(text, public_globals)
 
     return text, public_globals
 
@@ -1024,7 +1182,7 @@ def generate(force=False):
         text = _minify(unminified, preserve_globals=public_globals)
 
         # The delivered file is verified after minification.
-        _verify(text)
+        _verify(text, public_globals)
 
         _CACHE['text'] = text
 

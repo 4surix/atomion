@@ -30,7 +30,7 @@ class TestExtraction(unittest.TestCase):
 
     def analyser(self, source):
 
-        return mk_file_calculatrice._corps_du_module(
+        return mk_file_calculatrice._module_body(
             ast.parse(source), 'module.py'
         )
 
@@ -78,7 +78,7 @@ class TestAplatissement(unittest.TestCase):
     def aplatir(self, source, alias=('utile', 'objets')):
 
         return ast.unparse(
-            mk_file_calculatrice._Aplatisseur(set(alias)).visit(
+            mk_file_calculatrice._Flattener(set(alias)).visit(
                 ast.parse(source)
             )
         )
@@ -132,7 +132,7 @@ class TestAlias(unittest.TestCase):
     def test_module_lie_par_import_relatif(self):
 
         chemin = os.path.join(
-            mk_file_calculatrice.PAQUET, 'objets', 'atome.py'
+            mk_file_calculatrice.PACKAGE, 'objets', 'atome.py'
         )
         arbre = ast.parse(
             'from .. import objets, utile\n'
@@ -140,19 +140,19 @@ class TestAlias(unittest.TestCase):
         )
 
         self.assertEqual(
-            mk_file_calculatrice._alias_modules(arbre, chemin),
+            mk_file_calculatrice._module_aliases(arbre, chemin),
             {'objets', 'utile'}
         )
 
     def test_classe_liee_par_import_non_aplatie(self):
 
         chemin = os.path.join(
-            mk_file_calculatrice.PAQUET, 'objets', 'atome.py'
+            mk_file_calculatrice.PACKAGE, 'objets', 'atome.py'
         )
         arbre = ast.parse('from ..objets import Atome\n')
 
         self.assertEqual(
-            mk_file_calculatrice._alias_modules(arbre, chemin), set()
+            mk_file_calculatrice._module_aliases(arbre, chemin), set()
         )
 
 
@@ -166,8 +166,8 @@ class TestAssemblage(unittest.TestCase):
             ('b.py', ast.parse('class Doublon: pass').body)
         ]
 
-        with self.assertRaises(mk_file_calculatrice.ErreurBundle):
-            mk_file_calculatrice._verifier_collisions(morceaux)
+        with self.assertRaises(mk_file_calculatrice.BundleError):
+            mk_file_calculatrice._check_collisions(morceaux)
 
     def test_affectations_homonymes_tolerees(self):
 
@@ -176,11 +176,11 @@ class TestAssemblage(unittest.TestCase):
             ('b.py', ast.parse('__all__ = [2]').body)
         ]
 
-        mk_file_calculatrice._verifier_collisions(morceaux)
+        mk_file_calculatrice._check_collisions(morceaux)
 
     def test_modules_du_paquet_tous_declares(self):
 
-        declared = [partie for partie, _ in mk_file_calculatrice.lister_modules()]
+        declared = [partie for partie, _ in mk_file_calculatrice.list_modules()]
 
         self.assertEqual(declared, list(mk_file_calculatrice.MODULES))
 
@@ -190,14 +190,14 @@ class TestPortabilite(unittest.TestCase):
 
     def test_fstring_refusee(self):
 
-        with self.assertRaises(mk_file_calculatrice.ErreurBundle):
-            mk_file_calculatrice.verifier_portabilite(
+        with self.assertRaises(mk_file_calculatrice.BundleError):
+            mk_file_calculatrice.check_portability(
                 ast.parse("x = f'{y}'"), 'test.py'
             )
 
     def test_code_portable_accepte(self):
 
-        mk_file_calculatrice.verifier_portabilite(
+        mk_file_calculatrice.check_portability(
             ast.parse('x = [1, 2]\n'), 'test.py'
         )
 
@@ -216,8 +216,8 @@ class TestFichierUnique(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
 
-        cls.texte = mk_file_calculatrice.generer()
-        cls.non_minifie = mk_file_calculatrice.construire()
+        cls.texte = mk_file_calculatrice.generate()
+        cls.non_minifie = mk_file_calculatrice.build()
 
     def test_aucun_marqueur(self):
 
@@ -236,7 +236,7 @@ class TestFichierUnique(unittest.TestCase):
     def test_aucune_annotation(self):
 
         for texte in (self.non_minifie, self.texte):
-            mk_file_calculatrice._verifier_sans_annotations(ast.parse(texte))
+            mk_file_calculatrice._verify_no_annotations(ast.parse(texte))
 
     def test_aucune_docstring(self):
 
@@ -264,7 +264,7 @@ class TestFichierUnique(unittest.TestCase):
     def test_generation_deterministe(self):
 
         self.assertEqual(
-            self.texte, mk_file_calculatrice.generer(force = True)
+            self.texte, mk_file_calculatrice.generate(force = True)
         )
 
 

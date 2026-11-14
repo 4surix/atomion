@@ -56,7 +56,7 @@ class TestCalculatrice(unittest.TestCase):
 
     def test_fichier_valide(self):
 
-        texte = mk_file_calculatrice.generer()
+        texte = mk_file_calculatrice.generate()
 
         # Plus de marqueurs `CAPTURE` : le fichier est recomposé par AST.
         self.assertNotIn('CAPTURE FICHIER CALC', texte)
@@ -93,7 +93,7 @@ class TestCalculatrice(unittest.TestCase):
 
         espace = {}
         exec(
-            compile(mk_file_calculatrice.generer(), 'atomion.py', 'exec'),
+            compile(mk_file_calculatrice.generate(), 'atomion.py', 'exec'),
             espace
         )
 
