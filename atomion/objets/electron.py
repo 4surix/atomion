@@ -1,19 +1,15 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
-
-from .. import objets
-from ..objets import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Electron, Proton, Neutron
-)
-from .. import utile
-from .. import exception
-
-from ..utile.typing import Union, Any, Optional
-
+from .. import exception, objets, utile
+from ..objets import Atome, Electron, Ion, IonMonoAtomique, IonPolyAtomique
+from ..utile.typing import Any, Optional, Union
 
 ###>>> CAPTURE FICHIER CALC
 

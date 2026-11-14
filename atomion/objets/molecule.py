@@ -1,31 +1,27 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
-
-from .. import objets
-from ..objets import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Electron, Proton, Neutron
-)
-from .. import utile
-from .. import exception
-
-from ..utile.typing import Union, Any, Optional, List
-
+from .. import exception, objets, utile
+from ..objets import Atome, IonMonoAtomique, IonPolyAtomique, Molecule
+from ..utile.typing import Any, List, Union
 
 ###>>> CAPTURE FICHIER CALC
 
 class Molecule:
 
     __slots__ = (
-        'atomes', 
+        'atomes',
         'proton', 'neutron', 'electron', 'nucleon',
         'masse', 'masse_moleculaire_relative'
     )
 
-    def __init__(self, 
+    def __init__(self,
             valeur:Union[str, IonPolyAtomique, List[Atome]],
             *args,
             verif_stable:bool = True
@@ -40,7 +36,7 @@ class Molecule:
                 ]
                 if isinstance(valeur, IonPolyAtomique)
                 else
-                    utile.convertie_notation_vers('atomes', valeur) 
+                    utile.convertie_notation_vers('atomes', valeur)
         )
 
         if len(self.atomes) < 2:
@@ -67,7 +63,7 @@ class Molecule:
 
         self.masse = sum(atome.masse for atome in self.atomes)
         self.masse_moleculaire_relative = sum(
-            atome.masse_atomique_relative 
+            atome.masse_atomique_relative
             for atome in self.atomes
         )
 
@@ -104,7 +100,7 @@ class Molecule:
                 str__.replace('è', 'e').replace('é', 'e')
         )
 
-    def __add__(self, 
+    def __add__(self,
             obj: Union[Molecule, Atome]
         ) -> Molecule:
 
@@ -123,12 +119,12 @@ class Molecule:
         else:
             raise exception.Incompatible(self, obj)
 
-    def __iadd__(self, 
+    def __iadd__(self,
             obj: Union[Molecule, Atome]
         ) -> Molecule:
         return self + obj
 
-    def __sub__(self, 
+    def __sub__(self,
             obj: Union[Molecule, Atome]
         ) -> Union[None, Atome, Molecule]:
 
@@ -162,7 +158,7 @@ class Molecule:
         else:
             raise exception.Incompatible(self, obj)
 
-    def __isub__(self, 
+    def __isub__(self,
             obj: Union[Molecule, Atome]
         ) -> Union[None, Atome, Molecule]:
         return self - obj
@@ -204,7 +200,7 @@ class Molecule:
                     nbr if utile.params.calculatrice
                     else
                         ''.join(
-                            utile.sous_exposants[int(num)] 
+                            utile.sous_exposants[int(num)]
                             for num in str(nbr)
                         )
             )

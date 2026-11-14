@@ -1,22 +1,15 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
-
-from .. import objets
-from ..objets import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Noyau,
-    Electron, Proton, Neutron
-)
-from .. import utile
-from .. import exception
-
-from ..utile.typing import (
-    Union, Any, Optional, List, Tuple
-)
-
+from .. import exception, objets, utile
+from ..objets import Atome, Ion, IonMonoAtomique, IonPolyAtomique, Molecule, Neutron, Noyau, Proton
+from ..utile.typing import Any, List, Optional, Tuple, Union
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -74,7 +67,7 @@ if not utile.params.calculatrice:
 class IonMonoAtomique(Ion):
 
     __slots__ = (
-        'nom', 'symbole', 'categorie', 
+        'nom', 'symbole', 'categorie',
         'proton', 'neutron', 'electron', 'nucleon',
         'masse', 'masse_atomique_relative',
         'configuration', 'couches', 'noyau',
@@ -86,7 +79,7 @@ class IonMonoAtomique(Ion):
         def __new__(cls, *args, **kwargs):
             return object.__new__(cls)
 
-    def __init__(self, 
+    def __init__(self,
             valeur:Union[int, str, Atome],
             *,
             neutron:Optional[int] = None,
@@ -146,7 +139,7 @@ class IonMonoAtomique(Ion):
         self.configuration = utile.configuration_electronique(self)
         self.noyau = Noyau(Proton(self.proton), Neutron(self.neutron))
 
-    def __add__(self, 
+    def __add__(self,
             obj: Union[Proton, Neutron, IonMonoAtomique]
         ) -> Union[Ion, IonPolyAtomique]:
 
@@ -168,12 +161,12 @@ class IonMonoAtomique(Ion):
         else:
             raise exception.Incompatible(self, obj)
 
-    def __iadd__(self, 
+    def __iadd__(self,
             obj: Union[Proton, Neutron, IonMonoAtomique]
         ) -> Union[Ion, IonPolyAtomique]:
         return self + obj
 
-    def __sub__(self, 
+    def __sub__(self,
             obj: Union[Proton, Neutron]
         ) -> Ion:
 
@@ -186,49 +179,49 @@ class IonMonoAtomique(Ion):
         else:
             raise exception.Incompatible(self, obj)
 
-    def __isub__(self, 
+    def __isub__(self,
             obj: Union[Proton, Neutron]
         ) -> Ion:
         return self - obj
 
-    def __str__(self) -> str: 
+    def __str__(self) -> str:
         str__ = (
             "Ion monoatomique %s" % self.notation()
             + (
-                "\n Elément: %s" % self.nom[utile.params.langue] 
+                "\n Elément: %s" % self.nom[utile.params.langue]
                 if utile.params.nom else ''
             )
             + (
-                "\n Catégorie: %s" % self.categorie[utile.params.langue] 
+                "\n Catégorie: %s" % self.categorie[utile.params.langue]
                 if utile.params.categorie else ''
             )
             + (
-                "\n Proton(s): %s" % self.proton 
+                "\n Proton(s): %s" % self.proton
                 if utile.params.proton else ''
             )
             + (
-                "\n Neutron(s): %s" % self.neutron 
+                "\n Neutron(s): %s" % self.neutron
                 if utile.params.neutron else ''
             )
             + (
-                "\n Electron(s): %s" % self.electron 
+                "\n Electron(s): %s" % self.electron
                 if utile.params.electron else ''
             )
             + (
-                "\n Masse: %s" % self.masse 
+                "\n Masse: %s" % self.masse
                 if utile.params.masse else ''
             )
             + (
-                "\n Masse atomique relative: %s" 
+                "\n Masse atomique relative: %s"
                 % self.masse_atomique_relative
                 if utile.params.masse_relative else ''
             )
             + (
-                "\n Couche électronique: %s" % self.notation_couche() 
+                "\n Couche électronique: %s" % self.notation_couche()
                 if utile.params.couches else ''
             )
             + (
-                "\n Configuration électronique: %s" 
+                "\n Configuration électronique: %s"
                 % self.notation_configuration()
                 if utile.params.configuration else ''
             )
@@ -251,14 +244,14 @@ class IonMonoAtomique(Ion):
 
     def notation(self):
         return "%s %s%s Z=%s A=%s" % (
-            self.symbole, 
-            self.diff, 
-            self.charge, 
-            self.proton, 
+            self.symbole,
+            self.diff,
+            self.charge,
+            self.proton,
             self.proton + self.neutron
         )
 
-    def notation_symbole(self, 
+    def notation_symbole(self,
             *args,
             A:bool = True, Z:bool = True, charge:bool = True
         ):
@@ -269,14 +262,14 @@ class IonMonoAtomique(Ion):
             '' if not A or utile.params.calculatrice
             else
                 ''.join(
-                    utile.exposants[int(num)] 
+                    utile.exposants[int(num)]
                     for num in str(self.proton + self.neutron)
                 )
             ,
             '' if not Z or utile.params.calculatrice
             else
                 ''.join(
-                    utile.sous_exposants[int(num)] 
+                    utile.sous_exposants[int(num)]
                     for num in str(self.proton)
                 )
             ,
@@ -292,7 +285,7 @@ class IonMonoAtomique(Ion):
                         '' if self.diff == 1
                         else
                             ''.join(
-                                utile.exposants[int(num)] 
+                                utile.exposants[int(num)]
                                 for num in str(self.diff)
                             )
                     ,
@@ -323,7 +316,7 @@ class IonPolyAtomique(Ion):
     """
 
     __slots__ = (
-        'ions', 
+        'ions',
         'proton', 'neutron', 'electron', 'nucleon',
         'masse', 'masse_moleculaire_relative',
         'diff', 'charge',
@@ -334,7 +327,7 @@ class IonPolyAtomique(Ion):
         def __new__(cls, *args, **kwargs):
             return object.__new__(cls)
 
-    def __init__(self, 
+    def __init__(self,
             valeur:Union[str, Molecule, List[IonMonoAtomique]],
             *args,
             verif_stable:bool = False,
@@ -348,12 +341,12 @@ class IonPolyAtomique(Ion):
             valeur if isinstance(valeur, list)
             else
                 [
-                    IonMonoAtomique(e) 
+                    IonMonoAtomique(e)
                     for e in valeur.atomes
                 ]
                 if isinstance(valeur, Molecule)
                 else
-                    utile.convertie_notation_vers('ions', valeur) 
+                    utile.convertie_notation_vers('ions', valeur)
         )
 
         if len(self.ions) < 2:
@@ -372,7 +365,7 @@ class IonPolyAtomique(Ion):
 
         self.masse = sum(ion.masse for ion in self.ions)
         self.masse_moleculaire_relative = sum(
-            ion.masse_atomique_relative 
+            ion.masse_atomique_relative
             for ion in self.ions
         )
 
@@ -418,7 +411,7 @@ class IonPolyAtomique(Ion):
                 str__.replace('è', 'e').replace('é', 'e')
         )
 
-    def __add__(self, 
+    def __add__(self,
             obj: Union[IonMonoAtomique, IonPolyAtomique]
         ) -> IonPolyAtomique:
 
@@ -437,12 +430,12 @@ class IonPolyAtomique(Ion):
         else:
             raise exception.Incompatible(self, obj)
 
-    def __iadd__(self, 
+    def __iadd__(self,
             obj: Union[IonMonoAtomique, IonPolyAtomique]
         ) -> IonPolyAtomique:
         return self + obj
 
-    def __sub__(self, 
+    def __sub__(self,
             obj: Union[IonMonoAtomique, IonPolyAtomique]
         ) -> Union[None, IonMonoAtomique, IonPolyAtomique]:
 
@@ -476,7 +469,7 @@ class IonPolyAtomique(Ion):
         else:
             raise exception.Incompatible(self, obj)
 
-    def __isub__(self, 
+    def __isub__(self,
             obj: Union[IonMonoAtomique, IonPolyAtomique]
         ) -> Union[None, IonMonoAtomique, IonPolyAtomique]:
         return self - obj
@@ -495,7 +488,7 @@ class IonPolyAtomique(Ion):
             yield ion
 
     def notation_symbole(
-            self, *args, 
+            self, *args,
             A:bool = True, Z:bool = True, charge:bool = True
         ) -> str:
 
@@ -519,7 +512,7 @@ class IonPolyAtomique(Ion):
                         nbr if utile.params.calculatrice
                         else
                             ''.join(
-                                utile.sous_exposants[int(num)] 
+                                utile.sous_exposants[int(num)]
                                 for num in str(nbr)
                             )
                 )
@@ -528,7 +521,7 @@ class IonPolyAtomique(Ion):
             ,
             ' ' if utile.params.calculatrice and charge else ''
             ,
-            '' if not charge
+            '' if not charge or self.charge not in ('-', '+')
             else
                 '%s%s' % (
                     self.diff if utile.params.calculatrice
@@ -536,7 +529,7 @@ class IonPolyAtomique(Ion):
                         '' if self.diff == 1
                         else
                             ''.join(
-                                utile.exposants[int(num)] 
+                                utile.exposants[int(num)]
                                 for num in str(self.diff)
                             )
                     ,

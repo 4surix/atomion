@@ -1,5 +1,10 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
 """Génère `atomion.py`, la version « fichier unique » pour calculatrices.
@@ -14,7 +19,6 @@ Usage :
 
 import os
 
-
 try: import python_minifier
 except ImportError:
     python_minifier = None
@@ -24,8 +28,13 @@ RACINE = os.path.dirname(os.path.abspath(__file__))
 
 
 TEXTE_DEPART = """
-# -*- coding: utf-8 -*-
-# Python 3.6.2 / MicroPython 1.9.4
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 """
 

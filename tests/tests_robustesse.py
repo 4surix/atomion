@@ -1,15 +1,19 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
 import unittest
-
 
 from atomion import *
 from atomion import couples, raccourcis
 from atomion.utile import params
 from atomion.utile.equation import analyse_charges
-from atomion.utile.utile import u, mol, masse_electron, masse_proton
+from atomion.utile.utile import masse_electron, masse_proton, mol, u
 
 
 class TestCouples(unittest.TestCase):
@@ -147,9 +151,18 @@ class TestComportements(unittest.TestCase):
             self.assertIsInstance(hash(objet), int)
 
     def test_ion_polyatomique_charge_documentee(self):
+        # Comportement documenté : charge = somme des charges des atomes ionisés.
         carbonate = Ion('CO3')
         self.assertEqual(carbonate.charge, '-')
         self.assertEqual(carbonate.diff, 2)
+
+    def test_oxydo_reduction_sans_couple(self):
+        # Deux oxydants (ou deux réducteurs) : aucune réaction possible.
+        # Levait un `raise` nu (`RuntimeError`) ou un `UnboundLocalError`.
+        self.assertRaises(
+            exception.ValeurIncorrecte,
+            lambda: OxydoReduction('{Cr2O7 2-}', '{MnO4 -}')
+        )
 
 
 if __name__ == '__main__':

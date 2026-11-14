@@ -1,20 +1,17 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
+from .. import couples, exception, objets
+from ..objets import Atome, Electron, Ion, Molecule
 from . import utile
-from .typing import Union
 from .equation import Equation
-
-from .. import objets
-from ..objets import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Electron
-)
-from .. import exception
-from .. import couples
-
+from .typing import Union
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -52,7 +49,10 @@ class OxydoReduction:
         if type(demi_equation_1.produits[-1]) == Electron:
 
             if not (type(demi_equation_2.reactifs[-1]) == Electron):
-                raise
+                raise exception.ValeurIncorrecte(
+                    "Il n'y a pas de réaction d'oxydo-réduction possible"
+                    + " entre ces deux réactifs."
+                )
 
             demi_equation_1.produits.pop()
             demi_equation_2.reactifs.pop()
@@ -63,13 +63,24 @@ class OxydoReduction:
         elif type(demi_equation_2.produits[-1]) == Electron:
 
             if not (type(demi_equation_1.reactifs[-1]) == Electron):
-                raise
+                raise exception.ValeurIncorrecte(
+                    "Il n'y a pas de réaction d'oxydo-réduction possible"
+                    + " entre ces deux réactifs."
+                )
 
             demi_equation_1.reactifs.pop()
             demi_equation_2.produits.pop()
 
             demi_equation_don = demi_equation_2
             demi_equation_gain = demi_equation_1
+
+        else:
+            # Aucune demi-équation ne libère d'électron :
+            #  les deux réactifs jouent le même rôle (oxydant/oxydant ou
+            #  réducteur/réducteur), il n'y a donc pas de réaction possible.
+            raise exception.ValeurIncorrecte(
+                "Aucun couple oxydant/réducteur n'est formé par ces réactifs."
+            )
 
 
         ### Equilibre coefficients
@@ -117,10 +128,10 @@ class OxydoReduction:
                 demi_equation_don.produits + demi_equation_gain.produits
             ),
             coefficients = [
-                demi_equation_don.coefficients[0] 
+                demi_equation_don.coefficients[0]
                 + demi_equation_gain.coefficients[0]
                 ,
-                demi_equation_don.coefficients[1] 
+                demi_equation_don.coefficients[1]
                 + demi_equation_gain.coefficients[1]
             ],
             is_equilibre = True

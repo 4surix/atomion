@@ -1,18 +1,15 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
-from .. import objets
-from ..objets import (
-    Atome, IonMonoAtomique,
-    Noyau,
-    Electron, Proton, Neutron
-)
-from .. import utile
-from .. import exception
-
-from ..utile.typing import Union, Any, Optional, List
-
+from .. import exception, objets, utile
+from ..objets import Atome, Electron, IonMonoAtomique, Neutron, Noyau, Proton
+from ..utile.typing import Any, List, Union
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -34,7 +31,7 @@ class Noyau:
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
 
-    def __add__(self, 
+    def __add__(self,
             obj:Union[Electron, Proton, Neutron]
         ) -> Union[Atome, IonMonoAtomique, Noyau]:
 
@@ -72,7 +69,7 @@ class Noyau:
             protons = self.proton.valeur + obj.proton.valeur
             neutrons = self.neutron.valeur + obj.neutron.valeur
 
-            nouvelles_especes = [] 
+            nouvelles_especes = []
 
             atome = Atome(protons)
             neutrons -= atome.neutron
@@ -85,7 +82,7 @@ class Noyau:
                 atome.noyau.neutron.valeur += neutrons
 
             elif neutrons > 0:
-                # On rajoute les neutrons qui ne sont pas 
+                # On rajoute les neutrons qui ne sont pas
                 #  dans le nouveau noyau mais qui étaient là de base.
                 # Noyau(2, 3) << Noyau(2, 2) == [Neutron(), Noyau(4, 4)]
                 nouvelles_especes.append(Neutron(neutrons))
@@ -105,7 +102,7 @@ class Noyau:
             '' if not A or utile.params.calculatrice
             else
                 ''.join(
-                    utile.exposants[int(num)] 
+                    utile.exposants[int(num)]
                     for num in str(
                         self.neutron.valeur + self.proton.valeur
                     )
@@ -114,7 +111,7 @@ class Noyau:
             '' if not Z or utile.params.calculatrice
             else
                 ''.join(
-                    utile.sous_exposants[int(num)] 
+                    utile.sous_exposants[int(num)]
                     for num in str(self.proton.valeur)
                 )
         )

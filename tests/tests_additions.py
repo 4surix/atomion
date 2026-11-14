@@ -1,9 +1,13 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
 import unittest
-
 
 from atomion import *
 
@@ -35,7 +39,7 @@ class TestAddition(unittest.TestCase):
 
     def test_molecule_molecule(self):
         self.assertEqual(
-            Molecule('CO2') + Molecule('CH4'), 
+            Molecule('CO2') + Molecule('CH4'),
             Molecule('C2O2H4')
         )
 

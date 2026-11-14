@@ -1,25 +1,34 @@
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# ----------------------------------------------------------------------------
+
 from atomion import *
 
 if not params.calculatrice:
     from atomion.raccourcis import *
 
 
-C + Proton(3) == F
+assert C + Proton(3) == F
 
-O + O == O2
+assert O + O == O2
 
 if params.calculatrice:
 	# Utilisez `mul` sur calculatrice :
-    mul(O, 2) == O2
+    assert mul(O, 2) == O2
 else:
 	# Sur Python normal :
-    O * 2 == O2
+    assert O * 2 == O2
 
-CO2 + CH4 == C2O2H4
+assert CO2 + CH4 == C2O2H4
 
-C2H4 + C == C3H4
+assert C2H4 + C == C3H4
 
-C2H4 - C == CH4
+assert C2H4 - C == CH4
 
 
 e # 1 électron

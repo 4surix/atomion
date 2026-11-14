@@ -88,6 +88,12 @@ ignore = [
 "atomion/objets/molecule.py" = ["F841"]
 # `Equation.__eq__` compare à une chaîne : pas de `__hash__` cohérent possible.
 "atomion/utile/equation.py" = ["PLW1641"]
+# Imports volontairement placés DANS les blocs `CAPTURE FICHIER CALC`
+#  (nécessaires au fichier unique MicroPython) : isort ne doit pas les en sortir.
+"atomion/couples.py" = ["I001"]
+"atomion/objets/quark.py" = ["I001"]
+"atomion/utile/typing.py" = ["I001"]
+"mk_file_calculatrice.py" = ["I001"]
 
 [tool.coverage.run]
 source = ["atomion"]

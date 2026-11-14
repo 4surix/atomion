@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
-
-from .. import objets
-from ..objets import (
-    Atome, Ion
-)
-from .. import utile
-from .. import exception
-
+from .. import exception, objets, utile
+from ..objets import Atome, Ion
 from ..utile.typing import List, Union
-
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -23,7 +21,7 @@ class Liaison:
         'pole_moins', 'pole_plus'
     )
 
-    def __init__(self, 
+    def __init__(self,
             *valeurs:List[Union[str, Atome, Ion]]
         ) -> None:
 

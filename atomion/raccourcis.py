@@ -1,12 +1,18 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
-
-from .objets import Atome, Molecule, Electron, Neutron, Proton
 from .elements import elements
-from .utile import u, mol, Me, Mp
-
+from .objets import Atome, Electron, Molecule, Neutron, Proton
+from .utile import Me as Me
+from .utile import Mp as Mp
+from .utile import mol as mol
+from .utile import u as u
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -62,5 +68,16 @@ for symbole in [
 del variables['element']
 del variables['symbole']
 del globals()['variables']
+
+
+# Noms exportés par `from atomion.raccourcis import *`
+#  (raccourcis d'éléments/molécules + constantes ; le reste est interne).
+__all__ = [
+    nom for nom in globals()
+    if not nom.startswith('_')
+    and nom not in (
+        'elements', 'Atome', 'Molecule', 'Electron', 'Neutron', 'Proton'
+    )
+]
 
 ###<<< CAPTURE FICHIER CALC

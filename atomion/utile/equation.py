@@ -1,20 +1,17 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
+from .. import couples, exception, objets
+from ..objets import Atome, Electron, Ion, IonMonoAtomique, IonPolyAtomique, Molecule
 from . import utile
-from .utile import *
 from .typing import *
-
-from .. import objets
-from ..objets import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Electron, Proton, Neutron
-)
-from .. import exception
-from .. import couples
-
+from .utile import *
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -82,7 +79,7 @@ def analyse_charges(
 
 
 def DemiEquation(
-        reactif:Union[str, Atome, Molecule, Ion], 
+        reactif:Union[str, Atome, Molecule, Ion],
         produit:Union[str, Atome, Molecule, Ion] = None
     ):
 
@@ -105,8 +102,8 @@ def DemiEquation(
 class Equation:
 
     __slots__ = (
-        'is_equilibre', 
-        'coefficients', 
+        'is_equilibre',
+        'coefficients',
         'spectatrices', 'reactifs', 'produits',
         'notation', 'demi_equation'
     )
@@ -131,12 +128,12 @@ class Equation:
         self.reactifs = [
             utile.convertie_notation(notation.strip())
             for notation in reactifs.split(' + ')
-        ] if type(reactifs) == str else reactifs 
+        ] if type(reactifs) == str else reactifs
 
         self.produits = [
             utile.convertie_notation(notation.strip())
             for notation in produits.split(' + ')
-        ] if type(produits) == str else produits 
+        ] if type(produits) == str else produits
 
         self.spectatrices = []
 
@@ -165,7 +162,7 @@ class Equation:
             ' + '.join(
                 '%s%s' % (
                     '' if nbr == 1
-                    else 
+                    else
                         str(nbr) + ' '
                     ,
                     element.notation_symbole(A=False, Z=False)
@@ -245,7 +242,7 @@ class Equation:
                             (
                                 isinstance(element__, (IonMonoAtomique, Atome))
                                 and element == element__
-                            ) 
+                            )
                         ):
                             self.reactifs.remove(element__)
 
@@ -281,7 +278,7 @@ class Equation:
                 for symbole in liste_symboles_atomes:
 
                     if (
-                        # Dans le cas d'une demi-équation, 
+                        # Dans le cas d'une demi-équation,
                         #  on ne fait pas attention en premier
                         #  à l'hydrogéne et l'oxygéne.
                         self.demi_equation
@@ -529,7 +526,7 @@ class Reaction:
         'equation', 'quantites_reactifs'
     )
 
-    def __init__(self, 
+    def __init__(self,
             equation:Equation,
             quantites_reactifs:Dict[Union[Atome, Ion, Molecule], int] = None,
             *,
@@ -589,7 +586,7 @@ class Reaction:
             else:
                 info[espece] = round(
                     (
-                        self.quantites_reactifs[espece] 
+                        self.quantites_reactifs[espece]
                         - coefficient * nbr_transformation
                     ),
                     3

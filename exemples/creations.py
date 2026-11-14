@@ -1,9 +1,17 @@
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# ----------------------------------------------------------------------------
+
 from atomion import *
 
-
 # Créer un quark
-Quark(+ 2/3, 'R') == QUp('R')
-Quark(- 1/3, 'V') == QDown('V')
+assert Quark(+ 2/3, 'R') == QUp('R')
+assert Quark(- 1/3, 'V') == QDown('V')
 
 # Créer 3 Proton
 Proton(3)

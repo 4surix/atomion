@@ -1,20 +1,15 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
-
-from .. import objets
-from ..objets import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Noyau,
-    Electron, Proton, Neutron
-)
-from .. import utile
-from .. import exception
-
-from ..utile.typing import Union, Any, Optional
-
+from .. import exception, objets, utile
+from ..objets import Atome, Electron, IonMonoAtomique, Molecule, Neutron, Noyau, Proton
+from ..utile.typing import Any, Optional, Union
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -22,14 +17,14 @@ class Atome:
 
     __slots__ = (
         'nom', 'symbole', 'categorie',
-        'proton', 'neutron', 'nucleon', 'electron', 
-        'masse', 'masse_atomique_relative', 
+        'proton', 'neutron', 'nucleon', 'electron',
+        'masse', 'masse_atomique_relative',
         'configuration', 'couches', 'noyau',
         'electronegativite'
     )
 
-    def __init__(self, 
-            valeur:Union[int, str, IonMonoAtomique], 
+    def __init__(self,
+            valeur:Union[int, str, IonMonoAtomique],
             *args,
             neutron:Optional[int] = None
         ) -> None:
@@ -67,12 +62,12 @@ class Atome:
         else:
             raise exception.Incompatible(self, obj)
 
-    def __iadd__(self, 
+    def __iadd__(self,
             obj: Union[Proton, Neutron, Electron, Atome]
         ) -> Union[Atome, Molecule, IonMonoAtomique]:
         return self + obj
 
-    def __sub__(self, 
+    def __sub__(self,
             obj: Union[Proton, Neutron, Electron]
         ) -> Union[Atome, IonMonoAtomique]:
 
@@ -89,7 +84,7 @@ class Atome:
         else:
             raise exception.Incompatible(self, obj)
 
-    def __isub__(self, 
+    def __isub__(self,
             obj: Union[Proton, Neutron, Electron]
         ) -> Union[Atome, IonMonoAtomique]:
         return self - obj
@@ -104,40 +99,40 @@ class Atome:
         str__ = (
             "Atome %s" % self.notation()
             + (
-                "\n Elément: %s" % self.nom[utile.params.langue] 
+                "\n Elément: %s" % self.nom[utile.params.langue]
                 if utile.params.nom else ''
             )
             + (
-                "\n Catégorie: %s" % self.categorie[utile.params.langue] 
+                "\n Catégorie: %s" % self.categorie[utile.params.langue]
                 if utile.params.categorie else ''
             )
             + (
-                "\n Proton(s): %s" % self.proton 
+                "\n Proton(s): %s" % self.proton
                 if utile.params.proton else ''
             )
             + (
-                "\n Neutron(s): %s" % self.neutron 
+                "\n Neutron(s): %s" % self.neutron
                 if utile.params.neutron else ''
             )
             + (
-                "\n Electron(s): %s" % self.electron 
+                "\n Electron(s): %s" % self.electron
                 if utile.params.electron else ''
             )
             + (
-                "\n Masse: %s" % self.masse 
+                "\n Masse: %s" % self.masse
                 if utile.params.masse else ''
             )
             + (
-                "\n Masse atomique relative: %s" 
+                "\n Masse atomique relative: %s"
                 % self.masse_atomique_relative
                 if utile.params.masse_relative else ''
             )
             + (
-                "\n Couche électronique: %s" % self.notation_couche() 
+                "\n Couche électronique: %s" % self.notation_couche()
                 if utile.params.couches else ''
             )
             + (
-                "\n Configuration électronique: %s" 
+                "\n Configuration électronique: %s"
                 % self.notation_configuration()
                 if utile.params.configuration else ''
             )
@@ -169,14 +164,14 @@ class Atome:
             '' if not A or utile.params.calculatrice
             else
                 ''.join(
-                    utile.exposants[int(num)] 
+                    utile.exposants[int(num)]
                     for num in str(self.proton + self.neutron)
                 )
             ,
             '' if not Z or utile.params.calculatrice
             else
                 ''.join(
-                    utile.sous_exposants[int(num)] 
+                    utile.sous_exposants[int(num)]
                     for num in str(self.proton)
                 )
             ,

@@ -1,20 +1,16 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
-from .typing import *
-
-from .. import objets
-from ..objets import (
-    Atome, Molecule,
-    Ion, IonMonoAtomique, IonPolyAtomique,
-    Electron, Proton, Neutron
-)
-
-from .. import irregularites
-from .. import exception
+from .. import exception, irregularites, objets
 from ..elements import elements
-
+from ..objets import Atome, Ion, IonMonoAtomique, Molecule
+from .typing import *
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -24,7 +20,7 @@ try:
     enumerate = enumerate
     type(
         'EssaieMul',
-        (), 
+        (),
         {'__mul__': lambda self, objet: 1 * objet}
     )() * 2
 except:
@@ -94,73 +90,73 @@ mol = 6.02214076*(10**23)
 
 ### Fonctions
 
-## Séparées par couche, récupérants la configuration d'un ion 
+## Séparées par couche, récupérants la configuration d'un ion
 
 fonctions_configuration_ion = (
     lambda c: ([c if c <= 2 else 2], c-2),
-    lambda c: 
-        ([c], c-2) if c <= 2 
-        else 
-            ([2, c-2 if c <= 8 else 6], c-8),
-    lambda c: 
-        ([c], c-2) if c <= 2 
-        else 
-            ([2, c-2], c-8) if c <= 8 
-            else 
-                ([2, 6, c-8 if c <= 18 else 10], c-18),
-    lambda c: 
+    lambda c:
         ([c], c-2) if c <= 2
-        else 
-            ([2, c-2], c-8) if c <= 8 
-            else 
-                ([2, 6, c-8], c-18) if c <= 18 
-                else 
-                    ([2, 6, 10, c-18 if c <= 32 else 14], c-32),
-    lambda c: 
-        ([c], c-2) if c <= 2 
         else
-            ([2, c-2], c-8) if c <= 8 
-            else 
+            ([2, c-2 if c <= 8 else 6], c-8),
+    lambda c:
+        ([c], c-2) if c <= 2
+        else
+            ([2, c-2], c-8) if c <= 8
+            else
+                ([2, 6, c-8 if c <= 18 else 10], c-18),
+    lambda c:
+        ([c], c-2) if c <= 2
+        else
+            ([2, c-2], c-8) if c <= 8
+            else
                 ([2, 6, c-8], c-18) if c <= 18
-                else 
-                    ([2, 6, 10, c-18], c-32) if c <= 32 
-                    else 
+                else
+                    ([2, 6, 10, c-18 if c <= 32 else 14], c-32),
+    lambda c:
+        ([c], c-2) if c <= 2
+        else
+            ([2, c-2], c-8) if c <= 8
+            else
+                ([2, 6, c-8], c-18) if c <= 18
+                else
+                    ([2, 6, 10, c-18], c-32) if c <= 32
+                    else
                         ([2, 6, 10, 14, c-32 if c <= 50 else 18], c-50),
-) 
+)
 
-## Séparées par couche, récupérants la configuration d'un atome 
+## Séparées par couche, récupérants la configuration d'un atome
 
 fonctions_configuration_atome = (
     lambda c: ([c if c <= 2 else 2], c-2),
-    lambda c: 
-        ([c], c-2) if c <= 2 
-        else
-            ([2, c-2 if c <= 8 else 6], c-8),
-    lambda c: 
+    lambda c:
         ([c], c-2) if c <= 2
-        else 
+        else
             ([2, c-2 if c <= 8 else 6], c-8),
     lambda c:
-        ([c], c-2) if c <= 2 
+        ([c], c-2) if c <= 2
+        else
+            ([2, c-2 if c <= 8 else 6], c-8),
+    lambda c:
+        ([c], c-2) if c <= 2
         else
             ([2, c-2], c-12) if c <= 12
-            else 
-                ([2, 10, c-12 if c <= 18 else 6], c-18),
-    lambda c: 
-        ([c], c-2) if c <= 2 
-        else
-            ([2, c-2], c-12) if c <= 12 
             else
                 ([2, 10, c-12 if c <= 18 else 6], c-18),
     lambda c:
         ([c], c-2) if c <= 2
-        else 
-            ([2, c-2], c-16) if c <= 16 
-            else 
+        else
+            ([2, c-2], c-12) if c <= 12
+            else
+                ([2, 10, c-12 if c <= 18 else 6], c-18),
+    lambda c:
+        ([c], c-2) if c <= 2
+        else
+            ([2, c-2], c-16) if c <= 16
+            else
                 ([2, 14, c-16], c-26) if c <= 26
                 else
                     ([2, 14, 10, c-26 if c <= 32 else 6], c-32)
-) 
+)
 
 fonctions_get = {
     # electron(s) = (
@@ -359,10 +355,10 @@ def get_info(
     element = elements[obj.proton-1]
 
     (
-        obj.nom, 
-        obj.symbole, 
+        obj.nom,
+        obj.symbole,
         obj.categorie,
-        obj.couches, 
+        obj.couches,
         obj.masse_atomique_relative,
         obj.electronegativite
 
@@ -425,7 +421,7 @@ def get_masse(obj:Union[Atome, Ion]) -> float:
         Masse de l'objet.
     """
     return (
-        (obj.proton*masse_proton) 
+        (obj.proton*masse_proton)
         + (obj.neutron*masse_neutron)
         + (obj.electron*masse_electron)
     )
@@ -463,7 +459,7 @@ def convertie_notation_vers(
         type_obj = IonMonoAtomique
 
 
-    for carac in data.strip():          
+    for carac in data.strip():
 
         if carac == ')':
             # in_molecule == ['C', 'O', '2'] -> in_molecule == 'CO2'
@@ -490,7 +486,7 @@ def convertie_notation_vers(
                 # CO2(H2)4(Ag7)2
                 #         ^
                 elements.extend(
-                    convertie_notation_vers(type_obj, in_molecule) 
+                    convertie_notation_vers(type_obj, in_molecule)
                     * (int(nbr) if nbr else 1)
                 )
                 nbr = ''
@@ -504,7 +500,7 @@ def convertie_notation_vers(
                 # (H2)2Ca
                 #      ^
                 elements.extend(
-                    convertie_notation_vers(type_obj, in_molecule) 
+                    convertie_notation_vers(type_obj, in_molecule)
                     * (int(nbr) if nbr else 1)
                 )
                 in_molecule = False
@@ -542,7 +538,7 @@ def convertie_notation_vers(
 
     elif isinstance(in_molecule, str):
         elements.extend(
-            convertie_notation_vers(type_obj, in_molecule) 
+            convertie_notation_vers(type_obj, in_molecule)
             * (int(nbr) if nbr else 1)
         )
         in_molecule = False
@@ -585,7 +581,7 @@ def verif_espece_stable(elements:List[Union[Atome, Ion]]) -> bool:
 
     charges = sorted(
         (
-            ion.diff 
+            ion.diff
             for ion in [
                 element if isinstance(element, IonMonoAtomique)
                 else
@@ -613,7 +609,7 @@ def verif_espece_stable(elements:List[Union[Atome, Ion]]) -> bool:
             if not charges[indice]:
                 break
 
-            if (not charges[autre] 
+            if (not charges[autre]
                 or (
                     # Si c'est le même index pour les 2
                     #   c'est que c'est le même atome
@@ -642,7 +638,7 @@ def verif_espece_stable(elements:List[Union[Atome, Ion]]) -> bool:
             elif charges[autre] == 3:
                 
                 if (
-                    charges[indice] == 4 
+                    charges[indice] == 4
                     or (
                         # Si il n'y a que 2 éléments restant
                         #   avec 3 liaisons disponibles,
@@ -707,7 +703,7 @@ def notation_couche(self:Union[Atome, IonMonoAtomique]):
                     electron if params.calculatrice
                     else
                         ''.join(
-                            exposants[int(num)] 
+                            exposants[int(num)]
                             for num in str(electron)
                         )
                 )
@@ -725,13 +721,13 @@ def notation_configuration(self:Union[Atome, IonMonoAtomique]):
                 electron if params.calculatrice
                 else
                     ''.join(
-                        exposants[int(num)] 
+                        exposants[int(num)]
                         for num in str(electron)
                     )
             )
         )
         for notation, electron in zip(
-            notation_configuration_atome, 
+            notation_configuration_atome,
             self.configuration
         )
         if electron

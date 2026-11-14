@@ -1,5 +1,10 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
 ###>>> CAPTURE FICHIER CALC
@@ -7,16 +12,9 @@
 import random
 
 ###<<< CAPTURE FICHIER CALC
-
-
-from .. import objets
-from ..objets import (
-    Proton, Neutron
-)
-from .. import exception
-
-from ..utile.typing import Union, Any, Optional, List
-
+from .. import exception, objets
+from ..objets import Neutron, Proton
+from ..utile.typing import Any, List, Union
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -90,8 +88,8 @@ class QUp(Quark):
     def __init__(self, charge_couleur:str = None):
 
         Quark.__init__(
-            self, 
-            + 2/3, 
+            self,
+            + 2/3,
             charge_couleur if charge_couleur
             else
                 random.choice(list(CHARGES_COULEURS))
@@ -105,8 +103,8 @@ class QDown(Quark):
     def __init__(self, charge_couleur:str = None):
 
         Quark.__init__(
-            self, 
-            - 1/3, 
+            self,
+            - 1/3,
             charge_couleur if charge_couleur
             else
                 random.choice(list(CHARGES_COULEURS))
@@ -132,7 +130,7 @@ class BiQuark:
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
 
-    def __add__(self, 
+    def __add__(self,
             obj:Quark
         ) -> Union[Neutron, Proton]:
 

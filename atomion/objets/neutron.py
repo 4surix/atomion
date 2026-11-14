@@ -1,19 +1,15 @@
-# -*- coding: utf-8 -*-
-# Python 3.6.2
+# coding: utf-8
+# Python 3.9
+#
+# Atomion - manipulation of atoms, ions and molecules.
+# Copyright (C) 2026 Asurix
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # ----------------------------------------------------------------------------
 
-
-from .. import objets
-from ..objets import (
-    Atome, IonMonoAtomique,
-    Proton, Neutron,
-    Noyau
-)
-from .. import utile
-from .. import exception
-
-from ..utile.typing import Union, Any, Optional
-
+from .. import exception, objets, utile
+from ..objets import Atome, IonMonoAtomique, Neutron, Noyau, Proton
+from ..utile.typing import Any, Optional, Union
 
 ###>>> CAPTURE FICHIER CALC
 
@@ -44,7 +40,7 @@ class Neutron:
     def __eq__(self, obj: Any) -> bool:
         return repr(self) == repr(obj)
 
-    def __add__(self, 
+    def __add__(self,
             obj: Union[Neutron, Proton]
         ) -> Union[Neutron, Noyau]:
 
@@ -69,7 +65,7 @@ class Neutron:
             '' if not A or utile.params.calculatrice
             else
                 ''.join(
-                    utile.exposants[int(num)] 
+                    utile.exposants[int(num)]
                     for num in str(self.valeur)
                 )
             ,
