@@ -107,6 +107,21 @@ reaction.don ==  'H₃O⁺ -> H₂O + H⁺'
 reaction.equation == 'H₃O⁺ + C₃H₅O₂⁻ -> H₂O + C₃H₆O₂'
 ```
 
+### Affichage
+
+Le rendu des notations suit l'environnement : `¹²₆C`, `H₂O`, `Cl⁻` sur ordinateur,
+`C`, `H2O`, `{Cl 1-}` sur calculatrice. Il peut être forcé à tout moment :
+
+```python
+from atomion import *
+from atomion.utile import params
+
+params.config(affichage = 'ascii')    # notation calculatrice
+params.config(affichage = 'unicode')  # notation scientifique
+```
+
+_(`params.config(calculatrice = True)` équivaut à `affichage = 'ascii'` : c'est ce mode qui est actif dans le fichier unique destiné aux calculatrices.)_
+
 Pour voir le reste des fonctionnalités, regardez le dossier [`exemples`](https://github.com/4surix/atomion/blob/master/exemples).
 
 # Installer

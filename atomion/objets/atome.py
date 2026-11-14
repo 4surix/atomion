@@ -138,11 +138,7 @@ class Atome:
             )
         )
 
-        return (
-            str__ if not utile.params.calculatrice
-            else
-                str__.replace('è', 'e').replace('é', 'e')
-        )
+        return utile.affichage.sans_accents(str__)
 
     def __repr__(self) -> str:
         return self.notation_symbole()
@@ -161,19 +157,9 @@ class Atome:
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
         return "%s%s%s" % (
-            '' if not A or utile.params.calculatrice
-            else
-                ''.join(
-                    utile.exposants[int(num)]
-                    for num in str(self.proton + self.neutron)
-                )
+            '' if not A else utile.affichage.nombre_de_masse(self.proton + self.neutron)
             ,
-            '' if not Z or utile.params.calculatrice
-            else
-                ''.join(
-                    utile.sous_exposants[int(num)]
-                    for num in str(self.proton)
-                )
+            '' if not Z else utile.affichage.numero_atomique(self.proton)
             ,
             self.symbole
         )

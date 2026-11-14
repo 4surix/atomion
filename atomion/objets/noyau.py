@@ -99,21 +99,13 @@ class Noyau:
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
         return "%s%sX" % (
-            '' if not A or utile.params.calculatrice
+            '' if not A
             else
-                ''.join(
-                    utile.exposants[int(num)]
-                    for num in str(
-                        self.neutron.valeur + self.proton.valeur
-                    )
+                utile.affichage.nombre_de_masse(
+                    self.neutron.valeur + self.proton.valeur
                 )
             ,
-            '' if not Z or utile.params.calculatrice
-            else
-                ''.join(
-                    utile.sous_exposants[int(num)]
-                    for num in str(self.proton.valeur)
-                )
+            '' if not Z else utile.affichage.numero_atomique(self.proton.valeur)
         )
 
 ###<<< CAPTURE FICHIER CALC

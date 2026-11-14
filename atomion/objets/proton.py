@@ -62,21 +62,11 @@ class Proton:
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
         return "%s%sp%s" % (
-            '' if not A or utile.params.calculatrice
-            else
-                ''.join(
-                    utile.exposants[int(num)]
-                    for num in str(self.valeur)
-                )
+            '' if not A else utile.affichage.nombre_de_masse(self.valeur)
             ,
-            '' if not Z or utile.params.calculatrice
-            else
-                ''.join(
-                    utile.sous_exposants[int(num)]
-                    for num in str(self.valeur)
-                )
+            '' if not Z else utile.affichage.numero_atomique(self.valeur)
             ,
-            '+' if utile.params.calculatrice else '⁺'
+            utile.affichage.signe('+')
         )
 
 ###<<< CAPTURE FICHIER CALC

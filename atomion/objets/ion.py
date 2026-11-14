@@ -227,11 +227,7 @@ class IonMonoAtomique(Ion):
             )
         )
 
-        return (
-            str__ if not utile.params.calculatrice
-            else
-                str__.replace('è', 'e').replace('é', 'e')
-        )
+        return utile.affichage.sans_accents(str__)
 
     def __repr__(self):
         return self.notation_symbole()
@@ -256,46 +252,29 @@ class IonMonoAtomique(Ion):
             A:bool = True, Z:bool = True, charge:bool = True
         ):
 
+        ouvrant, separateur, fermant = utile.affichage.encadrement(charge)
+
         return "%s%s%s%s%s%s%s" % (
-            '{' if utile.params.calculatrice and charge else ''
+            ouvrant
             ,
-            '' if not A or utile.params.calculatrice
+            '' if not A
             else
-                ''.join(
-                    utile.exposants[int(num)]
-                    for num in str(self.proton + self.neutron)
-                )
+                utile.affichage.nombre_de_masse(self.proton + self.neutron)
             ,
-            '' if not Z or utile.params.calculatrice
-            else
-                ''.join(
-                    utile.sous_exposants[int(num)]
-                    for num in str(self.proton)
-                )
+            '' if not Z else utile.affichage.numero_atomique(self.proton)
             ,
             self.symbole
             ,
-            ' ' if utile.params.calculatrice and charge else ''
+            separateur
             ,
             '' if not charge
             else
                 '%s%s' % (
-                    self.diff if utile.params.calculatrice
-                    else
-                        '' if self.diff == 1
-                        else
-                            ''.join(
-                                utile.exposants[int(num)]
-                                for num in str(self.diff)
-                            )
-                    ,
-                    {
-                        '-': '⁻' if not utile.params.calculatrice else '-',
-                        '+': '⁺' if not utile.params.calculatrice else '+'
-                    }.get(self.charge)
+                    utile.affichage.facteur(self.diff),
+                    utile.affichage.signe(self.charge)
                 )
             ,
-            '}' if utile.params.calculatrice and charge else ''
+            fermant
         )
 
     notation_couche = utile.notation_couche
@@ -405,11 +384,7 @@ class IonPolyAtomique(Ion):
             )
         )
 
-        return (
-            str__ if not utile.params.calculatrice
-            else
-                str__.replace('è', 'e').replace('é', 'e')
-        )
+        return utile.affichage.sans_accents(str__)
 
     def __add__(self,
             obj: Union[IonMonoAtomique, IonPolyAtomique]
@@ -504,46 +479,26 @@ class IonPolyAtomique(Ion):
                 ions[ion] = 0
             ions[ion] += 1
 
+        ouvrant, separateur, fermant = utile.affichage.encadrement(charge)
+
         return '%s%s%s%s%s' % (
-            '{' if utile.params.calculatrice and charge else ''
+            ouvrant
             ,
             ''.join(
-                '%s%s' % (
-                    ion
-                    ,
-                    '' if ions[ion] == 1
-                    else
-                        ions[ion] if utile.params.calculatrice
-                        else
-                            ''.join(
-                                utile.sous_exposants[int(num)]
-                                for num in str(ions[ion])
-                            )
-                )
+                '%s%s' % (ion, utile.affichage.nombre_indice(ions[ion]))
                 for ion in ordre
             )
             ,
-            ' ' if utile.params.calculatrice and charge else ''
+            separateur
             ,
             '' if not charge or self.charge not in ('-', '+')
             else
                 '%s%s' % (
-                    self.diff if utile.params.calculatrice
-                    else
-                        '' if self.diff == 1
-                        else
-                            ''.join(
-                                utile.exposants[int(num)]
-                                for num in str(self.diff)
-                            )
-                    ,
-                    {
-                        '-': '⁻' if not utile.params.calculatrice else '-',
-                        '+': '⁺' if not utile.params.calculatrice else '+'
-                    }.get(self.charge)
+                    utile.affichage.facteur(self.diff),
+                    utile.affichage.signe(self.charge)
                 )
             ,
-            '}' if utile.params.calculatrice and charge else ''
+            fermant
         )
 
 objets.IonPolyAtomique = IonPolyAtomique

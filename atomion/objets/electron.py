@@ -51,7 +51,7 @@ class Electron:
         return "%se%s" % (
             '' if self.valeur == 1 else self.valeur
             ,
-            '-' if utile.params.calculatrice else '⁻'
+            utile.affichage.signe('-')
         )
 
 ###<<< CAPTURE FICHIER CALC

@@ -57,12 +57,22 @@ class params:
     configuration = True
 
     def config(**params_):
+        if 'affichage' in params_:
+            mode = params_.pop('affichage')
+            if mode not in ('unicode', 'ascii'):
+                raise exception.ValeurIncorrecte(
+                    "L'affichage doit valoir 'unicode' ou 'ascii'."
+                )
+            params_['calculatrice'] = (mode == 'ascii')
+
         for key, valeur in params_.items():
             if not hasattr(params, key):
                 raise exception.ValeurIncorrecte(
                     "Le paramètre '%s' n'existe pas." % key
                 )
             setattr(params, key, valeur)
+
+        definir_affichage(params.calculatrice)
 
 
 ### Valeur de base pour les calculs
@@ -218,7 +228,151 @@ exposants = tuple('⁰¹²³⁴⁵⁶⁷⁸⁹')
 sous_exposants = tuple('₀₁₂₃₄₅₆₇₈₉')
 
 
-### Utitaire
+### Profil d'affichage
+#
+# Toute la mise en forme des notations (exposants, indices, charges, accents)
+#  passe par ici. Deux profils :
+#  - ProfilUnicode : notation scientifique (¹²₆C, H₂O, Cl⁻)
+#  - ProfilAscii   : notation compatible calculatrices ({Cl 1-}, H2O)
+#
+#  Le profil est choisi automatiquement (MicroPython -> ASCII) et peut etre
+#  force : `params.config(affichage='unicode')` ou `affichage='ascii'`.
+
+
+class Profil:
+    """Mise en forme des notations (classe de base, a specialiser)."""
+
+    def nombre_de_masse(self, valeur):
+        """Rendu du nombre de masse (A), au-dessus du symbole : `12` dans `¹²₆C`."""
+        raise NotImplementedError
+
+    def numero_atomique(self, valeur):
+        """Rendu du numero atomique (Z), sous le symbole : `6` dans `¹²₆C`."""
+        raise NotImplementedError
+
+    def indice(self, valeur):
+        """Indice de formule (nombre d'atomes dans une molecule)."""
+        raise NotImplementedError
+
+    def exposant(self, valeur):
+        """Exposant (electrons d'une couche, configuration electronique)."""
+        raise NotImplementedError
+
+    def nombre_indice(self, nombre):
+        """Indice de formule, omis lorsque le nombre vaut 1."""
+        raise NotImplementedError
+
+    def facteur(self, nombre):
+        """Multiplicite d'une charge (1 -> omise en Unicode)."""
+        raise NotImplementedError
+
+    def signe(self, symbole):
+        """Symbole d'une charge : '-' , '+' ou '0' (neutre)."""
+        raise NotImplementedError
+
+    def encadrement(self, actif):
+        """Retourne `(ouvrant, separateur, fermant)` autour de la charge."""
+        raise NotImplementedError
+
+    def sans_accents(self, texte):
+        """Texte des descriptions (accents retires si necessaire)."""
+        raise NotImplementedError
+
+
+class ProfilUnicode(Profil):
+
+    def exposant(self, valeur):
+        return ''.join(exposants[int(num)] for num in str(valeur))
+
+    def indice(self, valeur):
+        return ''.join(sous_exposants[int(num)] for num in str(valeur))
+
+    nombre_de_masse = exposant
+    numero_atomique = indice
+
+    def nombre_indice(self, nombre):
+        return '' if nombre == 1 else self.indice(nombre)
+
+    def facteur(self, nombre):
+        return '' if nombre == 1 else self.exposant(nombre)
+
+    def signe(self, symbole):
+        return {'-': '⁻', '+': '⁺', '0': '⁰'}[symbole]
+
+    def encadrement(self, actif):
+        return ('', '', '')
+
+    def sans_accents(self, texte):
+        return texte
+
+
+class ProfilAscii(Profil):
+
+    def nombre_de_masse(self, valeur):
+        # Les caractères spéciaux de sont pas disponible sur la calculatrice,
+        #  la notation du nucleide (`¹²₆C`) est omise,
+        #  le symbole seul suffit (`C`).
+        return ''
+
+    def numero_atomique(self, valeur):
+        return ''
+
+    def indice(self, valeur):
+        return str(valeur)
+
+    def exposant(self, valeur):
+        return str(valeur)
+
+    def nombre_indice(self, nombre):
+        return '' if nombre == 1 else str(nombre)
+
+    def facteur(self, nombre):
+        return str(nombre)
+
+    def signe(self, symbole):
+        return {'-': '-', '+': '+', '0': ''}[symbole]
+
+    def encadrement(self, actif):
+        return ('{', ' ', '}') if actif else ('', '', '')
+
+    def sans_accents(self, texte):
+        return texte.replace('è', 'e').replace('é', 'e')
+
+
+class Affichage:
+    """Profil d'affichage actif.
+
+    Les objets conservent une reference vers cette instance.
+    Changer de profil remplace simplement son `profil` interne, 
+     sans casser les references deja prises.
+    """
+
+    def __init__(self, profil):
+        self.profil = profil
+
+    def definir(self, profil):
+        self.profil = profil
+
+    def __getattr__(self, nom):
+        if nom == 'profil':
+            raise AttributeError(nom)
+        return getattr(self.profil, nom)
+
+
+affichage = Affichage(ProfilAscii() if is_calculatrice else ProfilUnicode())
+
+
+def definir_affichage(calculatrice):
+    """Selectionne le profil d'affichage et synchronise `params.calculatrice`."""
+
+    params.calculatrice = bool(calculatrice)
+
+    affichage.definir(
+        ProfilAscii() if params.calculatrice else ProfilUnicode()
+    )
+
+
+### Utilitaire
 
 def configuration_electronique(element:Union[Atome, Ion]) -> List[int]:
     """
@@ -691,34 +845,14 @@ def notation_couche(self:Union[Atome, IonMonoAtomique]):
         '(%s)%s' % infos
         for infos in zip(
             notations_couche,
-            (
-                (
-                    electron if params.calculatrice
-                    else
-                        ''.join(
-                            exposants[int(num)]
-                            for num in str(electron)
-                        )
-                )
-                for electron in self.couches
-            )
+            (affichage.exposant(electron) for electron in self.couches)
         )
     )
 
 def notation_configuration(self:Union[Atome, IonMonoAtomique]):
 
     return ' '.join(
-        '%s%s' % (
-            notation,
-            (
-                electron if params.calculatrice
-                else
-                    ''.join(
-                        exposants[int(num)]
-                        for num in str(electron)
-                    )
-            )
-        )
+        '%s%s' % (notation, affichage.exposant(electron))
         for notation, electron in zip(
             notation_configuration_atome,
             self.configuration

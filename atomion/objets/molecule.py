@@ -94,11 +94,7 @@ class Molecule:
             )
         )
 
-        return (
-            str__ if not utile.params.calculatrice
-            else
-                str__.replace('è', 'e').replace('é', 'e')
-        )
+        return utile.affichage.sans_accents(str__)
 
     def __add__(self,
             obj: Union[Molecule, Atome]
@@ -197,17 +193,7 @@ class Molecule:
             atomes[atome] += 1
 
         return ''.join(
-            '%s%s' % (
-                atome,
-                '' if atomes[atome] == 1
-                else
-                    atomes[atome] if utile.params.calculatrice
-                    else
-                        ''.join(
-                            utile.sous_exposants[int(num)]
-                            for num in str(atomes[atome])
-                        )
-            )
+            '%s%s' % (atome, utile.affichage.nombre_indice(atomes[atome]))
             for atome in ordre
         )
 
@@ -422,11 +408,7 @@ class MoleculeOrganique(Molecule):
             )
         )
 
-        return (
-            str__ if not utile.params.calculatrice
-            else
-                str__.replace('è', 'e').replace('é', 'e')
-        )
+        return utile.affichage.sans_accents(str__)
 
 objets.MoleculeOrganique = MoleculeOrganique
 
