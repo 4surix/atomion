@@ -9,7 +9,7 @@ permissions: {}
 
 jobs:
   build:
-    name: Construction du paquet
+    name: Construction du paquet & Fichier calculatrice
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,17 +22,31 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Installer build
-        run: python -m pip install --upgrade build
+      - name: Installer build et les dépendances calculatrice
+        run: python -m pip install --upgrade build ".[calc]"
 
       - name: Construire le sdist et la wheel
         run: python -m build
 
-      - name: Sauvegarder les artefacts
+      - name: Générer les fichiers autonomes pour calculatrice
+        run: |
+          mkdir -p calc
+          python -m mk_file_calculatrice --lang fr
+          mv atomion.py calc/atomion-fr.py
+          python -m mk_file_calculatrice --lang en
+          mv atomion.py calc/atomion-en.py
+
+      - name: Sauvegarder les artefacts PyPI
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: dist
           path: dist/
+
+      - name: Sauvegarder les fichiers calculatrice
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: calc
+          path: calc/
 
   publish:
     name: Publication sur PyPI et GitHub
@@ -45,23 +59,47 @@ jobs:
       id-token: write   # requis pour le Trusted Publishing (OIDC)
       contents: write   # requis pour créer la GitHub Release
     steps:
-      - name: Télécharger les artefacts
+      - name: Télécharger les artefacts PyPI
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: dist
           path: dist/
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Télécharger les fichiers calculatrice
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          persist-credentials: false
+          name: calc
+          path: release-assets/
 
-      - name: Publier sur PyPI (Trusted Publishing)
+      - name: Vérifier si la version existe sur PyPI
+        id: check_pypi
+        run: |
+          PACKAGE="atomion"
+          VERSION="${GITHUB_REF_NAME#v}"
+
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://pypi.org/pypi/${PACKAGE}/${VERSION}/json")
+
+          if [ "$STATUS" -eq 200 ]; then
+            echo "La version ${VERSION} existe déjà sur PyPI."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "La version ${VERSION} n'existe pas encore (HTTP ${STATUS})."
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publier sur PyPI
+        if: steps.check_pypi.outputs.exists != 'true'
         uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
 
       - name: Créer la GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" dist/* \
-            --title "${GITHUB_REF_NAME}" \
-            --generate-notes
+          if gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            echo "La release GitHub ${GITHUB_REF_NAME} existe déjà."
+          else
+            gh release create "${GITHUB_REF_NAME}" dist/* release-assets/* \
+              --repo "${GITHUB_REPOSITORY}" \
+              --title "${GITHUB_REF_NAME}" \
+              --generate-notes
+          fi
