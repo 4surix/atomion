@@ -17,8 +17,8 @@
 **Bibliothèque Python pure permettant de manipuler des atomes, ions, molécules et réactions chimiques de manière intuitive, aussi bien sur ordinateur que sur calculatrice.**
 
 - **Syntaxe naturelle** : instanciez un atome, un ion ou une équation en une seule ligne (`H + Cl -> HCl`), presque comme sur papier.
-- **Légèreté absolue** : 100 % Python pur, sans dépendance lourde (`numpy`, `scipy` ou `pandas`).
-- **Compatibilité universelle** : fonctionne sur ordinateur, dans le navigateur (Pyodide / JupyterLite), sur Raspberry Pi et sur calculatrice via **MicroPython 1.9.4**.
+- **Légèreté** : 100 % Python pur, sans dépendance lourde (`numpy`, `scipy` ou `pandas`).
+- **Compatibilité** : fonctionne sur ordinateur, dans le navigateur (Pyodide / JupyterLite), sur Raspberry Pi et sur calculatrice via **MicroPython 1.9.4**.
 - **Rendu scientifique riche** : affichage clair en console (configuration électronique, formules avec indices/exposants) _(et futur intégration Jupyter via `_repr_html_()`)_.
 - **Approche pédagogique** : équilibrage automatique (équations, oxydo-réduction, acido-basique) et messages d'erreur explicites en français.
 
@@ -122,7 +122,7 @@ params.config(affichage = 'unicode')  # notation scientifique
   - **Radioactivité ($\alpha$, $\beta^+$, $\beta^-$, $\gamma$)** : désintégrations et énergie associée.
 - [ ] **Mode pédagogique & pas-à-pas** : paramètre `etapes=True` pour détailler l'équilibrage des équations et réactions d'oxydo-réduction, accompagné de messages d'erreur explicites en français.
 - [ ] **Acido-basique** : détection automatique du couple acide/base conjugué lorsqu'il n'est pas renseigné.
-- [ ] **Chimie organique** : nomenclature IUPAC des molécules linéaires simples et affichage des formules semi-développées en ASCII (ex. : `CH3-CH2-CH2-OH` $\rightarrow$ *propan-1-ol*).
+- [ ] **Chimie organique** : nomenclature [IUPAC](https://fr.wikipedia.org/wiki/Nomenclature_de_l%27UICPA) des molécules linéaires simples et affichage des formules semi-développées en ASCII (ex. : `CH3-CH2-CH2-OH` $\rightarrow$ *propan-1-ol*).
 - [ ] **Assistant interactif calculatrice** : menu guidé (`atomion.menu` / `assistant()`) pour utiliser la bibliothèque sans connaître la syntaxe par cœur.
 
 ## Installation
