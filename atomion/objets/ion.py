@@ -199,11 +199,11 @@ class IonMonoAtomique(Ion):
         str__ = (
             "Ion monoatomique {}".format(self.notation())
             + (
-                "\n Elément: {}".format(self.nom[utile.params.langue])
+                "\n Elément: {}".format(self.nom)
                 if utile.params.nom else ''
             )
             + (
-                "\n Catégorie: {}".format(self.categorie[utile.params.langue])
+                "\n Catégorie: {}".format(self.categorie)
                 if utile.params.categorie else ''
             )
             + (

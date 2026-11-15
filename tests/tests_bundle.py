@@ -30,7 +30,7 @@ class TestExtraction(unittest.TestCase):
 
     def analyser(self, source):
 
-        return mk_file_calculatrice._module_body(
+        return mk_file_calculatrice.module_body(
             ast.parse(source), 'module.py'
         )
 
@@ -78,7 +78,7 @@ class TestAplatissement(unittest.TestCase):
     def aplatir(self, source, alias=('utile', 'objets')):
 
         return ast.unparse(
-            mk_file_calculatrice._Flattener(set(alias)).visit(
+            mk_file_calculatrice.Flattener(set(alias)).visit(
                 ast.parse(source)
             )
         )
@@ -140,7 +140,7 @@ class TestAlias(unittest.TestCase):
         )
 
         self.assertEqual(
-            mk_file_calculatrice._module_aliases(arbre, chemin),
+            mk_file_calculatrice.module_aliases(arbre, chemin),
             {'objets', 'utile'}
         )
 
@@ -152,7 +152,7 @@ class TestAlias(unittest.TestCase):
         arbre = ast.parse('from ..objets import Atome\n')
 
         self.assertEqual(
-            mk_file_calculatrice._module_aliases(arbre, chemin), set()
+            mk_file_calculatrice.module_aliases(arbre, chemin), set()
         )
 
 
@@ -167,7 +167,7 @@ class TestAssemblage(unittest.TestCase):
         ]
 
         with self.assertRaises(mk_file_calculatrice.BundleError):
-            mk_file_calculatrice._check_collisions(morceaux)
+            mk_file_calculatrice.check_collisions(morceaux)
 
     def test_affectations_homonymes_tolerees(self):
 
@@ -176,7 +176,7 @@ class TestAssemblage(unittest.TestCase):
             ('b.py', ast.parse('__all__ = [2]').body)
         ]
 
-        mk_file_calculatrice._check_collisions(morceaux)
+        mk_file_calculatrice.check_collisions(morceaux)
 
     def test_modules_du_paquet_tous_declares(self):
 

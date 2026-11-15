@@ -126,7 +126,7 @@ jobs:
         run: python3 -m pip install --user "python-minifier>=3.4,<4"
 
       - name: Générer atomion.py (fichier unique minifié)
-        run: python3 mk_file_calculatrice.py
+        run: python3 -m mk_file_calculatrice
 
       - name: Vérifier la compilation avec mpy-cross 1.9.4
         run: "$MPY_CROSS -o /tmp/atomion.mpy atomion.py"

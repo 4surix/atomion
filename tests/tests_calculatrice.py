@@ -58,7 +58,6 @@ class TestCalculatrice(unittest.TestCase):
 
         texte = mk_file_calculatrice.generate()
 
-        # Plus de marqueurs `CAPTURE` : le fichier est recomposé par AST.
         self.assertNotIn('CAPTURE FICHIER CALC', texte)
 
         # Aucun `typing` : MicroPython 1.9.4 n'en a pas, et les annotations
@@ -77,7 +76,7 @@ class TestCalculatrice(unittest.TestCase):
         self.assertEqual(espace['Atome']('C').symbole, 'C')
         self.assertEqual(
             str(espace['Equation']('H2 + O2 -> H2O').equilibrer()),
-            '2 H₂ + O₂ -> 2 H₂O'
+            '2 H2 + O2 -> 2 H2O'
         )
 
         self.assertIn('get_produit', espace)

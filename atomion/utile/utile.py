@@ -14,7 +14,7 @@ from typing import Any, List, Union
 
 from .. import exception, irregularites, objets
 from ..affichage import (
-    affichage, is_calculatrice
+    affichage, is_calculatrice, params
 )
 from ..elements import elements
 
@@ -330,9 +330,9 @@ def get_info(
 
         ) = (
 
-        element['name'],
+        element['name'] if is_calculatrice else element['name'][params.langue],
         element['symbol'],
-        element['category'],
+        element['category'] if is_calculatrice else element['category'][params.langue],
         element['shells'][:],
         element['atomic_mass'],
         element['electronegativity_pauling']

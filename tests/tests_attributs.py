@@ -17,14 +17,14 @@ class TestAttributsAtome(unittest.TestCase):
         self.hydrogene = Atome('H')
 
     def test_nom(self):
-        self.assertEqual(self.hydrogene.nom['fr'], 'Hydrogène')
+        self.assertEqual(self.hydrogene.nom, 'Hydrogène')
 
     def test_symbole(self):
         self.assertEqual(self.hydrogene.symbole, 'H')
 
     def test_categorie(self):
         self.assertEqual(
-            self.hydrogene.categorie['fr'], 'diatomique non-metal'
+            self.hydrogene.categorie, 'diatomique non-metal'
         )
 
     def test_particules(self):
@@ -55,11 +55,11 @@ class TestAttributsIonMonoAtomique(unittest.TestCase):
         self.chlorure = Ion('Cl')
 
     def test_nom(self):
-        self.assertEqual(self.chlorure.nom['fr'], 'Chlore')
+        self.assertEqual(self.chlorure.nom, 'Chlore')
 
     def test_categorie(self):
         self.assertEqual(
-            self.chlorure.categorie['fr'], 'diatomique non-metal'
+            self.chlorure.categorie, 'diatomique non-metal'
         )
 
     def test_particules(self):
