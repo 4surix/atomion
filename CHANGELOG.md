@@ -4,6 +4,31 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 
 Le format s'inspire de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et ce projet adhère au [versionnage sémantique](https://semver.org/lang/fr/).
 
+## [1.8.0] - 2026-11-15
+
+### Ajouté
+
+- Ajout d’une configuration Dependabot (` .github/dependabot.yml`) pour les mises à jour de dépendances.
+- Ajout de `__slots__` triés alphabétiquement dans les classes principales.
+- Ajout complet d’annotations de type (`from __future__ import annotations`) dans l’ensemble du code.
+
+### Modifié
+
+- Verrouillage des actions GitHub par SHA dans `.github/workflows/ci.yml` et `.github/workflows/release.yml`.
+- Chargement à la demande (`lazy loading`) du tableau périodique dans `elements.py` : passage d’une liste de dictionnaires à un format compact (tuples/chaînes) généré par `mk_file_calculatrice` lors du bundle, pour minimiser l’empreinte RAM sur les calculatrices anciennes (< 100 Ko).
+- Le bundleur `mk_file_calculatrice.py` est devenu un paquet `mk_file_calculatrice/` avec point d'entrée `__main__.py` ; il s'utilise désormais via `python3 -m mk_file_calculatrice`.
+- Ajustements divers dans les modules `utile/` (acido‑basique, équation, oxydo‑réduction) et nettoyage des exemples.
+- Complétion des types personnalisés pour les exceptions pédagogiques (`Incompatible`, `Instable`, `ValeurIncorrecte`).
+
+### Corrigé
+
+- Réduction significative des erreurs `ruff` sur les classes principales.
+- Resserrer configuration `ruff` : activation progressive de règles supplémentaires (dont `PTH123` → utiliser `pathlib` à la place de `open()`).
+
+### Supprimé
+
+- Suppression d’imports en dur dans `exemples/raccourcis.py`.
+
 ## [1.7.0] - 2026-11-14
 
 ### Ajouté

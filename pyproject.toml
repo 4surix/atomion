@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "atomion"
-version = "1.7.0"
+version = "1.8.0"
 description = "Manipulation facile d'atomes, d'ions, de molécules, d'équations et de réactions chimiques."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -54,7 +54,7 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["atomion*"]
+include = ["atomion*", "mk_file_calculatrice*"]
 
 [tool.setuptools.package-data]
 atomion = ["py.typed"]
