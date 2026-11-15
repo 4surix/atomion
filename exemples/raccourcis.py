@@ -30,16 +30,9 @@ assert C2H4 + C == C3H4
 assert C2H4 - C == CH4
 
 
-e # 1 électron
-n # 1 neutron
-p # 1 proton
 
 
-u # Unité de masse atomique unifiée
-mol # Une mole
 
 
-Me # Masse d'un électron
-Mp # Masse d'un proton
 # 'Mn' est le raccourci du Manganèse, pas la masse du neutron,
 #   à réféchir comment rendre disponible la masse du neutron.

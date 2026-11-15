@@ -5,9 +5,38 @@ on:
     tags:
       - "v*"
 
+permissions: {}
+
 jobs:
-  build-and-publish:
-    name: Build et publication sur PyPI
+  build:
+    name: Construction du paquet
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.13"
+
+      - name: Installer build
+        run: python -m pip install --upgrade build
+
+      - name: Construire le sdist et la wheel
+        run: python -m build
+
+      - name: Sauvegarder les artefacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Publication sur PyPI et GitHub
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -16,17 +45,19 @@ jobs:
       id-token: write   # requis pour le Trusted Publishing (OIDC)
       contents: write   # requis pour créer la GitHub Release
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Télécharger les artefacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a828898d90b75ff5af36 # v4.2.1
         with:
-          python-version: "3.13"
-      - name: Installer build
-        run: python -m pip install --upgrade build
-      - name: Construire le sdist et la wheel
-        run: python -m build
+          name: dist
+          path: dist/
+
       - name: Publier sur PyPI (Trusted Publishing)
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.12.4
+
       - name: Créer la GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_release_notes: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" dist/* \
+            --title "${GITHUB_REF_NAME}" \
+            --generate-notes
