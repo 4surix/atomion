@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -19,7 +18,7 @@ from .. import exception, objets, utile
 class Noyau:
     """Un noyau atomique, composé de protons et de neutrons."""
 
-    __slots__ = ('proton', 'neutron')
+    __slots__ = ('neutron', 'proton')
 
     def __init__(
         self, proton: objets.Proton, neutron: objets.Neutron
@@ -41,7 +40,7 @@ class Noyau:
         """Hash basé sur la représentation symbolique."""
         return hash(repr(self))
 
-    def __eq__(self, obj: Any) -> bool:  # noqa: ANN401
+    def __eq__(self, obj: Any) -> bool:
         """Compare deux noyaux par leur représentation symbolique."""
         return repr(self) == repr(obj)
 
@@ -108,17 +107,17 @@ class Noyau:
         else:
             raise exception.Incompatible(self, obj)
 
-    def __rshift__(self, obj: Any) -> Optional[Any]:  # noqa: ANN401
+    def __rshift__(self, obj: Any) -> Optional[Any]:
         """Fission nucléaire (opérateur >>, non implémenté)."""
         # Fission
         return NotImplemented
 
     def notation_symbole(
-        self, *args: Any,  # noqa: ANN401
+        self, *args: Any,
         A: bool = True, Z: bool = True
     ) -> str:
         """Notation symbolique du noyau (ex: '⁴₂X')."""
-        return "%s%sX" % (
+        return "{}{}X".format(
             '' if not A
             else
                 utile.affichage.nombre_de_masse(

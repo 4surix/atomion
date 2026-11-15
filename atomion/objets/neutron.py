@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -47,7 +46,7 @@ class Neutron:
         """Hash basé sur la représentation symbolique."""
         return hash(repr(self))
 
-    def __eq__(self, obj: Any) -> bool:  # noqa: ANN401
+    def __eq__(self, obj: Any) -> bool:
         """Compare deux neutrons par leur représentation symbolique."""
         return repr(self) == repr(obj)
 
@@ -73,11 +72,11 @@ class Neutron:
         return self * obj
 
     def notation_symbole(
-        self, *args: Any,  # noqa: ANN401
+        self, *args: Any,
         A: bool = True, Z: bool = True
     ) -> str:
         """Notation symbolique du neutron (ex: '1n0')."""
-        return "%s%sn%s" % (
+        return "{}{}n{}".format(
             '' if not A else utile.affichage.nombre_de_masse(self.valeur)
             ,
             '' if not Z else utile.affichage.numero_atomique(0)

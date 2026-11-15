@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -81,7 +80,7 @@ def __maj() -> None:
     }
 
 
-def get_produit(element: Any,  # noqa: ANN401
+def get_produit(element: Any,
                 categorie: str) -> list[tuple[str, Any]]:
     """Retourne la liste des couples associés à un élément.
 
@@ -98,7 +97,7 @@ def get_produit(element: Any,  # noqa: ANN401
 
     if categorie not in couples:
         raise exception.ValeurIncorrecte(
-            "La catégorie de couple '%s' n'existe pas." % categorie
+            "La catégorie de couple '{}' n'existe pas.".format(categorie)
         )
 
     if categorie == 'acide/base':
@@ -114,8 +113,7 @@ def get_produit(element: Any,  # noqa: ANN401
 
     if not produits:
         raise exception.ValeurIncorrecte(
-            "Le couple comportant l'élément %s n'est pas connu du module."
-            % repr(element)
+            "Le couple comportant l'élément {} n'est pas connu du module.".format(repr(element))
             + " N'hésitez pas à l'ajouter."
         )
 

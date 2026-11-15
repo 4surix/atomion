@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -48,7 +47,7 @@ def couleur_aleatoire() -> str:
 class Quark:
     """Un quark, particule élémentaire de la matière."""
 
-    __slots__ = ('charge_electrique', 'charge_couleur')
+    __slots__ = ('charge_couleur', 'charge_electrique')
 
     def __init__(
         self, charge_electrique: float, charge_couleur: str
@@ -83,7 +82,7 @@ class Quark:
         """Hash basé sur la représentation symbolique."""
         return hash(repr(self))
 
-    def __eq__(self, obj: Any) -> bool:  # noqa: ANN401
+    def __eq__(self, obj: Any) -> bool:
         """Compare deux quarks par leur représentation symbolique."""
         return repr(self) == repr(obj)
 
@@ -159,13 +158,13 @@ class BiQuark:
 
     def __repr__(self) -> str:
         """Représentation symbolique du biquark."""
-        return 'BiQuark{%s}' % self.quarks
+        return 'BiQuark{{{}}}'.format(self.quarks)
 
     def __hash__(self) -> int:
         """Hash basé sur la représentation symbolique."""
         return hash(repr(self))
 
-    def __eq__(self, obj: Any) -> bool:  # noqa: ANN401
+    def __eq__(self, obj: Any) -> bool:
         """Compare deux biquarks par leur représentation symbolique."""
         return repr(self) == repr(obj)
 

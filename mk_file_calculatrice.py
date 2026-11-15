@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -34,6 +33,7 @@ Usage:
 import ast
 import importlib
 import os
+from pathlib import Path
 import sys
 
 try:
@@ -42,11 +42,11 @@ except ImportError:
     raise SystemExit(
         'python_minifier is required to generate the single file:\n'
         '    python -m pip install "atomion[calc]"'
-    )
+    ) from None
 
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
-PACKAGE = os.path.join(ROOT, 'atomion')
+ROOT = Path(__file__).resolve().parent
+PACKAGE = ROOT / 'atomion'
 
 
 HEADER_TEXT = """
@@ -187,7 +187,7 @@ def list_modules():
             if not filename.endswith('.py'):
                 continue
 
-            path = os.path.join(folder, filename)
+            path = Path(folder) / filename
             relative = os.path.relpath(path, PACKAGE).replace(os.sep, '/')
 
             found[relative] = path
@@ -199,16 +199,14 @@ def list_modules():
 
     if missing:
         raise BundleError(
-            'modules declared in `MODULES` but missing from package: %s'
-            % ', '.join(missing)
+            'modules declared in `MODULES` but missing from package: {}'.format(', '.join(missing))
         )
 
     forgotten = sorted(set(found) - set(MODULES))
 
     if forgotten:
         raise BundleError(
-            'package modules missing from `MODULES`: %s'
-            % ', '.join(forgotten)
+            'package modules missing from `MODULES`: {}'.format(', '.join(forgotten))
         )
 
     return tuple((part, found[part]) for part in MODULES)
@@ -217,16 +215,16 @@ def list_modules():
 def _submodule_names():
     """Package submodule and subpackage names absent from the single file.
 
-    These names (derived from `MODULES`, without extension or path)
-     refer to modules, not objects: they must not appear in `public_globals`
-     or in the `__all__` of the single file.
+    These names (derived from `MODULES` paths without extensions) refer to
+    modules rather than objects: they must be excluded from `public_globals`
+    and from the single file's `__all__`.
     """
     names = set()
 
     for part in MODULES:
         segments = part.split('/')
         names.update(segments[:-1])
-        stem = os.path.splitext(segments[-1])[0]
+        stem = Path(segments[-1]).stem
 
         if stem and stem != '__init__':
             names.add(stem)
@@ -313,8 +311,7 @@ def _check_exceptions(tree, issues):
         ):
             issues.append((
                 node.lineno,
-                'exception `%s` is not supported in MicroPython 1.9.4'
-                % node.id,
+                f'exception `{node.id}` is not supported in MicroPython 1.9.4',
             ))
 
         elif (
@@ -325,8 +322,8 @@ def _check_exceptions(tree, issues):
         ):
             issues.append((
                 node.lineno,
-                'exception `builtins.%s` is not supported in MicroPython '
-                '1.9.4' % node.attr,
+                f'exception `builtins.{node.attr}` is not supported in MicroPython '
+                '1.9.4',
             ))
 
         # Avoid overly broad `try ... except` handlers.
@@ -377,8 +374,8 @@ def _check_exceptions(tree, issues):
                 if base_id == 'BaseException':
                     issues.append((
                         node.lineno,
-                        'exception `%s` must inherit from `Exception`, '
-                        'not `BaseException`' % node.name,
+                        f'exception `{node.name}` must inherit from `Exception`, '
+                        'not `BaseException`',
                     ))
 
     # Ensure custom exceptions inherit from `Exception` (or a valid subclass).
@@ -393,7 +390,7 @@ def _check_exceptions(tree, issues):
         if not _has_unknown_external_base(class_node, classes):
             issues.append((
                 class_node.lineno,
-                'exception `%s` must inherit from `Exception`' % class_name,
+                f'exception `{class_name}` must inherit from `Exception`',
             ))
 
 
@@ -470,7 +467,7 @@ def check_portability(tree, name='atomion.py'):
 
     if issues:
         details = '\n'.join(
-            '  %s:%d : %s' % (name, line, reason)
+            f'  {name}:{line} : {reason}'
             for line, reason in issues
         )
 
@@ -481,8 +478,8 @@ def check_portability(tree, name='atomion.py'):
 
 def _read(path):
     """Syntax tree of a package module."""
-    with open(path, encoding='utf-8') as file:
-        return ast.parse(file.read(), path)
+    with Path(path).open(encoding='utf-8') as file:
+        return ast.parse(file.read(), str(path))
 
 
 def _is_docstring(node):
@@ -569,60 +566,79 @@ class _Flattener(ast.NodeTransformer):
 def _is_module(folder, name):
     """True if `folder/name` is a module of the package."""
     return (
-        os.path.isfile(os.path.join(folder, name + '.py'))
-        or os.path.isfile(os.path.join(folder, name, '__init__.py'))
+        Path(folder, name + '.py').is_file()
+        or Path(folder, name, '__init__.py').is_file()
     )
 
 
 def _imported_dir(path, node):
-    """Package folder targeted by a relative import (`None` if outside)."""
-    if node.level == 0:
-        return None
+    """Package folder targeted by a package import (`None` if outside)."""
+    package_name = Path(PACKAGE).name
 
-    folder = os.path.dirname(os.path.abspath(path))
+    if node.level == 0:
+        parts = (node.module or '').split('.')
+
+        if parts[0] != package_name:
+            return None
+
+        folder = Path(PACKAGE, *parts[1:])
+        return (
+            folder
+            if Path(os.path.commonpath([PACKAGE, folder])) == PACKAGE
+            else None
+        )
+
+    folder = Path(path).resolve().parent
 
     for _ in range(node.level - 1):
-        folder = os.path.dirname(folder)
+        folder = folder.parent
 
-        if os.path.commonpath([ROOT, folder]) != ROOT:
+        if Path(os.path.commonpath([ROOT, folder])) != ROOT:
             return None
 
     if node.module:
-        folder = os.path.join(folder, *node.module.split('.'))
+        folder = Path(folder, *node.module.split('.'))
 
     return folder
 
 
 def _module_aliases(tree, path):
-    """Names bound to a package module by a relative import.
+    """Names bound to a package module by an import (relative or absolute).
 
-    `from .. import objets` binds `objets` to the `atomion.objets` module:
-    in the single file, `objets.Atome` therefore becomes `Atome`. Conversely,
-    `from ..objets import Atome` binds a class: nothing to flatten.
+    `from .. import objets` or `from atomion import objets` binds `objets`
+    to the `atomion.objets` module: in the single file, `objets.Atome`
+    therefore becomes `Atome`. Conversely, `from ..objets import Atome`
+    binds a class: nothing to flatten.
     """
     aliases = set()
+    package_name = Path(PACKAGE).name
 
-    for node in tree.body:
-        if not isinstance(node, ast.ImportFrom):
-            continue
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            folder = _imported_dir(path, node)
 
-        folder = _imported_dir(path, node)
+            if folder is None:
+                continue
 
-        if folder is None:
-            continue
+            aliases.update(
+                name.asname or name.name
+                for name in node.names
+                if name.name != '*' and _is_module(folder, name.name)
+            )
 
-        aliases.update(
-            name.asname or name.name
-            for name in node.names
-            if name.name != '*' and _is_module(folder, name.name)
-        )
+        elif isinstance(node, ast.Import):
+            for name in node.names:
+                parts = name.name.split('.')
+
+                if parts[0] == package_name and len(parts) > 1:
+                    aliases.add(name.asname or parts[-1])
 
     return aliases
 
 
 def _imports_package(node):
     """True if the import targets a package module (relative or `atomion`)."""
-    package_name = os.path.basename(PACKAGE)
+    package_name = Path(PACKAGE).name
 
     if isinstance(node, ast.ImportFrom):
         return (
@@ -658,7 +674,7 @@ def _filter_stdlib_import(node):
             return None
         return node
 
-    package_name = os.path.basename(PACKAGE)
+    package_name = Path(PACKAGE).name
     kept = [
         alias for alias in node.names
         if alias.name.split('.')[0] != package_name
@@ -700,8 +716,7 @@ def _eval_string_sequence(node, path, local_seqs=None):
                 or not isinstance(element.value, str)
             ):
                 raise BundleError(
-                    '%s:%d: `__all__` must contain only string literals'
-                    % (path, getattr(node, 'lineno', 0))
+                    '{}:{}: `__all__` must contain only string literals'.format(path, getattr(node, 'lineno', 0))
                 )
 
             names.append(element.value)
@@ -782,27 +797,27 @@ def _is_dunder_all_statement(node):
 
 def _load_runtime_all(path):
     """Import a package module to evaluate a dynamically computed `__all__`."""
-    rel_path = os.path.relpath(os.path.abspath(path), ROOT)
-    module_name = os.path.splitext(rel_path)[0].replace(os.sep, '.')
+    rel_path = Path(path).resolve().relative_to(ROOT)
+    module_name = rel_path.with_suffix('').as_posix().replace('/', '.')
 
     if module_name.endswith('.__init__'):
         module_name = module_name[:-len('.__init__')]
 
-    added_root = ROOT not in sys.path
+    root_str = str(ROOT)
+    added_root = root_str not in sys.path
 
     if added_root:
-        sys.path.insert(0, ROOT)
+        sys.path.insert(0, root_str)
 
     try:
         module = importlib.import_module(module_name)
     except Exception as error:
         raise BundleError(
-            '%s: unable to evaluate `__all__` (%s: %s)'
-            % (path, type(error).__name__, error)
-        )
+            f'{path}: unable to evaluate `__all__` ({type(error).__name__}: {error})'
+        ) from error
     finally:
-        if added_root and ROOT in sys.path:
-            sys.path.remove(ROOT)
+        if added_root and root_str in sys.path:
+            sys.path.remove(root_str)
 
     raw_all = getattr(module, '__all__', None)
 
@@ -813,7 +828,7 @@ def _load_runtime_all(path):
         isinstance(item, str) for item in raw_all
     ):
         raise BundleError(
-            '%s: `__all__` must evaluate to a list or tuple of strings' % path
+            f'{path}: `__all__` must evaluate to a list or tuple of strings'
         )
 
     return list(raw_all)
@@ -886,6 +901,25 @@ def _extract_all(tree, path):
     return exported
 
 
+class _BodyImportStripper(ast.NodeTransformer):
+    """Remove package and typing imports inside functions or conditionals."""
+
+    def generic_visit(self, node):
+        super().generic_visit(node)
+
+        stmts = getattr(node, 'body', None)
+        if isinstance(stmts, list) and not stmts:
+            stmts.append(ast.Pass())
+
+        return node
+
+    def visit_Import(self, node):
+        return _filter_stdlib_import(node)
+
+    def visit_ImportFrom(self, node):
+        return _filter_stdlib_import(node)
+
+
 def _module_body(tree, path):
     """Statements of a module retained in the single file.
 
@@ -911,7 +945,9 @@ def _module_body(tree, path):
             continue
 
         if not _is_docstring(node):
-            body.append(node)
+            cleaned = _BodyImportStripper().visit(node)
+            if cleaned is not None:
+                body.append(cleaned)
 
     return body, imports
 
@@ -978,8 +1014,7 @@ def _check_collisions(chunks):
 
             if name in seen:
                 raise BundleError(
-                    'modules `%s` and `%s` both define `%s`'
-                    % (seen[name], part, name)
+                    f'modules `{seen[name]}` and `{part}` both define `{name}`'
                 )
 
             seen[name] = part
@@ -1001,8 +1036,8 @@ def _verify(text, public_globals=None):
         tree = ast.parse(text, 'atomion.py')
     except SyntaxError as error:
         raise BundleError(
-            'generated single file is invalid: %s' % error
-        )
+            f'generated single file is invalid: {error}'
+        ) from error
 
     check_portability(tree)
 
@@ -1014,16 +1049,15 @@ def _verify(text, public_globals=None):
     except Exception as error:
         raise BundleError(
             'generated single file fails to execute '
-            '(fix order in `MODULES`?): %s: %s'
-            % (type(error).__name__, error)
-        )
+            f'(fix order in `MODULES`?): {type(error).__name__}: {error}'
+        ) from error
 
     if public_globals:
         missing = [name for name in public_globals if name not in namespace]
         if missing:
             raise BundleError(
-                'symbols listed in `__all__` but undefined after execution: %s'
-                % ', '.join(missing)
+                'symbols listed in `__all__` but undefined after execution: '
+                '{}'.format(', '.join(missing))
             )
 
 
@@ -1040,14 +1074,13 @@ def _verify_no_annotations(tree):
 
         if remaining:
             raise BundleError(
-                'remaining annotation in single file (line %s)'
-                % getattr(node, 'lineno', '?')
+                'remaining annotation in single file (line {})'.format(getattr(node, 'lineno', '?'))
             )
 
 
 def _discover_public_globals():
     """Collect public symbols automatically from `__all__` across `MODULES`."""
-    if not os.path.isdir(PACKAGE):
+    if not Path(PACKAGE).is_dir():
         return []
 
     try:
@@ -1083,17 +1116,18 @@ def _build_bundle():
                 seen_exports.add(name)
                 public_globals.append(name)
 
+        aliases = _module_aliases(tree, path)
         body, header = _module_body(tree, path)
         imports.extend(header)
 
-        body = _Flattener(
-            _module_aliases(tree, path)
-        ).visit(ast.Module(body=body, type_ignores=[])).body
+        body = _Flattener(aliases).visit(
+            ast.Module(body=body, type_ignores=[])
+        ).body
 
         chunks.append((part, body))
 
     # Submodule names (exception, atom, molecule, ...)
-    #  do not exist as such in the single file: 
+    #  do not exist as such in the single file:
     #  exclude them from public_globals and the final __all__.
     submodule_names = _submodule_names()
     public_globals = [
@@ -1191,12 +1225,11 @@ def generate(force=False):
 
 def main():
     """Write the single file (`atomion.py`)."""
-    with open('atomion.py', 'w', encoding='utf-8') as file:
+    with Path('atomion.py').open('w', encoding='utf-8') as file:
         file.write(generate())
 
     print(
-        'atomion.py: %d modules, %d bytes'
-        % (len(MODULES), os.path.getsize('atomion.py'))
+        'atomion.py: {} modules, {} bytes'.format(len(MODULES), Path('atomion.py').stat().st_size)
     )
 
 

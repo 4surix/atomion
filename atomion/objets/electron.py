@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -49,7 +48,7 @@ class Electron:
         """Hash basé sur la représentation symbolique."""
         return hash(repr(self))
 
-    def __eq__(self, obj: Any) -> bool:  # noqa: ANN401
+    def __eq__(self, obj: Any) -> bool:
         """Compare deux électrons par leur représentation symbolique."""
         return repr(self) == repr(obj)
 
@@ -62,11 +61,11 @@ class Electron:
         return self * obj
 
     def notation_symbole(
-        self, *args: Any,  # noqa: ANN401
+        self, *args: Any,
         A: bool = True, Z: bool = True
     ) -> str:
         """Notation symbolique de l'électron (ex: 'e⁻' ou '2e⁻')."""
-        return "%se%s" % (
+        return "{}e{}".format(
             '' if self.valeur == 1 else self.valeur
             ,
             utile.affichage.signe('-')

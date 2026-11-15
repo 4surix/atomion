@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -7,14 +6,14 @@
 #
 # ----------------------------------------------------------------------------
 
-import os
 import re
 import unittest
 
 import atomion
+from pathlib import Path
 
 
-RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RACINE = Path(__file__).resolve().parent.parent
 
 
 class TestVersion(unittest.TestCase):
@@ -22,9 +21,7 @@ class TestVersion(unittest.TestCase):
     def test_versions_coherentes(self):
         # La version déclarée dans `pyproject.toml` doit correspondre
         #  exactement à `atomion.__version__`.
-        with open(
-            os.path.join(RACINE, 'pyproject.toml'), encoding='utf-8'
-        ) as fichier:
+        with Path(RACINE, 'pyproject.toml').open(encoding='utf-8') as fichier:
             contenu = fichier.read()
 
         version = re.search(

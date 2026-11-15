@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -36,14 +35,29 @@ from .utile.equation import DemiEquation, Equation, Reaction
 from .utile.oxydo_reduction import OxydoReduction
 
 __all__ = (
-    # Objets
-    'Quark', 'QUp', 'QDown',
-    'Proton', 'Neutron', 'Electron',
-    'Noyau', 'Atome', 'Ion', 'IonMonoAtomique', 'IonPolyAtomique',
-    'Molecule', 'MoleculeOrganique', 'Liaison',
+    'AcidoBasique',
+    'Atome',
+    'DemiEquation',
+    'Electron',
     # Équations et réactions
-    'Equation', 'Reaction', 'DemiEquation',
-    'OxydoReduction', 'AcidoBasique',
+    'Equation',
+    'Ion',
+    'IonMonoAtomique',
+    'IonPolyAtomique',
+    'Liaison',
+    'Molecule',
+    'MoleculeOrganique',
+    'Neutron',
+    'Noyau',
+    'OxydoReduction',
+    'Proton',
+    'QDown',
+    'QUp',
+    # Objets
+    'Quark',
+    'Reaction',
+    'exception',
+    'mol',
     # Divers
-    'params', 'mol', 'exception',
+    'params',
 )

@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -11,13 +10,11 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, List, Union
 
 from .. import exception, irregularites, objets
 from ..affichage import (
-    Affichage, Profil, ProfilAscii, ProfilUnicode,
-    affichage, definir_affichage, exposants, is_calculatrice, params,
-    sous_exposants
+    affichage, is_calculatrice
 )
 from ..elements import elements
 
@@ -27,8 +24,8 @@ from ..elements import elements
 if is_calculatrice:
 
     def mul(
-        inicial: Any, *elements: Any  # noqa: ANN401
-    ) -> Any:  # noqa: ANN401
+        inicial: Any, *elements: Any
+    ) -> Any:
         """Multiplie plusieurs éléments entre eux (calculatrice uniquement).
 
         Args:
@@ -210,7 +207,7 @@ def configuration_electronique(element:Union[objets.Atome, objets.Ion]) -> List[
 
     -------
     Retours
- 
+
     :list
         Liste contenant le nombre d'électron par couche.
     """
@@ -279,7 +276,7 @@ def get_info(
 
     if isinstance(valeur, type(obj)):
         raise exception.ValeurIncorrecte(
-            "Cette objet est déjà un '%s' !" % type(obj)
+            "Cette objet est déjà un '{}' !".format(type(obj))
         )
 
     elif isinstance(valeur, (objets.IonMonoAtomique, objets.Atome)):
@@ -316,7 +313,7 @@ def get_info(
 
         if not obj.proton:
             raise exception.ValeurIncorrecte(
-                "Le symbole '%s'" % valeur
+                "Le symbole '{}'".format(valeur)
                 + "ne correspond à aucun élément existant !"
             )
 
@@ -398,7 +395,7 @@ def get_masse(obj:Union[objets.Atome, objets.Ion]) -> float:
 
 def convertie_notation(notation:str) -> Union[objets.Ion, objets.Molecule, objets.Atome]:
 
-    if '{' == notation[0] and notation[-1] == '}':
+    if notation[0] == '{' and notation[-1] == '}':
         return objets.Ion(notation)
 
     else:
@@ -595,7 +592,7 @@ def verif_espece_stable(elements:List[Union[objets.Atome, objets.Ion]]) -> bool:
             index_dernier_atome_liee = autre
 
             if charges[autre] == 4:
-                
+
                 if charges[indice] == 4:
                     charges[indice] -= 3
                     charges[autre] -= 3
@@ -605,7 +602,7 @@ def verif_espece_stable(elements:List[Union[objets.Atome, objets.Ion]]) -> bool:
                     charges[indice] = 0
 
             elif charges[autre] == 3:
-                
+
                 if (
                     charges[indice] == 4
                     or (
@@ -629,7 +626,7 @@ def verif_espece_stable(elements:List[Union[objets.Atome, objets.Ion]]) -> bool:
                     charges[indice] = 0
 
             elif charges[autre] == 2:
-                
+
                 if (
                     charges[indice] == 4
                     or charges[indice] == 3
@@ -664,7 +661,7 @@ def verif_espece_stable(elements:List[Union[objets.Atome, objets.Ion]]) -> bool:
 def notation_couche(self:Union[objets.Atome, objets.IonMonoAtomique]):
 
     return ' '.join(
-        '(%s)%s' % infos
+        '({}){}'.format(*infos)
         for infos in zip(
             notations_couche,
             (affichage.exposant(electron) for electron in self.couches)
@@ -674,7 +671,7 @@ def notation_couche(self:Union[objets.Atome, objets.IonMonoAtomique]):
 def notation_configuration(self:Union[objets.Atome, objets.IonMonoAtomique]):
 
     return ' '.join(
-        '%s%s' % (notation, affichage.exposant(electron))
+        '{}{}'.format(notation, affichage.exposant(electron))
         for notation, electron in zip(
             notation_configuration_atome,
             self.configuration

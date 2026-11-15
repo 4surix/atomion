@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -99,11 +98,9 @@ class OxydoReduction:
                 multiple_gain = multiple_gain // multiple_don
                 multiple_don = 1
 
-        elif multiple_don > multiple_gain:
-
-            if multiple_don % multiple_gain == 0:
-                multiple_don = multiple_don // multiple_gain
-                multiple_gain = 1
+        elif multiple_don > multiple_gain and multiple_don % multiple_gain == 0:
+            multiple_don = multiple_don // multiple_gain
+            multiple_gain = 1
 
 
         for coefficients in demi_equation_gain.coefficients:

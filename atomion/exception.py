@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -17,8 +16,8 @@ from typing import Any
 class Incompatible(Exception):
 	"""Exception levée quand deux objets ne sont pas compatibles entre eux."""
 
-	def __init__(self, objet_1: Any,  # noqa: ANN401
-                 objet_2: Any) -> None:  # noqa: ANN401
+	def __init__(self, objet_1: Any,
+                 objet_2: Any) -> None:
 		"""Initialise l'exception avec les deux objets incompatibles.
 
 		Args:
@@ -26,8 +25,7 @@ class Incompatible(Exception):
 			objet_2: Second objet.
 		"""
 		self.description = (
-			"Objet '%s' non compatible avec objet '%s'."
-			% (type(objet_1), type(objet_2))
+			"Objet '{}' non compatible avec objet '{}'.".format(type(objet_1), type(objet_2))
 		)
 
 	def __str__(self) -> str:
@@ -38,14 +36,14 @@ class Incompatible(Exception):
 class Instable(Exception):
 	"""Exception levée quand une espèce chimique est instable."""
 
-	def __init__(self, element: Any) -> None:  # noqa: ANN401
+	def __init__(self, element: Any) -> None:
 		"""Initialise l'exception avec l'élément instable.
 
 		Args:
 			element: L'atome ou l'ion instable.
 		"""
 		self.description = (
-			"L'élément '%s' est instable !" % element.notation_symbole()
+			"L'élément '{}' est instable !".format(element.notation_symbole())
 		)
 
 	def __str__(self) -> str:

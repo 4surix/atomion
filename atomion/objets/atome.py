@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -20,17 +19,25 @@ class Atome:
     """Un atome chimique avec ses protons, neutrons et électrons."""
 
     __slots__ = (
-        'nom', 'symbole', 'categorie',
-        'proton', 'neutron', 'nucleon', 'electron',
-        'masse', 'masse_atomique_relative',
-        'configuration', 'couches', 'noyau',
+        'categorie',
+        'configuration',
+        'couches',
+        'electron',
         'electronegativite',
+        'masse',
+        'masse_atomique_relative',
+        'neutron',
+        'nom',
+        'noyau',
+        'nucleon',
+        'proton',
+        'symbole',
     )
 
     def __init__(
         self,
         valeur: Union[int, str, objets.IonMonoAtomique],
-        *args: Any,  # noqa: ANN401
+        *args: Any,
         neutron: Optional[int] = None,
     ) -> None:
         """Initialise un atome à partir d'une valeur.
@@ -119,43 +126,41 @@ class Atome:
     def __str__(self) -> str:
         """Représentation textuelle détaillée de l'atome."""
         str__ = (
-            "Atome %s" % self.notation()
+            "Atome {}".format(self.notation())
             + (
-                "\n Elément: %s" % self.nom[utile.params.langue]
+                "\n Elément: {}".format(self.nom[utile.params.langue])
                 if utile.params.nom else ''
             )
             + (
-                "\n Catégorie: %s" % self.categorie[utile.params.langue]
+                "\n Catégorie: {}".format(self.categorie[utile.params.langue])
                 if utile.params.categorie else ''
             )
             + (
-                "\n Proton(s): %s" % self.proton
+                "\n Proton(s): {}".format(self.proton)
                 if utile.params.proton else ''
             )
             + (
-                "\n Neutron(s): %s" % self.neutron
+                "\n Neutron(s): {}".format(self.neutron)
                 if utile.params.neutron else ''
             )
             + (
-                "\n Electron(s): %s" % self.electron
+                "\n Electron(s): {}".format(self.electron)
                 if utile.params.electron else ''
             )
             + (
-                "\n Masse: %s" % self.masse
+                "\n Masse: {}".format(self.masse)
                 if utile.params.masse else ''
             )
             + (
-                "\n Masse atomique relative: %s"
-                % self.masse_atomique_relative
+                "\n Masse atomique relative: {}".format(self.masse_atomique_relative)
                 if utile.params.masse_relative else ''
             )
             + (
-                "\n Couche électronique: %s" % self.notation_couche()
+                "\n Couche électronique: {}".format(self.notation_couche())
                 if utile.params.couches else ''
             )
             + (
-                "\n Configuration électronique: %s"
-                % self.notation_configuration()
+                "\n Configuration électronique: {}".format(self.notation_configuration())
                 if utile.params.configuration else ''
             )
         )
@@ -170,22 +175,22 @@ class Atome:
         """Hash basé sur la représentation symbolique."""
         return hash(repr(self))
 
-    def __eq__(self, obj: Any) -> bool:  # noqa: ANN401
+    def __eq__(self, obj: Any) -> bool:
         """Compare deux atomes par leur représentation symbolique."""
         return repr(self) == repr(obj)
 
     def notation(self) -> str:
         """Notation simplifiée (symbole Z= A=)."""
-        return "%s Z=%s A=%s" % (
+        return "{} Z={} A={}".format(
             self.symbole, self.proton, self.proton + self.neutron
         )
 
     def notation_symbole(
-        self, *args: Any,  # noqa: ANN401
+        self, *args: Any,
         A: bool = True, Z: bool = True
     ) -> str:
         """Notation du symbole avec nombre de masse et numéro atomique."""
-        return "%s%s%s" % (
+        return "{}{}{}".format(
             '' if not A else utile.affichage.nombre_de_masse(self.proton + self.neutron)
             ,
             '' if not Z else utile.affichage.numero_atomique(self.proton)
@@ -193,7 +198,7 @@ class Atome:
             self.symbole
         )
 
-    
+
     notation_couche = utile.notation_couche
 
     notation_configuration = utile.notation_configuration

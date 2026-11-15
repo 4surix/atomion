@@ -11,7 +11,6 @@
 #   https://github.com/Bowserinator/Periodic-Table-JSON
 # J'ai rajoutée moi-même la partie fr.
 
-
 elements = [
     {
         "name": {
@@ -486,7 +485,7 @@ elements = [
             2
         ],
         "atomic_mass": 50.94151,
-        "density": 6.0,
+        "density": 6,
         "electronegativity_pauling": 1.63
     },
     {
@@ -2453,7 +2452,7 @@ elements = [
             2
         ],
         "atomic_mass": 269,
-        "density": 35.0,
+        "density": 35,
         "electronegativity_pauling": None
     },
     {
@@ -2603,7 +2602,7 @@ elements = [
             2
         ],
         "atomic_mass": 285,
-        "density": 23.7,
+        "density": 14.0,
         "electronegativity_pauling": None
     },
     {

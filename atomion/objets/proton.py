@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -50,7 +49,7 @@ class Proton:
         """Hash basé sur la représentation symbolique."""
         return hash(repr(self))
 
-    def __eq__(self, obj: Any) -> bool:  # noqa: ANN401
+    def __eq__(self, obj: Any) -> bool:
         """Compare deux protons par leur représentation symbolique."""
         return repr(self) == repr(obj)
 
@@ -76,11 +75,11 @@ class Proton:
         return self * obj
 
     def notation_symbole(
-        self, *args: Any,  # noqa: ANN401
+        self, *args: Any,
         A: bool = True, Z: bool = True
     ) -> str:
         """Notation symbolique du proton (ex: '1p+')."""
-        return "%s%sp%s" % (
+        return "{}{}p{}".format(
             '' if not A else utile.affichage.nombre_de_masse(self.valeur)
             ,
             '' if not Z else utile.affichage.numero_atomique(self.valeur)

@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -21,14 +20,18 @@ class Molecule:
 
     __slots__ = (
         'atomes',
-        'proton', 'neutron', 'electron', 'nucleon',
-        'masse', 'masse_moleculaire_relative'
+        'electron',
+        'masse',
+        'masse_moleculaire_relative',
+        'neutron',
+        'nucleon',
+        'proton'
     )
 
     def __init__(
         self,
         valeur: Union[str, objets.IonPolyAtomique, List[objets.Atome]],
-        *args: Any,  # noqa: ANN401
+        *args: Any,
         verif_stable: bool = True,
     ) -> None:
         """Initialise une molécule.
@@ -64,9 +67,8 @@ class Molecule:
                     "Une molécule ne peut pas avoir de gaz noble."
                 )
 
-        if verif_stable and utile.params.strict:
-            if not utile.verif_espece_stable(self.atomes):
-                raise exception.Instable(self)
+        if verif_stable and utile.params.strict and not utile.verif_espece_stable(self.atomes):
+            raise exception.Instable(self)
 
         self.proton = sum(atome.proton for atome in self.atomes)
         self.neutron = sum(atome.neutron for atome in self.atomes)
@@ -82,26 +84,25 @@ class Molecule:
     def __str__(self) -> str:
         """Représentation textuelle de la molécule."""
         str__ = (
-            "Molécule %s" % self.notation_symbole()
+            "Molécule {}".format(self.notation_symbole())
             + (
-                "\n Proton(s): %s" % self.proton
+                "\n Proton(s): {}".format(self.proton)
                 if utile.params.proton else ''
             )
             + (
-                "\n Neutron(s): %s" % self.neutron
+                "\n Neutron(s): {}".format(self.neutron)
                 if utile.params.neutron else ''
             )
             + (
-                "\n Electron(s): %s" % self.electron
+                "\n Electron(s): {}".format(self.electron)
                 if utile.params.electron else ''
             )
             + (
-                "\n Masse: %s" % self.masse
+                "\n Masse: {}".format(self.masse)
                 if utile.params.masse else ''
             )
             + (
-                "\n Masse moléculaire relative: %s"
-                % (self.masse_moleculaire_relative)
+                "\n Masse moléculaire relative: {}".format(self.masse_moleculaire_relative)
                 if utile.params.masse_relative else ''
             )
         )
@@ -141,7 +142,7 @@ class Molecule:
 
     def __sub__(self,
             obj: Union[Molecule, objets.Atome]
-        ) -> Union[None, objets.Atome, Molecule]:
+        ) -> Union[objets.Atome, Molecule, None]:
 
         if isinstance(obj, Molecule):
 
@@ -175,7 +176,7 @@ class Molecule:
 
     def __isub__(self,
             obj: Union[Molecule, objets.Atome]
-        ) -> Union[None, objets.Atome, Molecule]:
+        ) -> Union[objets.Atome, Molecule, None]:
         return self - obj
 
     def __mul__(self, obj: int) -> Molecule:
@@ -194,8 +195,7 @@ class Molecule:
         return repr(self) == repr(obj)
 
     def __iter__(self):
-        for element in self.atomes:
-            yield element
+        yield from self.atomes
 
     def notation_symbole(self, *args, A:bool = True, Z:bool = True) -> str:
 
@@ -212,7 +212,7 @@ class Molecule:
             atomes[atome] += 1
 
         return ''.join(
-            '%s%s' % (atome, utile.affichage.nombre_indice(atomes[atome]))
+            '{}{}'.format(atome, utile.affichage.nombre_indice(atomes[atome]))
             for atome in ordre
         )
 
@@ -384,13 +384,13 @@ class MoleculeOrganique(Molecule):
             )
 
 
-        for index, nbr_carbone_ram in ramifications.items():
+        for _index, nbr_carbone_ram in ramifications.items():
             nbr_carbone += nbr_carbone_ram
             nbr_hydrogene += (nbr_carbone_ram * 2) + 1
 
 
         super().__init__(
-            '%s(C%s)(H%s)' % (partie, nbr_carbone, nbr_hydrogene),
+            '{}(C{})(H{})'.format(partie, nbr_carbone, nbr_hydrogene),
             verif_stable=False
         )
 
@@ -399,29 +399,28 @@ class MoleculeOrganique(Molecule):
     def __str__(self) -> str:
 
         str__ = (
-            "Molécule Organique %s" % self.notation_symbole()
+            "Molécule Organique {}".format(self.notation_symbole())
             + (
-                "\n Famille: %s" % self.famille
+                "\n Famille: {}".format(self.famille)
             )
             + (
-                "\n Proton(s): %s" % self.proton
+                "\n Proton(s): {}".format(self.proton)
                 if utile.params.proton else ''
             )
             + (
-                "\n Neutron(s): %s" % self.neutron
+                "\n Neutron(s): {}".format(self.neutron)
                 if utile.params.neutron else ''
             )
             + (
-                "\n Electron(s): %s" % self.electron
+                "\n Electron(s): {}".format(self.electron)
                 if utile.params.electron else ''
             )
             + (
-                "\n Masse: %s" % self.masse
+                "\n Masse: {}".format(self.masse)
                 if utile.params.masse else ''
             )
             + (
-                "\n Masse moléculaire relative: %s"
-                % (self.masse_moleculaire_relative)
+                "\n Masse moléculaire relative: {}".format(self.masse_moleculaire_relative)
                 if utile.params.masse_relative else ''
             )
         )

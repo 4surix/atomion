@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -11,7 +10,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Tuple, Union, Optional
 
 from .. import couples, exception, objets
 from . import utile
@@ -113,15 +112,18 @@ class Equation:
     """Représentation d'une équation chimique."""
 
     __slots__ = (
-        'is_equilibre',
         'coefficients',
-        'spectatrices', 'reactifs', 'produits',
-        'notation', 'demi_equation'
+        'demi_equation',
+        'is_equilibre',
+        'notation',
+        'produits',
+        'reactifs',
+        'spectatrices'
     )
 
     def __init__(
             self,
-            notation:str = None,
+            notation:Optional[str] = None,
             *,
             demi_equation:bool = False,
 
@@ -148,10 +150,7 @@ class Equation:
 
         self.spectatrices = []
 
-        self.coefficients = [
-            [1] * len(self.reactifs),
-            [1] * len(self.produits)
-        ] if not coefficients else coefficients
+        self.coefficients = coefficients if coefficients else [[1] * len(self.reactifs), [1] * len(self.produits)]
 
         self.maj_notation()
 
@@ -171,7 +170,7 @@ class Equation:
         # X + X -> X
         self.notation = (
             ' + '.join(
-                '%s%s' % (
+                '{}{}'.format(
                     '' if nbr == 1
                     else
                         str(nbr) + ' '
@@ -182,7 +181,7 @@ class Equation:
             )
             + ' -> '
             + ' + '.join(
-                '%s%s' % (
+                '{}{}'.format(
                     '' if nbr == 1
                     else
                         str(nbr) + ' '
@@ -375,12 +374,12 @@ class Equation:
                     or charge_total_p1 == charge_total_p2
                 ):
                     break
-                
+
                 elif charge_total_p1 < charge_total_p2:
 
                     min_value = 1000000000
 
-                    for index, element, charge in info_charges_reactifs:
+                    for index, _element, _charge in info_charges_reactifs:
 
                         value = configuration[0][index]
 
@@ -397,7 +396,7 @@ class Equation:
 
                     min_value = 1000000000
 
-                    for index, element, charge in info_charges_produits:
+                    for index, _element, _charge in info_charges_produits:
 
                         value = configuration[1][index]
 
@@ -539,9 +538,9 @@ class Reaction:
 
     def __init__(self,
             equation:Equation,
-            quantites_reactifs:Dict[Union[objets.Atome, objets.Ion, objets.Molecule], int] = None,
+            quantites_reactifs:Optional[Dict[Union[objets.Atome, objets.Ion, objets.Molecule], int]] = None,
             *,
-            quantites_produits:Dict[Union[objets.Atome, objets.Ion, objets.Molecule], int] = None
+            quantites_produits:Optional[Dict[Union[objets.Atome, objets.Ion, objets.Molecule], int]] = None
         ):
 
         if isinstance(equation, str):
@@ -556,7 +555,7 @@ class Reaction:
             )
 
         if quantites_produits:
-            
+
             quantites_reactifs = {}
 
             coefficient = self.equation.coefficients[1][0]
@@ -589,7 +588,7 @@ class Reaction:
                 self.equation.coefficients[0], self.equation.reactifs
             ):
             if isinstance(nbr_transformation, str):
-                info[espece] = '%s - %s * %s' % (
+                info[espece] = '{} - {} * {}'.format(
                     self.quantites_reactifs[espece],
                     coefficient,
                     nbr_transformation
@@ -607,7 +606,7 @@ class Reaction:
                 self.equation.coefficients[1], self.equation.produits
             ):
             if isinstance(nbr_transformation, str):
-                info[espece] = '0 + %s * %s' % (
+                info[espece] = '0 + {} * {}'.format(
                     coefficient,
                     nbr_transformation
                 )

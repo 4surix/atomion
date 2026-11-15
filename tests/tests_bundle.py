@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -15,12 +14,13 @@ les references et ce qu'il refuse.
 """
 
 import ast
-import os
 import sys
 import unittest
 
+from pathlib import Path
+
 # `mk_file_calculatrice` est à la racine du dépôt (ce n'est pas un paquet installé).
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, Path(__file__).resolve().parent.parent)
 
 import mk_file_calculatrice
 
@@ -131,7 +131,7 @@ class TestAlias(unittest.TestCase):
 
     def test_module_lie_par_import_relatif(self):
 
-        chemin = os.path.join(
+        chemin = Path(
             mk_file_calculatrice.PACKAGE, 'objets', 'atome.py'
         )
         arbre = ast.parse(
@@ -146,7 +146,7 @@ class TestAlias(unittest.TestCase):
 
     def test_classe_liee_par_import_non_aplatie(self):
 
-        chemin = os.path.join(
+        chemin = Path(
             mk_file_calculatrice.PACKAGE, 'objets', 'atome.py'
         )
         arbre = ast.parse('from ..objets import Atome\n')

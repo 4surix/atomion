@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -18,12 +17,12 @@ from .. import exception, objets, utile
 
 def decode_notation(
         notation:str,
-        charge:Union[None, int]
-    ) -> Tuple[str, Union[None, int]]:
+        charge:Union[int, None]
+    ) -> Tuple[str, Union[int, None]]:
 
     notation = notation.strip()
 
-    if '{' == notation[0] and notation[-1] == '}':
+    if notation[0] == '{' and notation[-1] == '}':
 
         args = notation[1:-1].split(' ')
         notation = args.pop(0)
@@ -56,26 +55,35 @@ class Ion:
 if not utile.params.calculatrice:
 
     class Ion:
-        
+
         def __new__(cls, *args, **kwargs):
 
             try: return IonMonoAtomique(*args, **kwargs)
             except (exception.ValeurIncorrecte, exception.Instable) as exc_IMA:
                 try: return IonPolyAtomique(*args, **kwargs)
                 except (exception.ValeurIncorrecte, exception.Instable):
-                    raise exc_IMA
+                    raise exc_IMA from None
 
 
 
 class IonMonoAtomique(Ion):
 
     __slots__ = (
-        'nom', 'symbole', 'categorie',
-        'proton', 'neutron', 'electron', 'nucleon',
-        'masse', 'masse_atomique_relative',
-        'configuration', 'couches', 'noyau',
-        'diff', 'charge',
-        'electronegativite'
+        'categorie',
+        'charge',
+        'configuration',
+        'couches',
+        'diff',
+        'electron',
+        'electronegativite',
+        'masse',
+        'masse_atomique_relative',
+        'neutron',
+        'nom',
+        'noyau',
+        'nucleon',
+        'proton',
+        'symbole'
     )
 
     if not utile.params.calculatrice:
@@ -189,43 +197,41 @@ class IonMonoAtomique(Ion):
 
     def __str__(self) -> str:
         str__ = (
-            "Ion monoatomique %s" % self.notation()
+            "Ion monoatomique {}".format(self.notation())
             + (
-                "\n Elément: %s" % self.nom[utile.params.langue]
+                "\n Elément: {}".format(self.nom[utile.params.langue])
                 if utile.params.nom else ''
             )
             + (
-                "\n Catégorie: %s" % self.categorie[utile.params.langue]
+                "\n Catégorie: {}".format(self.categorie[utile.params.langue])
                 if utile.params.categorie else ''
             )
             + (
-                "\n Proton(s): %s" % self.proton
+                "\n Proton(s): {}".format(self.proton)
                 if utile.params.proton else ''
             )
             + (
-                "\n Neutron(s): %s" % self.neutron
+                "\n Neutron(s): {}".format(self.neutron)
                 if utile.params.neutron else ''
             )
             + (
-                "\n Electron(s): %s" % self.electron
+                "\n Electron(s): {}".format(self.electron)
                 if utile.params.electron else ''
             )
             + (
-                "\n Masse: %s" % self.masse
+                "\n Masse: {}".format(self.masse)
                 if utile.params.masse else ''
             )
             + (
-                "\n Masse atomique relative: %s"
-                % self.masse_atomique_relative
+                "\n Masse atomique relative: {}".format(self.masse_atomique_relative)
                 if utile.params.masse_relative else ''
             )
             + (
-                "\n Couche électronique: %s" % self.notation_couche()
+                "\n Couche électronique: {}".format(self.notation_couche())
                 if utile.params.couches else ''
             )
             + (
-                "\n Configuration électronique: %s"
-                % self.notation_configuration()
+                "\n Configuration électronique: {}".format(self.notation_configuration())
                 if utile.params.configuration else ''
             )
         )
@@ -242,7 +248,7 @@ class IonMonoAtomique(Ion):
         return repr(self) == repr(obj)
 
     def notation(self):
-        return "%s %s%s Z=%s A=%s" % (
+        return "{} {}{} Z={} A={}".format(
             self.symbole,
             self.diff,
             self.charge,
@@ -257,7 +263,7 @@ class IonMonoAtomique(Ion):
 
         ouvrant, separateur, fermant = utile.affichage.encadrement(charge)
 
-        return "%s%s%s%s%s%s%s" % (
+        return "{}{}{}{}{}{}{}".format(
             ouvrant
             ,
             '' if not A
@@ -272,7 +278,7 @@ class IonMonoAtomique(Ion):
             ,
             '' if not charge
             else
-                '%s%s' % (
+                '{}{}'.format(
                     utile.affichage.facteur(self.diff),
                     utile.affichage.signe(self.charge)
                 )
@@ -297,11 +303,16 @@ class IonPolyAtomique(Ion):
     """
 
     __slots__ = (
+        'charge',
+        'diff',
+        'electron',
+        'electronegativite',
         'ions',
-        'proton', 'neutron', 'electron', 'nucleon',
-        'masse', 'masse_moleculaire_relative',
-        'diff', 'charge',
-        'electronegativite'
+        'masse',
+        'masse_moleculaire_relative',
+        'neutron',
+        'nucleon',
+        'proton'
     )
 
     if not utile.params.calculatrice:
@@ -362,26 +373,25 @@ class IonPolyAtomique(Ion):
     def __str__(self) -> str:
 
         str__ = (
-            "Ion polyatomique %s" % self.notation_symbole()
+            "Ion polyatomique {}".format(self.notation_symbole())
             + (
-                "\n Proton(s): %s" % self.proton
+                "\n Proton(s): {}".format(self.proton)
                 if utile.params.proton else ''
             )
             + (
-                "\n Neutron(s): %s" % self.neutron
+                "\n Neutron(s): {}".format(self.neutron)
                 if utile.params.neutron else ''
             )
             + (
-                "\n Electron(s): %s" % self.electron
+                "\n Electron(s): {}".format(self.electron)
                 if utile.params.electron else ''
             )
             + (
-                "\n Masse: %s" % self.masse
+                "\n Masse: {}".format(self.masse)
                 if utile.params.masse else ''
             )
             + (
-                "\n Masse moléculaire relative: %s"
-                % (self.masse_moleculaire_relative)
+                "\n Masse moléculaire relative: {}".format(self.masse_moleculaire_relative)
                 if utile.params.masse_relative else ''
             )
         )
@@ -414,7 +424,7 @@ class IonPolyAtomique(Ion):
 
     def __sub__(self,
             obj: Union[IonMonoAtomique, IonPolyAtomique]
-        ) -> Union[None, IonMonoAtomique, IonPolyAtomique]:
+        ) -> Union[IonMonoAtomique, IonPolyAtomique, None]:
 
         if isinstance(obj, IonPolyAtomique):
 
@@ -448,7 +458,7 @@ class IonPolyAtomique(Ion):
 
     def __isub__(self,
             obj: Union[IonMonoAtomique, IonPolyAtomique]
-        ) -> Union[None, IonMonoAtomique, IonPolyAtomique]:
+        ) -> Union[IonMonoAtomique, IonPolyAtomique, None]:
         return self - obj
 
     def __repr__(self) -> str:
@@ -461,8 +471,7 @@ class IonPolyAtomique(Ion):
         return repr(self) == repr(obj)
 
     def __iter__(self):
-        for ion in self.ions:
-            yield ion
+        yield from self.ions
 
     def notation_symbole(
             self, *args,
@@ -483,11 +492,11 @@ class IonPolyAtomique(Ion):
 
         ouvrant, separateur, fermant = utile.affichage.encadrement(charge)
 
-        return '%s%s%s%s%s' % (
+        return '{}{}{}{}{}'.format(
             ouvrant
             ,
             ''.join(
-                '%s%s' % (ion, utile.affichage.nombre_indice(ions[ion]))
+                '{}{}'.format(ion, utile.affichage.nombre_indice(ions[ion]))
                 for ion in ordre
             )
             ,
@@ -495,7 +504,7 @@ class IonPolyAtomique(Ion):
             ,
             '' if not charge or self.charge not in ('-', '+')
             else
-                '%s%s' % (
+                '{}{}'.format(
                     utile.affichage.facteur(self.diff),
                     utile.affichage.signe(self.charge)
                 )
@@ -513,4 +522,4 @@ if utile.params.calculatrice:
         except (exception.ValeurIncorrecte, exception.Instable) as exc_IMA:
             try: return IonPolyAtomique(*args, **kwargs)
             except (exception.ValeurIncorrecte, exception.Instable):
-                raise exc_IMA
+                raise exc_IMA from None

@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -24,10 +23,10 @@ from typing import Any
 
 ### Verif si calculatrice
 
-# MicroPython fournit le module `micropython` sur tous ses ports 
+# MicroPython fournit le module `micropython` sur tous ses ports
 #  (y compris `unix`) : c'est un signal fiable et documenté.
 try:
-    import micropython
+    __import__("micropython")
 except ImportError:
     is_calculatrice: bool = False
 else:
@@ -58,7 +57,7 @@ class params:
     couches = True
     configuration = True
 
-    def config(**params_: Any) -> None:  # noqa: ANN401
+    def config(**params_: Any) -> None:
         """Configure les paramètres globaux d'affichage.
 
         Args:
@@ -76,7 +75,7 @@ class params:
         for key, valeur in params_.items():
             if not hasattr(params, key):
                 raise exception.ValeurIncorrecte(
-                    "Le paramètre '%s' n'existe pas." % key
+                    "Le paramètre '{}' n'existe pas.".format(key)
                 )
             setattr(params, key, valeur)
 
@@ -233,7 +232,7 @@ class Affichage:
         """
         self.profil = profil
 
-    def __getattr__(self, nom: str) -> Any:  # noqa: ANN401
+    def __getattr__(self, nom: str) -> Any:
         """Redirige l'accès aux attributs vers le profil actif."""
         if nom == 'profil':
             raise AttributeError(nom)

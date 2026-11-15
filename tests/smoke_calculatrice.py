@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -11,7 +10,7 @@
 
 https://en.wikipedia.org/wiki/Smoke_testing_(software)
 
-Ce script ne depend que du fichier unique `atomion.py` 
+Ce script ne depend que du fichier unique `atomion.py`
  produit par `mk_file_calculatrice.py`
  et doit donc rester compatible MicroPython 1.9.4 :
  pas de f-string, pas d'`unittest`, pas de `typing`.

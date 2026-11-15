@@ -67,25 +67,48 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "W"]
+select = [
+    "E",    # pycodestyle (erreurs)
+    "F",    # Pyflakes
+    "W",    # pycodestyle (avertissements)
+    "B",    # flake8-bugbear (pièges courants)
+    "UP",   # pyupgrade (modernisation syntaxique)
+    "PTH",  # flake8-use-pathlib (couvre PTH123)
+    "RUF",  # règles spécifiques Ruff (couvre RUF023)
+    "SIM",  # flake8-simplify (simplifications de code)
+]
 ignore = [
+    # Règles historiques à retirer progressivement
     "E1",    # indentation (tabulations historiques)
     "E2",    # espaces
     "E3",    # lignes vides
-    "E4",    # imports
     "E5",    # longueur de ligne / continuations
     "E7",    # instructions multiples sur une ligne
     "W1",    # indentation
-    "W2",    # espaces en fin de ligne
-    "W3",    # lignes vides
-    "W6",    # syntaxe d'échappement dépréciée
-    "F401",  # import non utilisé
     "F403",  # import * utilisé
     "F405",  # nom potentiellement indéfini (via import *)
-    "F811",  # redéfinition d'un nom (nécessaire pour le mode calculatrice)
+
+    # Règles à garder ignorées pour MicroPython 1.9.4
+    "F811",    # redéfinition d'un nom (nécessaire pour le mode calculatrice)
+    "UP007",   # évite `X | Y` dans les annotations (`Union[X, Y]` pour MicroPython)
+    "UP045",   # évite `X | None` dans les annotations (`Optional[X]` pour MicroPython)
+    "RUF001",  # autorise les caractères Unicode mathématiques/chimiques (², ⁻, →) dans les chaînes
+    "RUF002",  # autorise les caractères Unicode dans les docstrings
+    "RUF003",  # autorise les caractères Unicode dans les commentaires
 ]
 
 [tool.ruff.lint.per-file-ignores]
+# MicroPython 1.9.4 ne supporte ni pathlib ni les f-strings
+"atomion/**/*.py" = [
+    "PTH",    # pathlib n'existe pas sur MicroPython
+    "UP006",  # garde typing.List / Dict / Tuple au lieu de list[...]
+    "UP007",  # garde Union[X, Y] au lieu de X | Y
+    "UP015",  # autorise le mode explicite "r" dans open()
+    "UP032",  # interdit les f-strings (absentes de MicroPython 1.9.4)
+    "UP035",  # garde les imports depuis typing
+    "UP045",  # garde Optional[X] au lieu de X | None
+    "RUF005", # MicroPython 1.9.4 no support unpacking `*x` in a literal (PEP 448)
+]
 # Parseur de nomenclature organique : variables préparatoires inutilisées.
 "atomion/objets/molecule.py" = ["F841"]
 # `Equation.__eq__` compare à une chaîne : pas de `__hash__` cohérent possible.

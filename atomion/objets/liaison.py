@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -11,7 +10,7 @@
 
 from __future__ import annotations
 
-from typing import Iterator, List, Union
+from typing import Iterator, Union
 
 from .. import exception, objets, utile
 
@@ -67,8 +66,7 @@ class Liaison:
 
     def __iter__(self) -> Iterator[objets.Atome]:
         """Itère sur les atomes de la liaison."""
-        for atome in self.atomes:
-            yield atome
+        yield from self.atomes
 
     def __str__(self) -> str:
         """Représentation textuelle de la liaison."""

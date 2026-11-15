@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -11,3 +10,4 @@ from . import acido_basique as acido_basique
 from . import equation as equation
 from . import oxydo_reduction as oxydo_reduction
 from .utile import *
+from ..affichage import params as params

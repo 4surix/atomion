@@ -1,4 +1,3 @@
-# coding: utf-8
 # Python 3.9
 #
 # Atomion - manipulation of atoms, ions and molecules.
@@ -7,12 +6,13 @@
 #
 # ----------------------------------------------------------------------------
 
-import os
 import sys
 import unittest
 
+from pathlib import Path
+
 # `mk_file_calculatrice` est à la racine du dépôt (ce n'est pas un paquet installé).
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, Path(__file__).resolve().parent.parent)
 
 import atomion
 import mk_file_calculatrice
